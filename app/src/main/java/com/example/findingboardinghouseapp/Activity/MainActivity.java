@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.home:
                         selectedFragment = new HomeFragment();
                         break;
-                    case R.id.search:
-                        selectedFragment = new SearchFragment();
-                        break;
+//                    case R.id.search:
+//                        selectedFragment = new SearchFragment();
+//                        break;
                     case R.id.account:
                         selectedFragment = new LogInFragment();
                         break;

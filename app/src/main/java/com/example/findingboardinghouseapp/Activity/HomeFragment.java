@@ -13,10 +13,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 
 import com.example.findingboardinghouseapp.Adapter.RoomRecommendationAdapter;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
+import com.github.aakira.expandablelayout.ExpandableLinearLayout;
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -95,8 +103,11 @@ public class HomeFragment extends Fragment {
     private RoomRecommendationAdapter adapter;
     private ArrayList<Room> arrayList;
     private ArrayList<Room> arrayListRoomRecommendation;
-
+    private Spinner spinnerNumberPeople, spinnerPrice, spinnerDistance;
+    private String numberPeople = "0", distance = "4", price = "4";
     private FirebaseFirestore firebaseFirestore;
+    private Boolean pressButton = false;
+    private EditText editTextSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,6 +122,14 @@ public class HomeFragment extends Fragment {
 
         // mapping
         RecyclerView recyclerViewRoomRecommendation = view.findViewById(R.id.recyclerViewRoomRecommendation);
+        ExpandableRelativeLayout expandableRelativeLayout = view.findViewById(R.id.h_expandable_layout);
+        Button buttonSearch = view.findViewById(R.id.h_button_search);
+        ScrollView scrollView = view.findViewById(R.id.h_scrollView);
+        editTextSearch = view.findViewById(R.id.h_editText_search);
+        spinnerPrice = view.findViewById(R.id.h_spinner_price);
+        spinnerDistance = view.findViewById(R.id.h_spinner_distance);
+        spinnerNumberPeople = view.findViewById(R.id.h_spinner_number_people);
+        Button buttonRefresh = view.findViewById(R.id.h_button_refresh);
 
         // recyclerView
         recyclerViewRoomRecommendation.setHasFixedSize(true);
@@ -119,54 +138,170 @@ public class HomeFragment extends Fragment {
         recyclerViewRoomRecommendation.setLayoutManager(gridLayoutManager);
         recyclerViewRoomRecommendation.setAdapter(adapter);
 
-        realTimeUpdate();
-
         firebaseFirestore.collection("boardingHouse").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                realTimeUpdate();
+                readData(list -> {
+                    arrayList.clear();
+                    arrayList.addAll(list);
+                    if (arrayList.size() > 0) {
+                        arrayListRoomRecommendation.clear();
+                        arrayListRoomRecommendation.addAll(arrayList);
+                    }
+                    adapter.notifyDataSetChanged();
+                });
             }
         });
 
         firebaseFirestore.collectionGroup("roomType").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                realTimeUpdate();
+                readData(list -> {
+                    arrayList.clear();
+                    arrayList.addAll(list);
+                    if (arrayList.size() > 0) {
+                        arrayListRoomRecommendation.clear();
+                        arrayListRoomRecommendation.addAll(arrayList);
+                    }
+                    adapter.notifyDataSetChanged();
+                });
             }
         });
 
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandableRelativeLayout.expand();
+//                expandableLinearLayout.toggle();
+            }
+        });
+        buttonRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandableRelativeLayout.collapse();
+            }
+        });
         // update status of room
 //        firebaseFirestore.collection("boardingHouse").document("JYYwAzho2pZ09NCTg8EJ").collection("roomType").document("QVfTthtQrdM8IjXj7OKo")
 //                .update("room.11", false);
 //        firebaseFirestore.collection("boardingHouse").document("JYYwAzho2pZ09NCTg8EJ").collection("roomType").document("QVfTthtQrdM8IjXj7OKo")
 //                .update("room.image.1", "for fun");
 
+        initialSpinner();
         return view;
     }
 
-    private void realTimeUpdate() {
-        readData(new FirestoreCallback() {
-            @Override
-            public void onCallbackBoardingHouse(List<Room> list) {
+    private void initialSpinner() {
 
+        List<String> listNumberPeople = new ArrayList<>();
+        listNumberPeople.add("Số người ở");
+        listNumberPeople.add("1");
+        listNumberPeople.add("2");
+        listNumberPeople.add("3");
+        listNumberPeople.add("4");
+
+//        String listNumberPeople[] = {
+//                "Số người","1", "2", "3", "4"
+//        };
+        ArrayAdapter<String> adapterNumberPeopleSpinner = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listNumberPeople);
+        adapterNumberPeopleSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNumberPeople.setAdapter(adapterNumberPeopleSpinner);
+
+
+        spinnerNumberPeople.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (arrayListRoom.size() > 0) {
+//                    if (parent.getItemAtPosition(position).toString().equals("Số người ở")) {
+//                        numberPeople = "0";
+//                    } else {
+//                        numberPeople = parent.getItemAtPosition(position).toString();
+//                    }
+//                    searchRoom(price, distance, numberPeople);
+//                }
             }
 
             @Override
-            public void onCallbackRoomType(List<Room> list) {
-                arrayList.clear();
-                arrayList.addAll(list);
-                if (arrayList.size() > 0) {
-                    arrayListRoomRecommendation.clear();
-                    arrayListRoomRecommendation.addAll(arrayList);
-                }
-                adapter.notifyDataSetChanged();
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+
+        List<String> listPrice = new ArrayList<>();
+        listPrice.add("Giá (triệu)");
+        listPrice.add("1");
+        listPrice.add("2");
+        listPrice.add("3");
+        listPrice.add("4");
+
+        ArrayAdapter<String> adapterPriceSpinner = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listPrice);
+        adapterPriceSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPrice.setAdapter(adapterPriceSpinner);
+
+        spinnerPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+//                if (arrayListRoom.size() > 0) {
+//                    if (parent.getItemAtPosition(position).toString().equals("Giá (triệu)")) {
+//
+//                        price = "4";
+//
+//
+//                    } else {
+//                        price = parent.getItemAtPosition(position).toString();
+//                    }
+//                    searchRoom(price, distance, numberPeople);
+//                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        List<String> listDistance = new ArrayList<>();
+        listDistance.add("Khoảng cách (km)");
+        listDistance.add("1");
+        listDistance.add("2");
+        listDistance.add("3");
+        listDistance.add("4");
+
+        ArrayAdapter<String> adapterDistanceSpinner = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listDistance);
+        adapterDistanceSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDistance.setAdapter(adapterDistanceSpinner);
+
+        spinnerDistance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+//                if (arrayListRoom.size() > 0) {
+//
+//                    if (parent.getItemAtPosition(position).toString().equals("Khoảng cách (km)")) {
+//
+//                        distance = "4";
+//                    } else {
+//                        distance = parent.getItemAtPosition(position).toString();
+//                    }
+//                    searchRoom(price, distance, numberPeople);
+//
+//
+//                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     private interface FirestoreCallback {
-        void onCallbackBoardingHouse(List<Room> list);
-
         void onCallbackRoomType(List<Room> list);
     }
 
@@ -187,12 +322,10 @@ public class HomeFragment extends Fragment {
                     roomBoardingHouse.setIdOwnerBoardingHouse(documentSnapshot.getString("owner"));
                     listBoardingHouse.add(roomBoardingHouse);
                 }
-                firestoreCallback.onCallbackBoardingHouse(listBoardingHouse);
                 for (Room room : listBoardingHouse) {
                     firebaseFirestore.collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").get()
                             .addOnSuccessListener(queryDocumentSnapshots1 -> {
                                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots1.getDocuments()) {
-
                                     Room roomRoomType = new Room();
                                     roomRoomType = room;
 //                                        roomRoomType.setIdBoardingHouse(room.getIdBoardingHouse());

@@ -137,7 +137,7 @@
             android:text="4km" />
 
         <Button
-            android:id="@+id/cbh_button_create_boarding_house"
+            android:id="@+id/cbh_button_create"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"

@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FindingBoardingHouseApp">
-        <activity android:name=".Activity.CreateBoardingHouseActivity"></activity>
+        <activity android:name=".Activity.PickLocationActivity"></activity>
+        <activity android:name=".Activity.CreateBoardingHouseActivity" />
         <activity android:name=".Activity.CreateAccountActivity" />
         <activity android:name=".Activity.RoomManagementActivity" />
         <activity android:name=".Activity.AccountSettingActivity" />

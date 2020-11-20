@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
@@ -22,6 +24,23 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         BoardingHouse boardingHouse = (BoardingHouse) bundle.getSerializable("boardingHouse");
         Toast.makeText(getApplicationContext(), boardingHouse.getIdOwnerBoardingHouse(), Toast.LENGTH_SHORT).show();
+
+        // mapping
+        Button buttonCreateBoardingHouse = findViewById(R.id.cbh_button_create);
+        Button buttonPickLocation = findViewById(R.id.cbh_button_pick_location);
+
+        buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        buttonPickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
