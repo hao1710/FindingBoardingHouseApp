@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "890303557762",
+    "firebase_url": "https://findingboardinghouseapp.firebaseio.com",
+    "project_id": "findingboardinghouseapp",
+    "storage_bucket": "findingboardinghouseapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890303557762:android:2ba4d962fd6e885c23449b",
+        "android_client_info": {
+          "package_name": "com.example.findingboardinghouseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890303557762-e8073u1jucaiog694ro5nr7flkp7159u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOI8Y0ytqAAZrSKGvil4jWwH-_TP-hNpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890303557762-e8073u1jucaiog694ro5nr7flkp7159u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AccountSettingActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/custom_background_title"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="Thêm phòng"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/rm_input"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:hint="Tên phòng"
+            android:paddingLeft="10dp" />
+
+        <Button
+            android:id="@+id/rm_btn_add_image"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/green"
+            android:text="Chọn ảnh" />
+
+        <ImageView
+            android:id="@+id/rm_image_room"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp" />
+
+        <ProgressBar
+            android:id="@+id/rm_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/rm_btn_create_room"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/green"
+            android:text="Lưu" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/as_address_landlord"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:text="Địa chỉ"-->
+        <!--            android:gravity="center_vertical"/>-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/as_phoneNumber_landlord"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:text="SĐT"-->
+        <!--            android:gravity="center_vertical"/>-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/as_email_landlord"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:text="Email"-->
+        <!--            android:gravity="center_vertical"/>-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/as_password_landlord"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:text="Mật khẩu"-->
+        <!--            android:gravity="center_vertical"/>-->
+
+    </LinearLayout>
+
+</LinearLayout>
