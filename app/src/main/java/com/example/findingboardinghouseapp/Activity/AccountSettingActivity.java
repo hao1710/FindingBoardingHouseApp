@@ -11,8 +11,7 @@ import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
 
 public class AccountSettingActivity extends AppCompatActivity {
-    private TextView textViewNameLandlord, textViewAddressLandlord, textViewPhoneNumberLandlord, textViewEmailLandlord, textViewPasswordLandlord;
-
+    public static final int RESULT_CODE_SETTING_ACCOUNT = 99;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +24,11 @@ public class AccountSettingActivity extends AppCompatActivity {
 
 
         // mapping
-        textViewNameLandlord = findViewById(R.id.as_name_landlord);
-        textViewAddressLandlord = findViewById(R.id.as_address_landlord);
-        textViewPhoneNumberLandlord = findViewById(R.id.as_phoneNumber_landlord);
-        textViewEmailLandlord = findViewById(R.id.as_email_landlord);
-        textViewPasswordLandlord = findViewById(R.id.as_password_landlord);
+        TextView textViewNameLandlord = findViewById(R.id.as_name_landlord);
+        TextView textViewAddressLandlord = findViewById(R.id.as_address_landlord);
+        TextView textViewPhoneNumberLandlord = findViewById(R.id.as_phoneNumber_landlord);
+        TextView textViewEmailLandlord = findViewById(R.id.as_email_landlord);
+        TextView textViewPasswordLandlord = findViewById(R.id.as_password_landlord);
 
         // do something
 
@@ -43,7 +42,7 @@ public class AccountSettingActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        setResult(98, intent);
+        setResult(RESULT_CODE_SETTING_ACCOUNT, intent);
         finish();
         super.onBackPressed();
     }

@@ -87,8 +87,9 @@ public class AccountFragment extends Fragment {
     private BoardingHouseAdapter adapter;
     private ArrayList<BoardingHouse> arrayList;
     private Landlord landlord;
-    private static final int REQUEST_CODE_CREATE_BOARDING_HOUSE = 2;
-    private static final int REQUEST_CODE_SETTING_ACCOUNT = 1;
+    public static final int REQUEST_CODE_SETTING_ACCOUNT = 1;
+    public static final int REQUEST_CODE_CREATE_BOARDING_HOUSE = 2;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -165,12 +166,12 @@ public class AccountFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CREATE_BOARDING_HOUSE) {
-            if (resultCode == 99) {
+            if (resultCode == CreateBoardingHouseActivity.RESULT_CODE_CREATE_BOARDING_HOUSE) {
                 Toast.makeText(getContext(), "Create", Toast.LENGTH_SHORT).show();
             }
         }
         if (requestCode == REQUEST_CODE_SETTING_ACCOUNT) {
-            if (resultCode == 98) {
+            if (resultCode == AccountSettingActivity.RESULT_CODE_SETTING_ACCOUNT) {
                 Toast.makeText(getContext(), "Setting", Toast.LENGTH_SHORT).show();
             }
         }

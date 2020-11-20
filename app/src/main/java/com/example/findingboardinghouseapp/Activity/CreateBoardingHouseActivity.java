@@ -11,7 +11,7 @@ import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
 
 public class CreateBoardingHouseActivity extends AppCompatActivity {
-    private static final int RESULT_CODE_CREATE_BOARDING_HOUSE = 99;
+    public static final int RESULT_CODE_CREATE_BOARDING_HOUSE = 98;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
