@@ -23,7 +23,10 @@ import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -149,7 +152,12 @@ public class AccountFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
             }
         });
-
+        FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                readDataBoardingHouse();
+            }
+        });
         return view;
     }
 

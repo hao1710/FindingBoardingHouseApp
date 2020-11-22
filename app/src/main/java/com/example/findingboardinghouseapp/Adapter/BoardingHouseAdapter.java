@@ -1,11 +1,14 @@
 package com.example.findingboardinghouseapp.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.findingboardinghouseapp.Activity.BoardingHouseActivity;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,11 +55,37 @@ public class BoardingHouseAdapter extends RecyclerView.Adapter<BoardingHouseAdap
         public MyViewHolder(View view) {
             super(view);
             textViewNameBoardingHouse = view.findViewById(R.id.item_bh_name_boarding_house);
+
             view.setOnClickListener((View.OnClickListener) v -> {
                 Intent intent = new Intent(context, BoardingHouseActivity.class);
                 BoardingHouse boardingHouse = arrayList.get(getLayoutPosition());
                 intent.putExtra("boardingHouse", (Serializable) boardingHouse);
                 context.startActivity(intent);
+            });
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Bạn muốn xóa khu trọ này?")
+                            .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // FIRE ZE MISSILES!
+                                    FirebaseFirestore.getInstance().collection("boardingHouse").document(arrayList.get(getAdapterPosition()).getIdBoardingHouse()).delete();
+                                    Toast.makeText(context, "Xóa khu trọ thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                    dialog.dismiss();
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    builder.create();
+                    builder.show();
+
+                    return true;
+                }
             });
         }
     }
