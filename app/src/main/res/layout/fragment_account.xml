@@ -39,23 +39,31 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/a_btn_setting_account"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_margin="8dp"
+            android:layout_toStartOf="@+id/a_button_log_out"
             android:backgroundTint="@color/white"
             android:text="Thiết lập tài khoản"
+
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/a_button_log_out"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+
+            android:background="@drawable/ic_exit_to_app" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

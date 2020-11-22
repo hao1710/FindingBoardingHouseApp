@@ -1,15 +1,9 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +11,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.findingboardinghouseapp.Adapter.BoardingHouseAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Landlord;
-import com.example.findingboardinghouseapp.Model.Room;
-import com.example.findingboardinghouseapp.Model.RoomCRUD;
 import com.example.findingboardinghouseapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -84,12 +76,12 @@ public class AccountFragment extends Fragment {
     }
 
     //code under
-    private BoardingHouseAdapter adapter;
-    private ArrayList<BoardingHouse> arrayList;
     private Landlord landlord;
-    public static final int REQUEST_CODE_SETTING_ACCOUNT = 1;
-    public static final int REQUEST_CODE_CREATE_BOARDING_HOUSE = 2;
-
+    private RecyclerView recyclerViewBoardingHouse;
+    public static final int REQUEST_CODE_FROM_ACCOUNT_FRAGMENT = 34;
+    public static final int RESULT_CODE_FROM_ACCOUNT_FRAGMENT = 33;
+    public static final String MY_PREFERENCES = "MyPre";
+    public SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,28 +92,72 @@ public class AccountFragment extends Fragment {
         Bundle bundle = getArguments();
         assert bundle != null;
         landlord = (Landlord) bundle.getSerializable("landlord");
-
+        sharedPreferences = getContext().getSharedPreferences(MY_PREFERENCES, getContext().MODE_PRIVATE);
         // initial
-        arrayList = new ArrayList<>();
-        adapter = new BoardingHouseAdapter(getContext(), arrayList);
+//        arrayList = new ArrayList<>();
+//        adapter = new BoardingHouseAdapter(getContext(),arrayList);
 
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
         // mapping
         TextView textViewNameLandlord = view.findViewById(R.id.a_name_landlord);
         textViewNameLandlord.setText(landlord.getNameLandlord());
-        RecyclerView recyclerViewBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
+        recyclerViewBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
         Button buttonSetting = view.findViewById(R.id.a_btn_setting_account);
         Button buttonCreateBoardingHouse = view.findViewById(R.id.a_button_create_bdh);
+        Button buttonLogOut = view.findViewById(R.id.a_button_log_out);
 
         // recyclerView
         recyclerViewBoardingHouse.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerViewBoardingHouse.setLayoutManager(linearLayout);
-        recyclerViewBoardingHouse.setAdapter(adapter);
+        //recyclerViewBoardingHouse.setAdapter(adapter);
 
         // do something
-        firebaseFirestore.collection("boardingHouse").whereEqualTo("owner", landlord.getIdLandlord()).get()
+        readDataBoardingHouse();
+
+        buttonLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
+                editor.clear();
+                editor.apply();
+                Fragment fragment = new LogInFragment();
+                FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+        buttonSetting.setOnClickListener(v -> {
+            Bundle bundle1 = new Bundle();
+            bundle1.putSerializable("landlord", landlord);
+
+            Intent intent = new Intent(getContext(), AccountSettingActivity.class);
+            intent.putExtras(bundle1);
+            startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+        });
+
+        buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoardingHouse boardingHouse = new BoardingHouse();
+                boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("boardingHouse", boardingHouse);
+
+                Intent intent = new Intent(getContext(), CreateBoardingHouseActivity.class);
+                intent.putExtras(bundle2);
+                startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+            }
+        });
+
+        return view;
+    }
+
+    private void readDataBoardingHouse() {
+        ArrayList<BoardingHouse> arrayList = new ArrayList();
+        BoardingHouseAdapter adapter = new BoardingHouseAdapter(getContext(), arrayList);
+        recyclerViewBoardingHouse.setAdapter(adapter);
+        FirebaseFirestore.getInstance().collection("boardingHouse").whereEqualTo("owner", landlord.getIdLandlord()).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult()).getDocuments()) {
@@ -135,42 +171,15 @@ public class AccountFragment extends Fragment {
                     }
                     adapter.notifyDataSetChanged();
                 });
-
-        buttonSetting.setOnClickListener(v -> {
-            Bundle bundle1 = new Bundle();
-            bundle1.putSerializable("landlord", landlord);
-
-            Intent intent = new Intent(getContext(), AccountSettingActivity.class);
-            intent.putExtras(bundle1);
-            startActivityForResult(intent, REQUEST_CODE_SETTING_ACCOUNT);
-        });
-
-        buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BoardingHouse boardingHouse = new BoardingHouse();
-                boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
-                Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("boardingHouse", boardingHouse);
-
-                Intent intent = new Intent(getContext(), CreateBoardingHouseActivity.class);
-                intent.putExtras(bundle2);
-                startActivityForResult(intent, REQUEST_CODE_CREATE_BOARDING_HOUSE);
-            }
-        });
-
-        return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CREATE_BOARDING_HOUSE) {
-            if (resultCode == CreateBoardingHouseActivity.RESULT_CODE_CREATE_BOARDING_HOUSE) {
-                Toast.makeText(getContext(), "Create", Toast.LENGTH_SHORT).show();
-            }
+        if (requestCode == REQUEST_CODE_FROM_ACCOUNT_FRAGMENT && resultCode == CreateBoardingHouseActivity.RESULT_CODE_FROM_CREATE_BOARDING_HOUSE) {
+            readDataBoardingHouse();
         }
-        if (requestCode == REQUEST_CODE_SETTING_ACCOUNT) {
+        if (requestCode == REQUEST_CODE_FROM_ACCOUNT_FRAGMENT) {
             if (resultCode == AccountSettingActivity.RESULT_CODE_SETTING_ACCOUNT) {
                 Toast.makeText(getContext(), "Setting", Toast.LENGTH_SHORT).show();
             }

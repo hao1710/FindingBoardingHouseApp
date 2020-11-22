@@ -8,7 +8,6 @@
     tools:context=".Activity.CreateBoardingHouseActivity">
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/custom_background_title"
@@ -40,7 +39,7 @@
             android:gravity="center_vertical"
             android:text="Vui lòng điền các thông tin bên dưới"
             android:textColor="@color/black"
-            android:textSize="17sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -52,7 +51,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cbh_text_input_name"
+            android:id="@+id/cbh_textInput_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tên nhà trọ"
@@ -69,7 +68,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cbh_text_input_address"
+            android:id="@+id/cbh_textInput_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Địa chỉ"
@@ -88,12 +87,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cbh_text_input_description"
+            android:id="@+id/cbh_textInput_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mô tả"
             android:textColorHint="@color/green"
             app:errorEnabled="true"
+
             app:hintTextColor="@color/green">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -115,26 +115,41 @@
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:padding="0dp"
+                android:layout_toStartOf="@+id/cbh_button_pick_location"
                 android:paddingLeft="10dp"
-                android:text="Nhấn biểu tượng bên cạnh để chọn vị trí nhà trọ" />
+                android:text="Nhấn biểu tượng bên cạnh để chọn vị trí nhà trọ"
+                android:textSize="16sp" />
 
             <Button
 
                 android:id="@+id/cbh_button_pick_location"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_add_location"
-                android:backgroundTint="@color/green" />
+                android:background="@drawable/ic_add_location" />
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/cbh_textView_info"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cbh_textInput_distance_parent"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="4km" />
+            android:layout_height="wrap_content"
+            android:hint="Khoảng cách"
+            android:textColorHint="@color/green"
+            app:errorEnabled="true"
+            app:hintTextColor="@color/green">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cbh_textInput_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:enabled="false">
+
+            </com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <Button
             android:id="@+id/cbh_button_create"

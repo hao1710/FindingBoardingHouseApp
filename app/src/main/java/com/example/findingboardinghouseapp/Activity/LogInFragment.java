@@ -1,38 +1,27 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,6 +75,8 @@ public class LogInFragment extends Fragment {
     private TextView textViewEmail, textViewPassword;
 
     private FirebaseFirestore firebaseFirestore;
+    public SharedPreferences sharedPreferences;
+    public static final String MY_PREFERENCES = "MyPre";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,7 +106,7 @@ public class LogInFragment extends Fragment {
 
         // initial
         firebaseFirestore = FirebaseFirestore.getInstance();
-
+        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
         buttonLogIn.setOnClickListener(v -> {
             String email = textViewEmail.getText().toString();
             String password = textViewPassword.getText().toString();
@@ -123,7 +114,6 @@ public class LogInFragment extends Fragment {
                     .addOnCompleteListener(task -> {
                         if (task.getResult().size() > 0) {
                             for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-
                                 Landlord landlord = new Landlord();
                                 landlord.setIdLandlord(documentSnapshot.getId());
                                 landlord.setNameLandlord(documentSnapshot.getString("name"));
@@ -132,6 +122,15 @@ public class LogInFragment extends Fragment {
                                 landlord.setEmailLandlord(email);
                                 landlord.setPasswordLandlord(password);
 
+                                SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
+                                editor.putString("id", landlord.getIdLandlord());
+                                editor.putString("name", landlord.getNameLandlord());
+                                editor.putString("address", landlord.getAddressLandlord());
+                                editor.putString("phoneNumber", landlord.getPhoneNumberLandlord());
+                                editor.putString("email", email);
+                                editor.putString("password", password);
+
+                                editor.commit();
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("landlord", landlord);
 

@@ -1,14 +1,6 @@
 package com.example.findingboardinghouseapp.Activity;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,33 +11,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findingboardinghouseapp.Adapter.RoomRecommendationAdapter;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
-import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -227,22 +211,23 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        List<String> listPrice = new ArrayList<>();
-        listPrice.add("Giá (triệu)");
-        listPrice.add("1");
-        listPrice.add("2");
-        listPrice.add("3");
-        listPrice.add("4");
 
-        ArrayAdapter<String> adapterPriceSpinner = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listPrice);
+        ArrayList<ObjectSpinner> listPrice = new ArrayList<>();
+        listPrice.add(new ObjectSpinner("4", "Giá (triệu)"));
+        listPrice.add(new ObjectSpinner("1", "1 triệu"));
+        listPrice.add(new ObjectSpinner("2", "2 triệu"));
+        listPrice.add(new ObjectSpinner("3", "3 triệu"));
+        listPrice.add(new ObjectSpinner("4", "4 triệu"));
+
+        ArrayAdapter<ObjectSpinner> adapterPriceSpinner = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listPrice);
         adapterPriceSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPrice.setAdapter(adapterPriceSpinner);
 
         spinnerPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
+                ObjectSpinner objectSpinner = (ObjectSpinner) parent.getItemAtPosition(position);
+                Toast.makeText(getContext(), objectSpinner.key, Toast.LENGTH_SHORT).show();
 //                if (arrayListRoom.size() > 0) {
 //                    if (parent.getItemAtPosition(position).toString().equals("Giá (triệu)")) {
 //
@@ -299,6 +284,37 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    class ObjectSpinner {
+        String key;
+        String value;
+
+        public ObjectSpinner(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 
     private interface FirestoreCallback {
