@@ -4,100 +4,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".Activity.AccountFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_background_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/custom_background_title">
 
         <TextView
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
             android:text="Tài khoản"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/a_name_landlord"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="8dp"
-        android:gravity="center_vertical"
-        android:text="Võ Anh Hào"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
-
-    <RelativeLayout
-        android:layout_margin="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_marginRight="8dp"
-            android:id="@+id/a_btn_setting_account"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_toStartOf="@+id/a_button_log_out"
-            android:backgroundTint="@color/white"
-            android:text="Thiết lập tài khoản"
-            android:textAlignment="viewStart"
-            android:textColor="@color/black" />
-
-        <Button
-            android:id="@+id/a_button_log_out"
+        <ImageButton
+            android:id="@+id/a_imageButton_menu"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_exit_to_app" />
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_more_vert"
+            android:backgroundTint="@color/white" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/custom_background">
+
+        <TextView
+            android:id="@+id/a_name_landlord"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="Võ Anh Hào"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
+        android:background="@drawable/custom_background"
         android:orientation="vertical">
 
-        <RelativeLayout
+
+        <TextView
+            android:id="@+id/a_boarding_house_landlord"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_height="40dp"
+            android:layout_margin="8dp"
+            android:gravity="center_vertical"
+            android:text="Khu trọ"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/a_boarding_house_landlord"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical"
-                android:text="Khu trọ"
-                android:textSize="20sp" />
 
-            <Button
-                android:id="@+id/a_button_create_bdh"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_add_business" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_marginTop="8dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewBoardingHouse"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewBoardingHouse"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
     </LinearLayout>
 
 

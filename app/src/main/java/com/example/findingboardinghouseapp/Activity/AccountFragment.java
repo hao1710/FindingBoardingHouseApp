@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,10 +108,8 @@ public class AccountFragment extends Fragment {
         TextView textViewNameLandlord = view.findViewById(R.id.a_name_landlord);
         textViewNameLandlord.setText(landlord.getNameLandlord());
         recyclerViewBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
-        Button buttonSetting = view.findViewById(R.id.a_btn_setting_account);
-        Button buttonCreateBoardingHouse = view.findViewById(R.id.a_button_create_bdh);
-        Button buttonLogOut = view.findViewById(R.id.a_button_log_out);
 
+        ImageButton imageButton = view.findViewById(R.id.a_imageButton_menu);
         // recyclerView
         recyclerViewBoardingHouse.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -118,38 +119,49 @@ public class AccountFragment extends Fragment {
         // do something
         readDataBoardingHouse();
 
-        buttonLogOut.setOnClickListener(new View.OnClickListener() {
+
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
-                editor.clear();
-                editor.apply();
-                Fragment fragment = new LogInFragment();
-                FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, fragment);
-                fragmentTransaction.commit();
-            }
-        });
-        buttonSetting.setOnClickListener(v -> {
-            Bundle bundle1 = new Bundle();
-            bundle1.putSerializable("landlord", landlord);
+                PopupMenu popupMenu = new PopupMenu(getContext(), imageButton);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_af, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.a_item_log_out:
+                                SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
+                                editor.clear();
+                                editor.apply();
+                                Fragment fragment = new LogInFragment();
+                                FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                                fragmentTransaction.commit();
+                                return true;
+                            case R.id.a_item_create_boarding_house:
+                                BoardingHouse boardingHouse = new BoardingHouse();
+                                boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
+                                Bundle bundle2 = new Bundle();
+                                bundle2.putSerializable("boardingHouse", boardingHouse);
+                                Intent intent = new Intent(getContext(), CreateBoardingHouseActivity.class);
+                                intent.putExtras(bundle2);
+                                startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+                                return true;
+                            case R.id.a_item_setting_account:
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putSerializable("landlord", landlord);
 
-            Intent intent = new Intent(getContext(), AccountSettingActivity.class);
-            intent.putExtras(bundle1);
-            startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
-        });
+                                Intent intent4 = new Intent(getContext(), AccountSettingActivity.class);
+                                intent4.putExtras(bundle1);
+                                startActivityForResult(intent4, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
 
-        buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BoardingHouse boardingHouse = new BoardingHouse();
-                boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
-                Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("boardingHouse", boardingHouse);
-
-                Intent intent = new Intent(getContext(), CreateBoardingHouseActivity.class);
-                intent.putExtras(bundle2);
-                startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
             }
         });
         FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener(new EventListener<QuerySnapshot>() {

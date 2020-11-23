@@ -10,9 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_background_title"
-
-        android:orientation="vertical">
+        android:background="@drawable/custom_background_title">
 
         <TextView
             android:layout_centerInParent="true"
@@ -37,13 +35,16 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:paddingStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_background"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="RtlSymmetry">
 
         <TextView
+
             android:id="@+id/bh_address_boarding_house"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -59,8 +60,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:layout_marginTop="8dp"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/custom_background"
@@ -74,6 +75,7 @@
             android:textSize="20sp"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="8dp"
             android:id="@+id/recyclerViewRoomType"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
