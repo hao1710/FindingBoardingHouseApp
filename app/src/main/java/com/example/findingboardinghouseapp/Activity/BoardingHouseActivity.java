@@ -2,6 +2,10 @@ package com.example.findingboardinghouseapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,9 +32,11 @@ public class BoardingHouseActivity extends AppCompatActivity {
 
     private BoardingHouse boardingHouse;
     private RoomTypeAdapter adapter;
-//    private ArrayList<RoomType> arrayList;
+    //    private ArrayList<RoomType> arrayList;
     private FirebaseFirestore firebaseFirestore;
     RecyclerView recyclerViewRoomType;
+    public static final int REQUEST_CODE_FROM_BOARDING_HOUSE = 32;
+    public static final int RESULT_CODE_FROM_BOARDING_HOUSE = 31;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,36 @@ public class BoardingHouseActivity extends AppCompatActivity {
         TextView textViewNameBoardingHouse = findViewById(R.id.bh_name_boarding_house);
         TextView textViewAddressBoardingHouse = findViewById(R.id.bh_address_boarding_house);
         TextView textViewDistanceBoardingHouse = findViewById(R.id.bh_distance_boarding_house);
+        ImageButton imageButton = findViewById(R.id.bh_imageButton_menu);
 
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), imageButton);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_bha, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.bh_item_update:
+                                return true;
+                            case R.id.bh_item_create_room_type:
+                                RoomType roomType = new RoomType();
+                                roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("newRoomType", roomType);
+                                Intent intent1 = new Intent(BoardingHouseActivity.this, CreateRoomTypeActivity.class);
+                                intent1.putExtras(bundle);
+                                startActivityForResult(intent1, REQUEST_CODE_FROM_BOARDING_HOUSE);
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+
+            }
+        });
         // initial
 //        arrayList = new ArrayList<>();
 //        adapter = new RoomTypeAdapter(getApplicationContext(), arrayList);
@@ -79,6 +114,9 @@ public class BoardingHouseActivity extends AppCompatActivity {
             if (resultCode == CreateRoomActivity.RESULT_CODE_FROM_CREATE_ROOM) {
                 readDataRoomType();
             }
+        }
+        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE && resultCode == CreateRoomTypeActivity.RESULT_CODE_FROM_CREATE_ROOM_TYPE && data != null) {
+            readDataRoomType();
         }
     }
 

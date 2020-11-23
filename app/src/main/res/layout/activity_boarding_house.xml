@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".Activity.BoardingHouseActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/custom_background_title"
-        android:gravity="center"
+
         android:orientation="vertical">
 
         <TextView
+            android:layout_centerInParent="true"
             android:id="@+id/bh_name_boarding_house"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -22,12 +23,24 @@
             android:text="Thông tin nhà trọ"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+
+
+        <ImageButton
+            android:id="@+id/bh_imageButton_menu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_more_vert"
+            android:backgroundTint="@color/white" />
+
+    </RelativeLayout>
 
     <LinearLayout
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:background="@drawable/custom_background"
         android:orientation="vertical">
 
         <TextView
@@ -46,14 +59,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="8dp"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
+        android:background="@drawable/custom_background"
         android:orientation="vertical">
 
         <TextView
-
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
