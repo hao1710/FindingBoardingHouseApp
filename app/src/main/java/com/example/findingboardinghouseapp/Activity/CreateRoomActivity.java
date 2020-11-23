@@ -1,31 +1,27 @@
 package com.example.findingboardinghouseapp.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.findingboardinghouseapp.Model.Room;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.Model.RoomCRUD;
 import com.example.findingboardinghouseapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,56 +33,55 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RoomManagementActivity extends AppCompatActivity {
+public class CreateRoomActivity extends AppCompatActivity {
+    private TextInputLayout textInputName, textInputDescription;
+    public static final int REQUEST_CODE_FROM_CREATE_ROOM = 29;
+    public static final int RESULT_CODE_FROM_CREATE_ROOM = 28;
     private Room room;
-
-    private static final int PICK_IMAGE_REQUEST = 1;
 
     private Uri uriImage;
     private ImageView imageView;
     private ProgressBar progressBar;
     private StorageReference storageReference;
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room_management);
+        setContentView(R.layout.activity_create_room);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         room = (Room) bundle.getSerializable("newRoom");
 
         // mapping
-        Button buttonChooseImage = findViewById(R.id.rm_btn_add_image);
-        textView = findViewById(R.id.rm_input);
-        progressBar = findViewById(R.id.rm_progress_bar);
-        imageView = findViewById(R.id.rm_image_room);
-        Button buttonCreateRoom = findViewById(R.id.rm_btn_create_room);
+        textInputName = findViewById(R.id.cr_textInput_name);
+
+        Button buttonSelectImage = findViewById(R.id.cr_button_select_image);
+        Button buttonCreateRoom = findViewById(R.id.cr_button_create_room);
+        progressBar = findViewById(R.id.cr_progressBar);
+        imageView = findViewById(R.id.cr_imageView_room);
 
         // do something
-        buttonChooseImage.setOnClickListener(new View.OnClickListener() {
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFileChooser();
-
             }
         });
+
         buttonCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = textInputName.getEditText().getText().toString().trim();
+
+                if (!validateName(name)) {
+                    return;
+                }
                 uploadFile();
             }
         });
         storageReference = FirebaseStorage.getInstance().getReference("image");
 
-    }
-
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     private String getFileExtension(Uri uri) {
@@ -118,7 +113,7 @@ public class RoomManagementActivity extends AppCompatActivity {
                                     roomCRUD.setStatus(false);
                                     roomCRUD.setImage(uri.toString());
                                     Map<String, RoomCRUD> newRoom = new HashMap<>();
-                                    newRoom.put(textView.getText().toString(), roomCRUD);
+                                    newRoom.put(textInputName.getEditText().getText().toString().trim(), roomCRUD);
                                     Map<String, Map> create = new HashMap<>();
                                     create.put("room", newRoom);
 
@@ -149,12 +144,30 @@ public class RoomManagementActivity extends AppCompatActivity {
         }
     }
 
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_CODE_FROM_CREATE_ROOM);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data.getData() != null && data != null) {
+        if (requestCode == REQUEST_CODE_FROM_CREATE_ROOM && resultCode == RESULT_OK && data.getData() != null && data != null) {
             uriImage = data.getData();
             Picasso.with(this).load(uriImage).into(imageView);
+        }
+    }
+
+    private boolean validateName(String name) {
+        if (name.isEmpty()) {
+            textInputName.setError("Vui lòng điền tên phòng");
+            return false;
+        } else {
+            textInputName.setError(null);
+//            textInputEmail.setEnabled(false);
+            return true;
         }
     }
 
@@ -166,9 +179,8 @@ public class RoomManagementActivity extends AppCompatActivity {
         room.setNameRoom("aka");
         bundle.putSerializable("newRoom", room);
         intent.putExtra("a", bundle);
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_CODE_FROM_CREATE_ROOM, intent);
         finish();
         super.onBackPressed();
     }
-
 }

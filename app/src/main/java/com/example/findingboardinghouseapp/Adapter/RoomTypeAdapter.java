@@ -4,28 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.findingboardinghouseapp.Activity.RoomManagementActivity;
+import com.example.findingboardinghouseapp.Activity.CreateRoomActivity;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -143,7 +138,7 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
                     room.setIdRoomType(roomType.getIdRoomType());
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("newRoom", room);
-                    Intent intent = new Intent(view.getContext(), RoomManagementActivity.class);
+                    Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
                     intent.putExtras(bundle);
                     ((Activity)  view.getContext()).startActivityForResult(intent,0);
                 }

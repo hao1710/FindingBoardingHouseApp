@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".Activity.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -52,9 +53,10 @@
         android:id="@+id/h_expandable_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_margin="8dp"
 
-        app:ael_expanded="false">
+        app:ael_expanded="true">
 
         <TextView
             android:id="@+id/h_textView_filter"
@@ -166,28 +168,26 @@
     </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
     <LinearLayout
+        android:background="@drawable/custom_background"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="8dp">
 
         <TextView
+            android:id="@+id/h_textView_text"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginLeft="8dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
             android:gravity="center"
             android:text="Phòng trọ trống"
             android:textSize="20sp" />
 
-        <!--        <ListView-->
-        <!--            android:id="@+id/list_view"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="match_parent">-->
-
-        <!--        </ListView>-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRoomRecommendation"
             android:layout_width="match_parent"
+            android:layout_margin="8dp"
             android:layout_height="match_parent" />
     </LinearLayout>
 

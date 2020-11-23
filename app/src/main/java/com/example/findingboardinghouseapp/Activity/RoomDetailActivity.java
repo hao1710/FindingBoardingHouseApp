@@ -1,15 +1,14 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.findingboardinghouseapp.Adapter.CommentAdapter;
 import com.example.findingboardinghouseapp.Model.Comment;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoomDetailActivity extends AppCompatActivity {
-    protected TextView textViewDescriptionRoom, textViewAddressBoardingHouse, textViewDescriptionBoardingHouse, textViewPriceRoom, textViewAreaRoom, textViewNameBoardingHouse;
+    private TextView textViewDescriptionRoom, textViewAddressBoardingHouse, textViewDescriptionBoardingHouse, textViewPriceRoom, textViewAreaRoom, textViewNameBoardingHouse;
     protected ImageView imageView;
     protected RecyclerView recyclerViewComment;
     protected CommentAdapter adapter;
@@ -44,10 +43,10 @@ public class RoomDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         room = (Room) intent.getSerializableExtra("room");
 
-        textViewPriceRoom.setText(String.valueOf(room.getPriceRoomType()));
+        textViewPriceRoom.setText("Giá: " + String.valueOf(room.getPriceRoomType()) + " triệu đồng");
         textViewDescriptionBoardingHouse.setText(room.getDescriptionBoardingHouse());
-        textViewAreaRoom.setText(String.valueOf(room.getAreaRoomType()));
-        textViewAddressBoardingHouse.setText(room.getAddressBoardingHouse());
+        textViewAreaRoom.setText("Diện tích: " + String.valueOf(room.getAreaRoomType()) + " m2");
+        textViewAddressBoardingHouse.setText("Địa chỉ: " + room.getAddressBoardingHouse());
         textViewNameBoardingHouse.setText(room.getNameBoardingHouse());
         textViewDescriptionRoom.setText(room.getDescriptionRoom());
         Picasso.with(getApplicationContext()).load(room.getImageRoom())
@@ -113,7 +112,6 @@ public class RoomDetailActivity extends AppCompatActivity {
         textViewNameBoardingHouse = findViewById(R.id.rd_name_boarding_house);
         textViewAddressBoardingHouse = findViewById(R.id.rd_address_boarding_house);
         textViewAreaRoom = findViewById(R.id.rd_area_room);
-        textViewDescriptionBoardingHouse = findViewById(R.id.rd_description_boarding_house);
         textViewPriceRoom = findViewById(R.id.rd_price_room);
         textViewDescriptionRoom = findViewById(R.id.rd_description_room);
         imageView = findViewById(R.id.rd_image_room);

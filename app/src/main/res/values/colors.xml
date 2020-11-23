@@ -12,5 +12,6 @@
     <color name="skyBlue">#87CEEB</color>
     <color name="aqua">#00FFFF</color>
     <color name="steelBlue">#63B8FF</color>
-    <color name="green">#276327</color>
+    <color name="green">#327E32</color>
+    <color name="backgroundColor">#F4F1F1</color>
 </resources>

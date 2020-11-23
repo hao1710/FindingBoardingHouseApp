@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#E4E4E4"
     tools:context=".Activity.RoomDetailActivity">
 
     <LinearLayout
@@ -14,38 +15,47 @@
         <ImageView
             android:id="@+id/rd_image_room"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_app" />
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:background="@drawable/custom_background"
         android:orientation="vertical">
 
         <TextView
+            android:layout_height="40dp"
             android:id="@+id/rd_description_room"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:textColor="@color/black"
             android:text="Mô tả"
             android:textSize="20sp" />
 
         <TextView
+            android:layout_height="40dp"
             android:id="@+id/rd_name_boarding_house"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:textColor="@color/black"
             android:text="Name Boarding House"
             android:textSize="20sp" />
 
         <TextView
+            android:layout_height="40dp"
+
+            android:paddingStart="10dp"
             android:id="@+id/rd_address_boarding_house"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:textColor="@color/black"
+
             android:gravity="center_vertical"
             android:text="Address" />
 
@@ -56,59 +66,61 @@
 
             <TextView
                 android:id="@+id/rd_area_room"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingStart="10dp"
                 android:gravity="center_vertical"
 
                 android:text="Area: 12m" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
                 android:id="@+id/rd_price_room"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:drawableLeft="@drawable/ic_attach_money"
                 android:gravity="center_vertical"
+                android:paddingStart="10dp"
+
                 android:text="Price: 1tr" />
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/rd_description_boarding_house"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical"
-            android:text="Description" />
 
     </LinearLayout>
 
     <LinearLayout
+
+        android:layout_marginStart="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/custom_background"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2">
+            android:layout_marginTop="8dp">
 
             <TextView
-
+                android:paddingStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:text="Bình luận" />
 
             <Button
+                android:layout_alignParentEnd="true"
                 android:id="@+id/rd_btn_add_comment"
                 android:background="@drawable/ic_add_comment"
-                android:layout_centerHorizontal="true"
+                android:layout_marginRight="8dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
         </RelativeLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="8dp"
             android:id="@+id/recyclerViewComment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
