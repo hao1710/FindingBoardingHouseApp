@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(MY_PREFERENCES, MODE_PRIVATE);
 
-        Landlord landlord = new Landlord();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 //                        selectedFragment = new SearchFragment();
 //                        break;
                     case R.id.account:
+                        Landlord landlord = new Landlord();
                         if (sharedPreferences.contains("email") && sharedPreferences.contains("password")) {
                             landlord.setIdLandlord(sharedPreferences.getString("id", null));
                             landlord.setNameLandlord(sharedPreferences.getString("name", null));

@@ -1,5 +1,6 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +40,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_FROM_BOARDING_HOUSE = 32;
     public static final int RESULT_CODE_FROM_BOARDING_HOUSE = 31;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +96,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
         recyclerViewRoomType.setAdapter(adapter);
 
         // do something
-        readDataRoomType();
+        //readDataRoomType();
 
         textViewNameBoardingHouse.setText(boardingHouse.getNameBoardingHouse());
         textViewAddressBoardingHouse.setText("Địa chỉ: " + boardingHouse.getAddressBoardingHouse());
@@ -102,7 +105,17 @@ public class BoardingHouseActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        readDataRoomType();
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            DocumentSnapshot documentSnapshot = dc.getDocument();
+                            switch (dc.getType()) {
+                                case ADDED:
+                                case REMOVED:
+                                    readDataRoomType();
+                                    break;
+                                case MODIFIED:
+                                    break;
+                            }
+                        }
                     }
                 });
     }

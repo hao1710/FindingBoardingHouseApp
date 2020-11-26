@@ -3,6 +3,7 @@ package com.example.findingboardinghouseapp.Model;
 import java.io.Serializable;
 
 public class Landlord implements Serializable {
+
     protected String idLandlord;
     protected String nameLandlord;
     protected String addressLandlord;

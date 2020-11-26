@@ -1,17 +1,21 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,6 +29,7 @@ import com.example.findingboardinghouseapp.Adapter.BoardingHouseAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +37,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -89,27 +96,38 @@ public class AccountFragment extends Fragment {
     public static final String MY_PREFERENCES = "MyPre";
     public SharedPreferences sharedPreferences;
 
+    private ImageButton imageButtonMenu;
+    private EditText editTextName, editTextAddress, editTextPhoneNumber, editTextEmail, editTextPassword;
+    private ExpandableRelativeLayout expandLayoutSetting;
+    private Button buttonSaveSetting, buttonCancelSetting;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
+        // mapping
+        imageButtonMenu = view.findViewById(R.id.a_imageButton_menu);
+        editTextName = view.findViewById(R.id.a_editText_name);
+        editTextAddress = view.findViewById(R.id.a_editText_address);
+        editTextPhoneNumber = view.findViewById(R.id.a_editText_phoneNumber);
+        editTextEmail = view.findViewById(R.id.a_editText_email);
+        editTextPassword = view.findViewById(R.id.a_editText_password);
+        expandLayoutSetting = view.findViewById(R.id.a_expand_layout_setting);
+        buttonSaveSetting = view.findViewById(R.id.a_button_save_setting);
+        buttonCancelSetting = view.findViewById(R.id.a_button_cancel_setting);
+        recyclerViewBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
 
+        // initial
+        // sharedPreferences
+        sharedPreferences = getContext().getSharedPreferences(MY_PREFERENCES, getContext().MODE_PRIVATE);
+
+        expandLayoutSetting.collapse();
+        //
         Bundle bundle = getArguments();
         assert bundle != null;
         landlord = (Landlord) bundle.getSerializable("landlord");
-        sharedPreferences = getContext().getSharedPreferences(MY_PREFERENCES, getContext().MODE_PRIVATE);
-        // initial
-//        arrayList = new ArrayList<>();
-//        adapter = new BoardingHouseAdapter(getContext(),arrayList);
 
-
-        // mapping
-        TextView textViewNameLandlord = view.findViewById(R.id.a_name_landlord);
-        textViewNameLandlord.setText(landlord.getNameLandlord());
-        recyclerViewBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
-
-        ImageButton imageButton = view.findViewById(R.id.a_imageButton_menu);
         // recyclerView
         recyclerViewBoardingHouse.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -117,16 +135,17 @@ public class AccountFragment extends Fragment {
         //recyclerViewBoardingHouse.setAdapter(adapter);
 
         // do something
+        readDataLandlord(landlord);
+
         readDataBoardingHouse();
 
-
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        imageButtonMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getContext(), imageButton);
+                PopupMenu popupMenu = new PopupMenu(getContext(), imageButtonMenu);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_af, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @SuppressLint("ResourceAsColor")
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
@@ -149,19 +168,81 @@ public class AccountFragment extends Fragment {
                                 startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
                                 return true;
                             case R.id.a_item_setting_account:
-                                Bundle bundle1 = new Bundle();
-                                bundle1.putSerializable("landlord", landlord);
+//                                Bundle bundle1 = new Bundle();
+//                                bundle1.putSerializable("landlord", landlord);
+//
+//                                Intent intent4 = new Intent(getContext(), AccountSettingActivity.class);
+//                                intent4.putExtras(bundle1);
+//                                startActivityForResult(intent4, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
 
-                                Intent intent4 = new Intent(getContext(), AccountSettingActivity.class);
-                                intent4.putExtras(bundle1);
-                                startActivityForResult(intent4, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
-                                return true;
+                                expandLayoutSetting.expand();
+                                editTextName.setEnabled(true);
+                                editTextName.requestFocus();
+                                Editable e = editTextName.getText();
+                                Selection.setSelection(e, editTextName.getText().length());
+                                // show keyboard
+                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                                // hide keyboard
+//                                InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+//                                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                                editTextAddress.setEnabled(true);
+                                editTextPhoneNumber.setEnabled(true);
+                                editTextEmail.setEnabled(true);
+                                editTextPassword.setEnabled(true);
                         }
                         return false;
                     }
                 });
                 popupMenu.show();
 
+            }
+        });
+        buttonCancelSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandLayoutSetting.collapse();
+                editTextName.setEnabled(false);
+                editTextAddress.setEnabled(false);
+                editTextPhoneNumber.setEnabled(false);
+                editTextEmail.setEnabled(false);
+                editTextPassword.setEnabled(false);
+//                readDataLandlord(landlord);
+            }
+        });
+        buttonSaveSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandLayoutSetting.collapse();
+                Map<String, Object> update = new HashMap<>();
+                update.put("name", editTextName.getText().toString().trim());
+
+                update.put("address", editTextAddress.getText().toString().trim());
+                update.put("phoneNumber", editTextPhoneNumber.getText().toString().trim());
+                update.put("email", editTextEmail.getText().toString().trim());
+                update.put("password", editTextPassword.getText().toString().trim());
+                FirebaseFirestore.getInstance().collection("landlord").document(landlord.getIdLandlord()).update(update);
+                editTextName.setEnabled(false);
+                editTextAddress.setEnabled(false);
+                editTextPhoneNumber.setEnabled(false);
+                editTextEmail.setEnabled(false);
+                editTextPassword.setEnabled(false);
+
+                landlord.setNameLandlord(editTextName.getText().toString().trim());
+                landlord.setAddressLandlord(editTextAddress.getText().toString().trim());
+                landlord.setPhoneNumberLandlord(editTextPhoneNumber.getText().toString().trim());
+                landlord.setEmailLandlord(editTextEmail.getText().toString().trim());
+                landlord.setPasswordLandlord(editTextPassword.getText().toString().trim());
+                SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
+                editor.clear();
+                editor.putString("id", landlord.getIdLandlord());
+                editor.putString("name", landlord.getNameLandlord());
+                editor.putString("address", landlord.getAddressLandlord());
+                editor.putString("phoneNumber", landlord.getPhoneNumberLandlord());
+                editor.putString("email", landlord.getEmailLandlord());
+                editor.putString("password", landlord.getPasswordLandlord());
+                editor.apply();
+                Toast.makeText(getContext(), "Chỉnh sửa thông tin thành công", Toast.LENGTH_SHORT).show();
             }
         });
         FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -171,6 +252,14 @@ public class AccountFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void readDataLandlord(Landlord landlord) {
+        editTextName.setText(landlord.getNameLandlord());
+        editTextAddress.setText(landlord.getAddressLandlord());
+        editTextPhoneNumber.setText(landlord.getPhoneNumberLandlord());
+        editTextEmail.setText(landlord.getEmailLandlord());
+        editTextPassword.setText(landlord.getPasswordLandlord());
     }
 
     private void readDataBoardingHouse() {

@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -72,8 +73,9 @@ public class LogInFragment extends Fragment {
 
 
     //code under
-    private TextView textViewEmail, textViewPassword;
-
+    private TextInputLayout textInputEmail, textInputPassword;
+    private TextView textViewCreateAccount;
+    private Button buttonLogIn;
     private FirebaseFirestore firebaseFirestore;
     public SharedPreferences sharedPreferences;
     public static final String MY_PREFERENCES = "MyPre";
@@ -85,10 +87,14 @@ public class LogInFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_log_in, container, false);
 
         // mapping
-        textViewEmail = view.findViewById(R.id.li_editText_email);
-        textViewPassword = view.findViewById(R.id.li_editText_password);
-        Button buttonLogIn = view.findViewById(R.id.li_btn_login);
-        TextView textViewCreateAccount = view.findViewById(R.id.li_edt_create);
+        textInputEmail = view.findViewById(R.id.li_textInput_email);
+        textInputPassword = view.findViewById(R.id.li_textInput_password);
+        buttonLogIn = view.findViewById(R.id.li_button_log_in);
+        textViewCreateAccount = view.findViewById(R.id.li_textView_create_account);
+
+        // initial
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
 
         // underline textView
         String create = "Bạn chưa có tài khoản? Đăng kí ngay";
@@ -96,6 +102,10 @@ public class LogInFragment extends Fragment {
         spannableString.setSpan(new UnderlineSpan(), 0, create.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewCreateAccount.setText(spannableString);
 
+        // sharedPreferences
+        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+
+        // do something
         textViewCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,12 +114,12 @@ public class LogInFragment extends Fragment {
             }
         });
 
-        // initial
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
         buttonLogIn.setOnClickListener(v -> {
-            String email = textViewEmail.getText().toString();
-            String password = textViewPassword.getText().toString();
+            String email = textInputEmail.getEditText().getText().toString().trim();
+            String password = textInputPassword.getEditText().getText().toString().trim();
+            if (!validateEmail(email) | !validatePassword(password)) {
+                return;
+            }
             firebaseFirestore.collection("landlord").whereEqualTo("email", email).whereEqualTo("password", password).get()
                     .addOnCompleteListener(task -> {
                         if (task.getResult().size() > 0) {
@@ -129,8 +139,8 @@ public class LogInFragment extends Fragment {
                                 editor.putString("phoneNumber", landlord.getPhoneNumberLandlord());
                                 editor.putString("email", email);
                                 editor.putString("password", password);
+                                editor.apply();
 
-                                editor.commit();
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("landlord", landlord);
 
@@ -148,5 +158,25 @@ public class LogInFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private boolean validateEmail(String email) {
+        if (email.isEmpty()) {
+            textInputEmail.setError("Vui lòng điền email");
+            return false;
+        } else {
+            textInputEmail.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validatePassword(String password) {
+        if (password.isEmpty()) {
+            textInputPassword.setError("Vui lòng điền mật khẩu");
+            return false;
+        } else {
+            textInputPassword.setError(null);
+            return true;
+        }
     }
 }
