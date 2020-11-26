@@ -19,6 +19,7 @@ allprojects {
         jcenter()
         maven {
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
+
             authentication {
                 basic(BasicAuthentication)
             }
@@ -30,6 +31,8 @@ allprojects {
                 password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
             }
         }
+        maven { url 'https://jitpack.io' }
+
     }
 }
 

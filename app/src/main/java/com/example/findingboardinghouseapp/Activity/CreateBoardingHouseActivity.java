@@ -70,7 +70,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 String address = textInputAddress.getEditText().getText().toString().trim();
                 String description = textInputDescription.getEditText().getText().toString().trim();
                 String distanceIn = textInputDistance.getText().toString().trim();
-                if (!validateName(name) | !validateAddress(address) | !validateDistance(distanceIn)) {
+                if (!validateDescription(description) | !validateName(name) | !validateAddress(address) | !validateDistance(distanceIn)) {
                     return;
                 }
                 BoardingHouseCRUD boardingHouseCRUD = new BoardingHouseCRUD();
@@ -122,6 +122,17 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
             return false;
         } else {
             textInputDistanceParent.setError(null);
+//            textInputEmail.setEnabled(false);
+            return true;
+        }
+    }
+
+    private boolean validateDescription(String description) {
+        if (description.isEmpty()) {
+            textInputDescription.setError("Vui lòng điền mô tả về nhà trọ");
+            return false;
+        } else {
+            textInputDescription.setError(null);
 //            textInputEmail.setEnabled(false);
             return true;
         }

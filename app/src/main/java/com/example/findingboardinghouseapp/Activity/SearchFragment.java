@@ -416,9 +416,7 @@ public class SearchFragment extends Fragment {
                                                         if (image.getKey().equals("image")) {
                                                             roomRoom.setImageRoom(image.getValue().toString());
                                                         }
-                                                        if (image.getKey().equals("description")) {
-                                                            roomRoom.setDescriptionRoom(image.getValue().toString());
-                                                        }
+
                                                         if (image.getKey().equals("status")) {
                                                             if (image.getValue().toString().equals("false")) {
                                                                 listRoomType.add(roomRoom);

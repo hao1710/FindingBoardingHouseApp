@@ -9,18 +9,18 @@ public class RoomType extends BoardingHouse implements Serializable {
     protected int numberPeopleRoomType;
     protected double priceRoomType;
     protected double areaRoomType;
+    protected String descriptionRoomType;
 
-    protected boolean expanded;
-
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
-    }
 
     public RoomType() {
+    }
+
+    public String getDescriptionRoomType() {
+        return descriptionRoomType;
+    }
+
+    public void setDescriptionRoomType(String descriptionRoomType) {
+        this.descriptionRoomType = descriptionRoomType;
     }
 
     public String getIdRoomType() {

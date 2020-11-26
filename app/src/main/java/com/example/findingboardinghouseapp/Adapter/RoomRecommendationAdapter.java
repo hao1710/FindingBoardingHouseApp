@@ -2,7 +2,6 @@ package com.example.findingboardinghouseapp.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.findingboardinghouseapp.Activity.RoomDetailActivity;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -45,6 +45,7 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
         holder.textViewPriceRoom.setText(String.valueOf(roomRecommendation.getPriceRoomType()));
 
         Picasso.with(context).load(roomRecommendation.getImageRoom())
+                .fit().centerCrop()
                 .placeholder(R.drawable.load_image_room)
                 .error(R.drawable.ic_app)
                 .into(holder.imageViewRoom);
@@ -71,6 +72,7 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
             textViewNameBoardingHouse = view.findViewById(R.id.rr_name_boarding_house);
             textViewAddressBoardingHouse = view.findViewById(R.id.rr_address_boarding_house);
             textViewPriceRoom = view.findViewById(R.id.rr_price_room);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

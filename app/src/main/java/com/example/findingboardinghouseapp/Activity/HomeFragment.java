@@ -392,6 +392,8 @@ public class HomeFragment extends Fragment {
                     roomBoardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
                     roomBoardingHouse.setDistanceBoardingHouse(documentSnapshot.getDouble("distance"));
                     roomBoardingHouse.setIdOwnerBoardingHouse(documentSnapshot.getString("owner"));
+                    roomBoardingHouse.setLatitude(documentSnapshot.getGeoPoint("point").getLatitude());
+                    roomBoardingHouse.setLongitude(documentSnapshot.getGeoPoint("point").getLongitude());
                     listBoardingHouse.add(roomBoardingHouse);
                 }
                 for (Room room : listBoardingHouse) {
@@ -412,6 +414,8 @@ public class HomeFragment extends Fragment {
                                     roomRoomType.setNumberPeopleRoomType(documentSnapshot.getDouble("numberPeople").intValue());
                                     roomRoomType.setPriceRoomType(documentSnapshot.getDouble("price"));
                                     roomRoomType.setAreaRoomType(documentSnapshot.getDouble("area"));
+                                    roomRoomType.setDescriptionRoomType(documentSnapshot.getString("description"));
+
                                     Map<String, Object> map = documentSnapshot.getData();
 
                                     assert map != null;
@@ -427,12 +431,15 @@ public class HomeFragment extends Fragment {
                                                 roomRoom.setDescriptionBoardingHouse(roomRoomType.getDescriptionBoardingHouse());
                                                 roomRoom.setDistanceBoardingHouse(roomRoomType.getDistanceBoardingHouse());
                                                 roomRoom.setIdOwnerBoardingHouse(roomRoomType.getIdOwnerBoardingHouse());
+                                                roomRoom.setLatitude(roomRoomType.getLatitude());
+                                                roomRoom.setLongitude(roomRoomType.getLongitude());
 
                                                 roomRoom.setIdRoomType(roomRoomType.getIdRoomType());
                                                 roomRoom.setNameRoomType(roomRoomType.getNameRoomType());
                                                 roomRoom.setNumberPeopleRoomType(roomRoomType.getNumberPeopleRoomType());
                                                 roomRoom.setPriceRoomType(roomRoomType.getPriceRoomType());
                                                 roomRoom.setAreaRoomType(roomRoomType.getAreaRoomType());
+                                                roomRoom.setDescriptionRoomType(roomRoomType.getDescriptionRoomType());
                                                 Map<String, Object> mapField = (Map<String, Object>) field.getValue();
                                                 for (Map.Entry<String, Object> image : mapField.entrySet()) {
 
@@ -440,9 +447,7 @@ public class HomeFragment extends Fragment {
                                                     if (image.getKey().equals("image")) {
                                                         roomRoom.setImageRoom(image.getValue().toString());
                                                     }
-                                                    if (image.getKey().equals("description")) {
-                                                        roomRoom.setDescriptionRoom(image.getValue().toString());
-                                                    }
+
                                                     if (image.getKey().equals("status")) {
                                                         if (image.getValue().toString().equals("false")) {
                                                             listRoom.add(roomRoom);

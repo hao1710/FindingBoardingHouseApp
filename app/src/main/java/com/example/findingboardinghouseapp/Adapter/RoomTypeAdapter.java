@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +22,8 @@ import com.example.findingboardinghouseapp.Activity.CreateRoomActivity;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
+import com.github.aakira.expandablelayout.ExpandableLinearLayout;
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -51,9 +56,7 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
         holder.textViewArea.setText("Diện tích: " + roomType.getAreaRoomType() + " m2");
         holder.textViewPrice.setText("Giá: " + roomType.getPriceRoomType() + " tr");
         holder.textViewNumberPeople.setText(roomType.getNumberPeopleRoomType() + " người");
-
-        boolean isExpanded = roomType.isExpanded();
-        holder.expandable.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+//        holder.expandableRelativeLayout.toggle();
 
         ArrayList<Room> arrayListRoom;
         RoomAdapter adapter;
@@ -106,43 +109,78 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewNameRoomType, textViewNumberPeople, textViewPrice, textViewArea;
-        LinearLayout expandable;
-        Button buttonAddRoom;
+        ImageButton imageButton, imageButtonAddComment;
+
+        ExpandableRelativeLayout expandableRelativeLayout;
+
 
         public MyViewHolder(View view) {
             super(view);
             // mapping
             textViewNameRoomType = view.findViewById(R.id.item_rt_name_room_type);
             recyclerViewRoom = view.findViewById(R.id.recyclerViewRoom);
-            buttonAddRoom = view.findViewById(R.id.item_rt_btn_add_room);
+
             textViewArea = view.findViewById(R.id.item_rt_area);
             textViewNumberPeople = view.findViewById(R.id.item_rt_number_people);
             textViewPrice = view.findViewById(R.id.item_rt_price);
+            imageButton = view.findViewById(R.id.rt_imageButton_menu);
 
-            expandable = view.findViewById(R.id.item_rt_expand);
+            expandableRelativeLayout = view.findViewById(R.id.item_rt_expandable_layout);
+
+
 
             textViewNameRoomType.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RoomType roomType = arrayList.get(getAdapterPosition());
-                    roomType.setExpanded(!roomType.isExpanded());
-                    notifyItemChanged(getAdapterPosition());
+                    expandableRelativeLayout.toggle();
                 }
             });
-            buttonAddRoom.setOnClickListener(new View.OnClickListener() {
+
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Room room = new Room();
-                    RoomType roomType = arrayList.get(getAdapterPosition());
-                    room.setIdBoardingHouse(roomType.getIdBoardingHouse());
-                    room.setIdRoomType(roomType.getIdRoomType());
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("newRoom", room);
-                    Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
-                    intent.putExtras(bundle);
-                    ((Activity)  view.getContext()).startActivityForResult(intent,0);
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), imageButton);
+                    popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_rta, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.rt_item_update:
+                                    Toast.makeText(v.getContext(), "Chỉnh sửa", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.rt_item_create_room:
+                                    Room room = new Room();
+                                    RoomType roomType = arrayList.get(getAdapterPosition());
+                                    room.setIdBoardingHouse(roomType.getIdBoardingHouse());
+                                    room.setIdRoomType(roomType.getIdRoomType());
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("newRoom", room);
+                                    Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
+                                    intent.putExtras(bundle);
+                                    ((Activity) view.getContext()).startActivityForResult(intent, 0);
+                                    return true;
+                            }
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
                 }
             });
+//            buttonAddRoom.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Room room = new Room();
+//                    RoomType roomType = arrayList.get(getAdapterPosition());
+//                    room.setIdBoardingHouse(roomType.getIdBoardingHouse());
+//                    room.setIdRoomType(roomType.getIdRoomType());
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("newRoom", room);
+//                    Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
+//                    intent.putExtras(bundle);
+//                    ((Activity)  view.getContext()).startActivityForResult(intent,0);
+//                }
+//            });
 
         }
 

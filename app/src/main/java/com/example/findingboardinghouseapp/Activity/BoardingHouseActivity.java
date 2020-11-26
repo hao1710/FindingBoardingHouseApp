@@ -138,7 +138,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
                                 roomType.setAreaRoomType(documentSnapshot.getDouble("area"));
                                 roomType.setPriceRoomType(documentSnapshot.getDouble("price"));
                                 roomType.setNumberPeopleRoomType(documentSnapshot.getDouble("numberPeople").intValue());
-                                roomType.setExpanded(false);
+
                                 roomTypeArrayList.add(roomType);
                             }
                         }

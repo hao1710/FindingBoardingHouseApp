@@ -8,188 +8,199 @@
     android:background="@color/backgroundColor"
     tools:context=".Activity.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/custom_background_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp">
-
-        <EditText
-            android:id="@+id/h_editText_search"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@id/h_button_search"
-            android:background="@drawable/custom_edit_text_search"
-            android:hint="Tìm kiếm"
-            android:paddingStart="15dp" />
-
-        <Button
-            android:id="@+id/h_button_search"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_search" />
-    </RelativeLayout>
-
-    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-        android:id="@+id/h_expandable_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_margin="8dp"
-
-        app:ael_expanded="true">
-
-        <TextView
-            android:id="@+id/h_textView_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:text="Lọc"
-            android:textSize="20sp" />
-
-        <ScrollView
-
-            android:layout_marginStart="16dp"
-            android:id="@+id/h_scrollView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_toEndOf="@id/h_textView_filter"
-            android:layout_toStartOf="@+id/h_button_refresh">
+            android:orientation="vertical">
 
-            <HorizontalScrollView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/custom_background_title"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <EditText
+                    android:id="@+id/h_editText_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@id/h_button_search"
+                    android:background="@drawable/custom_edit_text_search"
+                    android:hint="Tìm kiếm"
+                    android:paddingStart="15dp" />
+
+                <Button
+                    android:id="@+id/h_button_search"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_search" />
+            </RelativeLayout>
+
+            <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                android:id="@+id/h_expandable_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="8dp"
+
+                app:ael_expanded="true">
+
+                <TextView
+                    android:id="@+id/h_textView_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:text="Lọc"
+                    android:textSize="20sp" />
+
+                <ScrollView
+
+                    android:id="@+id/h_scrollView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@+id/h_button_refresh"
+                    android:layout_toEndOf="@id/h_textView_filter">
 
-                    <LinearLayout
+                    <HorizontalScrollView
+
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_scrollview"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content">
 
-                        <Spinner
-                            android:id="@+id/h_spinner_price"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:background="@drawable/custom_spinner" />
-
-                        <ImageView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_arrow_drop_down" />
+                            android:orientation="horizontal">
 
-                    </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/custom_scrollview"
+                                android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_marginStart="16dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_scrollview"
-                        android:orientation="horizontal">
+                                <Spinner
+                                    android:id="@+id/h_spinner_price"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/custom_spinner" />
 
-                        <Spinner
-                            android:id="@+id/h_spinner_distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:background="@drawable/ic_arrow_drop_down" />
 
-                            android:background="@drawable/custom_spinner" />
+                            </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_arrow_drop_down" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:background="@drawable/custom_scrollview"
+                                android:orientation="horizontal">
 
-                    </LinearLayout>
+                                <Spinner
+                                    android:id="@+id/h_spinner_distance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
 
-                    <LinearLayout
-                        android:layout_marginStart="16dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_scrollview"
-                        android:orientation="horizontal">
+                                    android:background="@drawable/custom_spinner" />
 
-                        <Spinner
-                            android:id="@+id/h_spinner_number_people"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:background="@drawable/ic_arrow_drop_down" />
 
-                            android:background="@drawable/custom_spinner" />
+                            </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_arrow_drop_down" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:background="@drawable/custom_scrollview"
+                                android:orientation="horizontal">
 
-                    </LinearLayout>
+                                <Spinner
+                                    android:id="@+id/h_spinner_number_people"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
 
-                </LinearLayout>
-            </HorizontalScrollView>
-        </ScrollView>
+                                    android:background="@drawable/custom_spinner" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:background="@drawable/ic_arrow_drop_down" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </ScrollView>
 
 
-        <Button
-            android:id="@+id/h_button_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_refresh" />
+                <Button
+                    android:id="@+id/h_button_refresh"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_refresh" />
 
 
-    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+            </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
-    <LinearLayout
-        android:background="@drawable/custom_background"
+            <LinearLayout
+                android:layout_width="match_parent"
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="8dp">
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_background"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
 
-        <TextView
-            android:id="@+id/h_textView_text"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:gravity="center"
-            android:text="Phòng trọ trống"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/h_textView_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    android:text="Phòng trọ trống"
+                    android:textSize="20sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewRoomRecommendation"
-            android:layout_width="match_parent"
-            android:layout_margin="8dp"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewRoomRecommendation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <!-- TODO: Update blank fragment layout -->
 
 
 </LinearLayout>

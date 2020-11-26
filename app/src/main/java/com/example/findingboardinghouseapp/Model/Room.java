@@ -7,7 +7,6 @@ public class Room extends RoomType implements Serializable {
     protected String nameRoom;
     protected boolean statusRoom;
     protected String imageRoom;
-    protected String descriptionRoom;
 
 
     public Room() {
@@ -42,11 +41,4 @@ public class Room extends RoomType implements Serializable {
         this.imageRoom = imageRoom;
     }
 
-    public String getDescriptionRoom() {
-        return descriptionRoom;
-    }
-
-    public void setDescriptionRoom(String descriptionRoom) {
-        this.descriptionRoom = descriptionRoom;
-    }
 }

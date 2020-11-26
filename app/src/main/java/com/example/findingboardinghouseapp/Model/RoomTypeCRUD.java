@@ -1,11 +1,14 @@
 package com.example.findingboardinghouseapp.Model;
 
+import java.util.Map;
+
 public class RoomTypeCRUD {
     private String name;
     private double area;
     private double price;
     private double numberPeople;
     private String description;
+    private Map<String, Facility> facility;
 
     public RoomTypeCRUD() {
     }
@@ -48,5 +51,13 @@ public class RoomTypeCRUD {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Map<String, Facility> getFacility() {
+        return facility;
+    }
+
+    public void setFacility(Map<String, Facility> facility) {
+        this.facility = facility;
     }
 }

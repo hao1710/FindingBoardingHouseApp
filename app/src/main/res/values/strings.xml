@@ -20,4 +20,11 @@
 
     <!--Move map instruction for toast-->
     <string name="move_map_instruction">Move map to place\nmarker at desired location</string>
+
+    <!--Marker strings for DirectionsActivity activity-->
+    <string name="directions_activity_toast_message">Route is %1$f meters long.</string>
+
+    <!-- Infowindow SymbolLayer -->
+    <string name="capital">Capital: %1$s</string>
+    <string name="tap_on_marker_instruction">Tap on a marker</string>
 </resources>
