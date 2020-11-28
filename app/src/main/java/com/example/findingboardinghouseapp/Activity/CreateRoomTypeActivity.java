@@ -79,60 +79,61 @@ public class CreateRoomTypeActivity extends AppCompatActivity {
                 Map<String, Facility> facility = new HashMap<>();
 
 
-                Facility facility1 = new Facility();
-                facility1.setName("Gác");
-                facility1.setStatus(checkBoxGac.isChecked());
-                facility1.setImage("ic_gac");
-                facility.put("gac", facility1);
+                Facility fGac = new Facility();
+                fGac.setName("Gác");
+                fGac.setStatus(checkBoxGac.isChecked());
+                fGac.setImage("ic_gac");
+                facility.put("gac", fGac);
 
-                Facility facility2 = new Facility();
-                facility2.setName("WC riêng");
-                facility2.setStatus(checkBoxWCRieng.isChecked());
-                facility2.setImage("ic_wc");
-                facility.put("wc", facility2);
+                Facility fWC = new Facility();
+                fWC.setName("WC riêng");
+                fWC.setStatus(checkBoxWCRieng.isChecked());
+                fWC.setImage("ic_wc");
+                facility.put("wc", fWC);
 
-                Facility facility3 = new Facility();
-                facility3.setName("Giường");
-                facility3.setStatus(checkBoxGiuong.isChecked());
-                facility3.setImage("ic_bed");
-                facility.put("giuong", facility3);
+                Facility fWifi = new Facility();
+                fWifi.setName("Wifi free");
+                fWifi.setImage("ic_wifi");
+                fWifi.setStatus(checkBoxWifiFree.isChecked());
+                facility.put("wifi", fWifi);
 
-                Facility facility4 = new Facility();
-                facility4.setName("Tủ quần áo");
-                facility4.setStatus(checkBoxTuQuanAo.isChecked());
-                facility4.setImage("ic_wardrobe");
-                facility.put("tuquanao", facility4);
+                Facility fKeBep = new Facility();
+                fKeBep.setImage("ic_kitchen_shelf");
+                fKeBep.setName("Kệ bếp");
+                fKeBep.setStatus(checkBoxBep.isChecked());
+                facility.put("ke", fKeBep);
 
-                Facility facility5 = new Facility();
-                facility5.setName("Máy lạnh");
-                facility5.setStatus(checkBoxMayLanh.isChecked());
-                facility5.setImage("ic_air");
-                facility.put("maylanh", facility5);
+                Facility fTuLanh = new Facility();
+                fTuLanh.setName("Tủ lạnh");
+                fTuLanh.setStatus(checkBoxTuLanh.isChecked());
+                fTuLanh.setImage("ic_fridge");
+                facility.put("tulanh", fTuLanh);
 
-                Facility facility6 = new Facility();
-                facility6.setName("Tủ lạnh");
-                facility6.setStatus(checkBoxTuLanh.isChecked());
-                facility6.setImage("ic_fridge");
-                facility.put("tulanh", facility6);
 
-                Facility facility7 = new Facility();
-                facility7.setImage("ic_kitchen_shelf");
-                facility7.setName("Kệ bếp");
-                facility7.setStatus(checkBoxBep.isChecked());
-                facility.put("ke", facility7);
+                Facility fMayLanh = new Facility();
+                fMayLanh.setName("Máy lạnh");
+                fMayLanh.setStatus(checkBoxMayLanh.isChecked());
+                fMayLanh.setImage("ic_air");
+                facility.put("maylanh", fMayLanh);
 
-                Facility facility8 = new Facility();
-                facility8.setName("Wifi free");
-                facility8.setImage("ic_wifi");
-                facility8.setStatus(checkBoxWifiFree.isChecked());
+                Facility fMayGiat = new Facility();
+                fMayGiat.setName("Máy giặt");
+                fMayGiat.setStatus(checkBoxMayGiat.isChecked());
+                fMayGiat.setImage("ic_washing");
+                facility.put("matgiat", fMayGiat);
 
-                facility.put("wifi", facility8);
+                Facility fTuQuanAo = new Facility();
+                fTuQuanAo.setName("Tủ quần áo");
+                fTuQuanAo.setStatus(checkBoxTuQuanAo.isChecked());
+                fTuQuanAo.setImage("ic_wardrobe");
+                facility.put("tuquanao", fTuQuanAo);
 
-                Facility facility9 = new Facility();
-                facility9.setName("Máy giặt");
-                facility9.setStatus(checkBoxMayGiat.isChecked());
-                facility9.setImage("ic_washing");
-                facility.put("matgiat", facility9);
+                Facility fGiuong = new Facility();
+                fGiuong.setName("Giường");
+                fGiuong.setStatus(checkBoxGiuong.isChecked());
+                fGiuong.setImage("ic_bed");
+                facility.put("giuong", fGiuong);
+
 
 //                facility.put("gac", checkBoxGac.isChecked());
 //                facility.put("wc", checkBoxWCRieng.isChecked());

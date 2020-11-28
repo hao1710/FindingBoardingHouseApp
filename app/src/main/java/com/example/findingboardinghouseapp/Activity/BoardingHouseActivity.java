@@ -39,7 +39,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
     RecyclerView recyclerViewRoomType;
     public static final int REQUEST_CODE_FROM_BOARDING_HOUSE = 32;
     public static final int RESULT_CODE_FROM_BOARDING_HOUSE = 31;
-
+    private TextView textViewDescription;
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,8 @@ public class BoardingHouseActivity extends AppCompatActivity {
         TextView textViewAddressBoardingHouse = findViewById(R.id.bh_address_boarding_house);
         TextView textViewDistanceBoardingHouse = findViewById(R.id.bh_distance_boarding_house);
         ImageButton imageButton = findViewById(R.id.bh_imageButton_menu);
+
+        textViewDescription = findViewById(R.id.bh_textView_description);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +101,9 @@ public class BoardingHouseActivity extends AppCompatActivity {
         //readDataRoomType();
 
         textViewNameBoardingHouse.setText(boardingHouse.getNameBoardingHouse());
-        textViewAddressBoardingHouse.setText("Địa chỉ: " + boardingHouse.getAddressBoardingHouse());
+        textViewAddressBoardingHouse.setText(boardingHouse.getAddressBoardingHouse());
         textViewDistanceBoardingHouse.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
+        textViewDescription.setText(boardingHouse.getDescriptionBoardingHouse());
         FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).collection("roomType")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override

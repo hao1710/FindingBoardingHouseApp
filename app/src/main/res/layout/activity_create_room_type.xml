@@ -113,43 +113,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_price_electricity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Giá điện"
-
-                android:textColorHint="@color/green"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/green">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_price_water"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Giá nước"
-
-                android:textColorHint="@color/green"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/green">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/crt_textInput_numberPeople"
@@ -201,159 +164,200 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Gác" />
 
                     <CheckBox
                         android:id="@+id/crt_checkBox_gac"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_gac"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:gravity="center_vertical"
+                        android:text="Gác" />
+
+
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="WC riêng" />
 
                     <CheckBox
                         android:id="@+id/crt_checkBox_wcrieng"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
+                        android:layout_centerVertical="true" />
 
                     <TextView
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_wcrieng"
+                        android:gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:text="Giường" />
+                        android:text="WC riêng" />
 
-                    <CheckBox
-                        android:id="@+id/crt_checkBox_giuong"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
 
                     android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Tủ quần áo" />
-
-                    <CheckBox
-                        android:id="@+id/crt_checkBox_tuquanao"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Máy lạnh" />
-
-                    <CheckBox
-                        android:id="@+id/crt_checkBox_maylanh"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Tủ lạnh" />
-
-                    <CheckBox
-                        android:id="@+id/crt_checkBox_tulanh"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Máy giặt" />
-
-                    <CheckBox
-                        android:id="@+id/crt_checkBox_maygiat"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Bếp" />
-
-                    <CheckBox
-                        android:id="@+id/crt_checkBox_bep"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Wifi free" />
 
                     <CheckBox
                         android:id="@+id/crt_checkBox_wififree"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_alignParentEnd="true" />
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_wififree"
+                        android:gravity="center_vertical"
+                        android:text="Wifi free" />
+
+
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/crt_checkBox_bep"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_bep"
+                        android:gravity="center_vertical"
+                        android:text="Kệ bếp" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/crt_checkBox_tulanh"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_tulanh"
+                        android:gravity="center_vertical"
+                        android:text="Tủ lạnh" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/crt_checkBox_maylanh"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_maylanh"
+                        android:gravity="center_vertical"
+                        android:text="Máy lạnh" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/crt_checkBox_maygiat"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_maygiat"
+                        android:gravity="center_vertical"
+                        android:text="Máy giặt" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/crt_checkBox_tuquanao"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_tuquanao"
+                        android:gravity="center_vertical"
+                        android:text="Tủ quần áo" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/crt_checkBox_giuong"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/crt_checkBox_giuong"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="Giường" />
+
+
+                </RelativeLayout>
+
+
             </LinearLayout>
 
 

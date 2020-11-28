@@ -44,6 +44,7 @@
                 android:hint="Email"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -68,6 +69,7 @@
                 android:hint="Mật khẩu"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText

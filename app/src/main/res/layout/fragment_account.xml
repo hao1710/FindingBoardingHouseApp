@@ -29,7 +29,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_more_vert"
-            android:backgroundTint="@color/white" />
+            android:backgroundTint="@color/white"
+            android:contentDescription="TODO" />
     </RelativeLayout>
 
     <LinearLayout
@@ -64,19 +65,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Địa chỉ:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:background="@drawable/ic_house" />
 
             <EditText
+                android:layout_marginStart="8dp"
                 android:id="@+id/a_editText_address"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginStart="8dp"
+
                 android:background="@drawable/custom_background_white"
                 android:enabled="false"
                 android:gravity="center_vertical"
@@ -89,15 +89,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Số điện thoại:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:background="@drawable/ic_contact_phone" />
 
             <EditText
+
                 android:id="@+id/a_editText_phoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -114,15 +113,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Email:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:background="@drawable/ic_email" />
 
             <EditText
+
                 android:id="@+id/a_editText_email"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -139,19 +137,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Mật khẩu:"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:background="@drawable/ic_visibility" />
 
             <EditText
+
+                android:layout_marginStart="8dp"
                 android:id="@+id/a_editText_password"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginStart="8dp"
                 android:background="@drawable/custom_background_white"
                 android:enabled="false"
                 android:gravity="center_vertical"

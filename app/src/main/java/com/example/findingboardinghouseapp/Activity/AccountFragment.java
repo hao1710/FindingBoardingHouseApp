@@ -275,6 +275,7 @@ public class AccountFragment extends Fragment {
                             boardingHouse.setAddressBoardingHouse(documentSnapshot.getString("address"));
                             boardingHouse.setDistanceBoardingHouse(documentSnapshot.getDouble("distance"));
                             boardingHouse.setIdBoardingHouse(documentSnapshot.getId());
+                            boardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
                             arrayList.add(boardingHouse);
                         }
                     }
