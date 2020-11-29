@@ -1,7 +1,9 @@
 package com.example.findingboardinghouseapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.findingboardinghouseapp.Activity.RoomDetailActivity;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -37,12 +38,19 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
         return myViewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Room roomRecommendation = arrayList.get(position);
+
+        holder.textViewDescription.setMaxLines(2);
+        holder.textViewDescription.setEllipsize(TextUtils.TruncateAt.END);
+        holder.textViewDescription.setText(roomRecommendation.getDescriptionRoomType());
         holder.textViewNameBoardingHouse.setText(roomRecommendation.getNameBoardingHouse());
+        holder.textViewAddressBoardingHouse.setMaxLines(2);
+        holder.textViewAddressBoardingHouse.setEllipsize(TextUtils.TruncateAt.END);
         holder.textViewAddressBoardingHouse.setText(roomRecommendation.getAddressBoardingHouse());
-        holder.textViewPriceRoom.setText(String.valueOf(roomRecommendation.getPriceRoomType()));
+        holder.textViewPriceRoom.setText(roomRecommendation.getPriceRoomType() + " triệu");
 
         Picasso.with(context).load(roomRecommendation.getImageRoom())
                 .fit().centerCrop()
@@ -64,11 +72,12 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageViewRoom;
-        public TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewPriceRoom;
+        public TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewPriceRoom, textViewDescription;
 
         public MyViewHolder(View view) {
             super(view);
             imageViewRoom = view.findViewById(R.id.rr_image_room);
+            textViewDescription = view.findViewById(R.id.rr_description);
             textViewNameBoardingHouse = view.findViewById(R.id.rr_name_boarding_house);
             textViewAddressBoardingHouse = view.findViewById(R.id.rr_address_boarding_house);
             textViewPriceRoom = view.findViewById(R.id.rr_price_room);

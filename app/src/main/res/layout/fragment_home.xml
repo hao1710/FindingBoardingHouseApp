@@ -36,34 +36,48 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp">
 
                 <EditText
                     android:id="@+id/h_editText_search"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toStartOf="@id/h_button_search"
+                    android:layout_marginEnd="4dp"
+                    android:layout_toStartOf="@id/h_imageButton_search"
                     android:background="@drawable/custom_edit_text_search"
                     android:hint="Tìm kiếm"
-                    android:paddingStart="15dp" />
+                    android:autofillHints=""
+                    android:inputType="text"
+                    android:paddingStart="15dp"
+                    tools:ignore="RtlSymmetry" />
 
-                <Button
-                    android:id="@+id/h_button_search"
+                <ImageButton
+                    android:id="@+id/h_imageButton_search"
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/ic_search" />
+                    android:background="@drawable/ic_search"
+                    android:contentDescription="TODO" />
+                <!--                <Button-->
+                <!--                    android:id="@+id/h_button_search"-->
+                <!--                    android:layout_width="40dp"-->
+                <!--                    android:layout_height="40dp"-->
+                <!--                    android:layout_alignParentEnd="true"-->
+                <!--                    android:layout_centerVertical="true"-->
+                <!--                    android:background="@drawable/ic_search" />-->
             </RelativeLayout>
 
             <com.github.aakira.expandablelayout.ExpandableRelativeLayout
                 android:id="@+id/h_expandable_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:layout_margin="8dp"
-
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
                 app:ael_expanded="true">
 
                 <TextView
@@ -81,8 +95,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toStartOf="@+id/h_button_refresh"
+                    android:layout_marginEnd="4dp"
+                    android:layout_toStartOf="@+id/h_imageButton_refresh"
                     android:layout_toEndOf="@id/h_textView_filter">
 
                     <HorizontalScrollView
@@ -104,10 +118,11 @@
                                 <Spinner
                                     android:id="@+id/h_spinner_price"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="50dp"
+                                    android:layout_height="40dp"
                                     android:background="@drawable/custom_spinner" />
 
                                 <ImageView
+                                    android:id="@+id/h_imageView_spinner_price"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -125,11 +140,12 @@
                                 <Spinner
                                     android:id="@+id/h_spinner_distance"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="50dp"
+                                    android:layout_height="40dp"
 
                                     android:background="@drawable/custom_spinner" />
 
                                 <ImageView
+                                    android:id="@+id/h_imageView_spinner_distance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -147,15 +163,17 @@
                                 <Spinner
                                     android:id="@+id/h_spinner_number_people"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="50dp"
+                                    android:layout_height="40dp"
 
                                     android:background="@drawable/custom_spinner" />
 
                                 <ImageView
+                                    android:id="@+id/h_imageView_spinner_number_people"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
-                                    android:background="@drawable/ic_arrow_drop_down" />
+                                    android:background="@drawable/ic_arrow_drop_down"
+                                    android:contentDescription="TODO" />
 
                             </LinearLayout>
 
@@ -163,14 +181,22 @@
                     </HorizontalScrollView>
                 </ScrollView>
 
-
-                <Button
-                    android:id="@+id/h_button_refresh"
+                <ImageButton
+                    android:id="@+id/h_imageButton_refresh"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_refresh"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/ic_refresh" />
+                    android:backgroundTint="@color/green"
+                    android:contentDescription="TODO" />
+                <!--                <Button-->
+                <!--                    android:id="@+id/h_button_refresh"-->
+                <!--                    android:layout_width="40dp"-->
+                <!--                    android:layout_height="40dp"-->
+                <!--                    android:layout_alignParentEnd="true"-->
+                <!--                    android:layout_centerVertical="true"-->
+                <!--                    android:background="@drawable/ic_refresh" />-->
 
 
             </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
@@ -180,8 +206,7 @@
 
                 android:layout_height="match_parent"
                 android:background="@drawable/custom_background_white"
-                android:orientation="vertical"
-                android:paddingTop="8dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/h_textView_text"
@@ -196,7 +221,7 @@
                     android:id="@+id/recyclerViewRoomRecommendation"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp" />
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

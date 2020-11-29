@@ -6,15 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findingboardinghouseapp.Adapter.RoomRecommendationAdapter;
@@ -91,6 +92,7 @@ public class HomeFragment extends Fragment {
     private Boolean pressButton = false;
     private EditText editTextSearch;
     RecyclerView recyclerViewRoomRecommendation;
+    private ImageView imageViewNumberPeople, imageViewPrice, imageViewDistance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,15 +104,17 @@ public class HomeFragment extends Fragment {
         // mapping
         recyclerViewRoomRecommendation = view.findViewById(R.id.recyclerViewRoomRecommendation);
         ExpandableRelativeLayout expandableRelativeLayout = view.findViewById(R.id.h_expandable_layout);
-        Button buttonSearch = view.findViewById(R.id.h_button_search);
+//        Button buttonSearch = view.findViewById(R.id.h_button_search);
         ScrollView scrollView = view.findViewById(R.id.h_scrollView);
         editTextSearch = view.findViewById(R.id.h_editText_search);
         spinnerPrice = view.findViewById(R.id.h_spinner_price);
         spinnerDistance = view.findViewById(R.id.h_spinner_distance);
         spinnerNumberPeople = view.findViewById(R.id.h_spinner_number_people);
-        Button buttonRefresh = view.findViewById(R.id.h_button_refresh);
-
-
+        imageViewDistance = view.findViewById(R.id.h_imageView_spinner_distance);
+        imageViewNumberPeople = view.findViewById(R.id.h_imageView_spinner_number_people);
+        imageViewPrice = view.findViewById(R.id.h_imageView_spinner_price);
+        ImageButton imageButtonSearch = view.findViewById(R.id.h_imageButton_search);
+        ImageButton imageButtonRefresh = view.findViewById(R.id.h_imageButton_refresh);
         // initial
         arrayListRoomRecommendation = new ArrayList<>();
         arrayListRoomSearch = new ArrayList<>();
@@ -120,9 +124,12 @@ public class HomeFragment extends Fragment {
 
         // recyclerView
         recyclerViewRoomRecommendation.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        recyclerViewRoomRecommendation.setLayoutManager(gridLayoutManager);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+//        gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
+//        recyclerViewRoomRecommendation.setLayoutManager(gridLayoutManager);
+
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerViewRoomRecommendation.setLayoutManager(linearLayout);
 
         firebaseFirestore.collection("boardingHouse").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -182,8 +189,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
+        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (arrayListRoomRecommendation.size() > 0) {
@@ -210,7 +216,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        buttonRefresh.setOnClickListener(new View.OnClickListener() {
+        imageButtonRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerViewRoomRecommendation.setAdapter(adapter);
@@ -225,6 +231,7 @@ public class HomeFragment extends Fragment {
                 pressButton = false;
             }
         });
+
         // update status of room
 //        firebaseFirestore.collection("boardingHouse").document("JYYwAzho2pZ09NCTg8EJ").collection("roomType").document("QVfTthtQrdM8IjXj7OKo")
 //                .update("room.11", false);
@@ -270,7 +277,13 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<ObjectSpinner> adapterNumberPeopleSpinner = new ArrayAdapter<ObjectSpinner>(getContext(), android.R.layout.simple_spinner_item, listNumberPeople);
         adapterNumberPeopleSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNumberPeople.setAdapter(adapterNumberPeopleSpinner);
+        imageViewNumberPeople.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinnerNumberPeople.performClick();
 
+            }
+        });
         spinnerNumberPeople.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -285,7 +298,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         ArrayList<ObjectSpinner> listPrice = new ArrayList<>();
         listPrice.add(new ObjectSpinner(99, "Giá (triệu)"));
         listPrice.add(new ObjectSpinner(1, "Dưới 1 triệu"));
@@ -296,7 +308,12 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<ObjectSpinner> adapterPriceSpinner = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listPrice);
         adapterPriceSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPrice.setAdapter(adapterPriceSpinner);
-
+        imageViewPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinnerPrice.performClick();
+            }
+        });
         spinnerPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -324,7 +341,12 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<ObjectSpinner> adapterDistanceSpinner = new ArrayAdapter<ObjectSpinner>(getContext(), android.R.layout.simple_spinner_item, listDistance);
         adapterDistanceSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDistance.setAdapter(adapterDistanceSpinner);
-
+        imageViewDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinnerDistance.performClick();
+            }
+        });
         spinnerDistance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
