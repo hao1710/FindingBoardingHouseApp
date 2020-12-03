@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findingboardinghouseapp.Activity.RoomDetailActivity;
+import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
 import com.squareup.picasso.Picasso;
@@ -85,9 +86,21 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent i = new Intent(context, RoomDetailActivity.class);
                     Room room = arrayList.get(getPosition());
                     i.putExtra("room", (Serializable) room);
+                    ArrayList<BoardingHouse> list = new ArrayList<>();
+
+                    for (Room room1 : arrayList) {
+                        BoardingHouse pointGeo = new BoardingHouse();
+                        pointGeo.setNameBoardingHouse(room1.getNameBoardingHouse());
+                        pointGeo.setLatitude(room1.getLatitude());
+                        pointGeo.setLongitude(room1.getLongitude());
+                        list.add(pointGeo);
+                    }
+                    i.putExtra("a", list);
+
                     context.startActivity(i);
                 }
             });

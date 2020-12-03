@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.R;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
@@ -39,6 +40,8 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -94,7 +97,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public String name;
     public double latitude;
     public double longitude;
-
+    private ArrayList<BoardingHouse> listBoardingHouse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +114,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mapView.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        listBoardingHouse = (ArrayList<BoardingHouse>) intent.getSerializableExtra("list");
         name = intent.getStringExtra("name");
         latitude = intent.getDoubleExtra("latitude", 0);
         longitude = intent.getDoubleExtra("longitude", 0);
@@ -128,7 +132,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(new LatLng(latitude, longitude)).zoom(14).build();
-                        new LoadGeoJsonDataTask(MapActivity.this).execute(String.valueOf(latitude), String.valueOf(longitude), name);
+                        new LoadGeoJsonDataTask(MapActivity.this).execute(listBoardingHouse);
 
 
                         mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -142,7 +146,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * AsyncTask to load data from the assets folder.
      */
-    private static class LoadGeoJsonDataTask extends AsyncTask<String, Void, FeatureCollection> {
+    private static class LoadGeoJsonDataTask extends AsyncTask<ArrayList<BoardingHouse>, Void, FeatureCollection> {
 
         private final WeakReference<MapActivity> activityRef;
 
@@ -151,42 +155,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         @Override
-        protected FeatureCollection doInBackground(String... params) {
+        protected FeatureCollection doInBackground(ArrayList<BoardingHouse>... params) {
             MapActivity activity = activityRef.get();
 
             if (activity == null) {
                 return null;
             }
+            ArrayList<BoardingHouse> listing = params[0];
             Log.i("Tell me why", "Params " + params[0]);
-
-            Feature singleFeatureTwo = Feature.fromGeometry(
-                    Point.fromLngLat(Double.valueOf(params[1]),
-                            Double.valueOf(params[0])));
-            singleFeatureTwo.addStringProperty("name", params[2]);
-            singleFeatureTwo.addStringProperty(ICON_PROPERTY, ICON_PIN_ID);
-            Feature singleFeatureThree = Feature.fromGeometry(
-                    Point.fromLngLat(105.590584,
-                            9.756021));
-
-            singleFeatureThree.addStringProperty(ICON_PROPERTY, ICON_PIN_ID);
-            singleFeatureThree.addStringProperty("name", "Nhà trọ Phương An");
-
-            Feature singleFeatureFour = Feature.fromGeometry(
-                    Point.fromLngLat(105.609115,
-                            9.763684));
-
-            singleFeatureFour.addStringProperty(ICON_PROPERTY, ICON_PIN_ID);
-            singleFeatureFour.addStringProperty("name", "Nhà trọ Minh Đăng");
-
-            Feature singleFeatureFive = Feature.fromGeometry(
-                    Point.fromLngLat(105.590874,
-                            9.744405));
-
-            singleFeatureFive.addStringProperty(ICON_PROPERTY, ICON_PIN_ID);
-            singleFeatureFive.addStringProperty("name", "Nhà trọ A");
-
             List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
-            symbolLayerIconFeatureList.add(singleFeatureTwo);
+
+            for (int i = 0; i < listing.size(); i++) {
+                BoardingHouse pointGeo = listing.get(i);
+                Log.i("Tell me why", "Params " + listing.get(i));
+                Feature singleFeatureTwo = Feature.fromGeometry(
+                        Point.fromLngLat(pointGeo.getLongitude(), pointGeo.getLatitude()));
+                singleFeatureTwo.addStringProperty("name", pointGeo.getNameBoardingHouse());
+                singleFeatureTwo.addStringProperty(ICON_PROPERTY, ICON_PIN_ID);
+                symbolLayerIconFeatureList.add(singleFeatureTwo);
+            }
+
+
 //            symbolLayerIconFeatureList.add(singleFeatureThree);
 //            symbolLayerIconFeatureList.add(singleFeatureFour);
 //            symbolLayerIconFeatureList.add(singleFeatureFive);
@@ -195,7 +184,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         @Override
         protected void onPostExecute(FeatureCollection featureCollection) {
-            Log.i("Tell", "onpost");
             super.onPostExecute(featureCollection);
             MapActivity activity = activityRef.get();
             if (featureCollection == null || activity == null) {
@@ -208,13 +196,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
             for (Feature singleFeature : featureCollection.features()) {
-                Log.i("Tell", "for");
                 singleFeature.addBooleanProperty(PROPERTY_SELECTED, false);
             }
 
             activity.setUpData(featureCollection);
             new GenerateViewIconTask(activity).execute(featureCollection);
-            Log.i("Tell", "afte new");
         }
 
     }
@@ -511,12 +497,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             MapActivity activity = activityRef.get();
             if (activity != null && bitmapHashMap != null) {
                 activity.setImageGenResults(bitmapHashMap);
-                System.out.println("zzzzzz");
                 if (refreshSource) {
                     activity.refreshSource();
                 }
             }
-            Toast.makeText(activity, R.string.tap_on_marker_instruction, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Nhấn vào marker", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -566,7 +551,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         client.enqueueCall(new Callback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+            public void onResponse(@NotNull Call<DirectionsResponse> call, @NotNull Response<DirectionsResponse> response) {
                 // You can get the generic HTTP info about the response
                 Timber.d("Response code: " + response.code());
                 if (response.body() == null) {

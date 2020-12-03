@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findingboardinghouseapp.Adapter.CommentAdapter;
 import com.example.findingboardinghouseapp.Adapter.FacilityAdapter;
+import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Comment;
 import com.example.findingboardinghouseapp.Model.CommentCRUD;
 import com.example.findingboardinghouseapp.Model.Facility;
@@ -41,8 +42,10 @@ import com.stfalcon.imageviewer.loader.ImageLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RoomDetailActivity extends AppCompatActivity {
     private TextView textViewDescriptionRoom, textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewNumberPeople, textViewDescriptionBoardingHouse, textViewPrice, textViewArea;
@@ -54,7 +57,7 @@ public class RoomDetailActivity extends AppCompatActivity {
     protected Room room;
     public ArrayList<Facility> arrayListFacility;
     public FacilityAdapter facilityAdapter;
-
+    private ArrayList<BoardingHouse> listBoardingHouse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +74,15 @@ public class RoomDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         room = (Room) intent.getSerializableExtra("room");
+        listBoardingHouse = (ArrayList<BoardingHouse>) intent.getSerializableExtra("a");
+        Set<BoardingHouse> pointGeoSet = new HashSet<>();
+        Log.i("meme", String.valueOf(listBoardingHouse.size()));
+        pointGeoSet.addAll(listBoardingHouse);
+        listBoardingHouse = new ArrayList<BoardingHouse>();
+        listBoardingHouse.addAll(pointGeoSet);
+        Log.i("meme", String.valueOf(listBoardingHouse.size()));
+
+        // findViewById
         textViewDescriptionRoom.setText(room.getDescriptionRoomType());
         textViewNameBoardingHouse.setText(room.getNameBoardingHouse());
         textViewAddressBoardingHouse.setText("Địa chỉ: " + room.getAddressBoardingHouse());
@@ -90,6 +102,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 intent1.putExtra("name", room.getNameBoardingHouse());
                 intent1.putExtra("latitude", room.getLatitude());
                 intent1.putExtra("longitude", room.getLongitude());
+                intent1.putExtra("list", listBoardingHouse);
                 startActivity(intent1);
             }
         });

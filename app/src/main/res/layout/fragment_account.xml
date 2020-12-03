@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/ic_more_vert"
             android:backgroundTint="@color/white"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/TODO" />
     </RelativeLayout>
 
     <LinearLayout
@@ -46,13 +46,17 @@
             android:id="@+id/a_editText_name"
             android:background="@drawable/custom_background_white"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
             android:gravity="center"
             android:text="Tên"
             android:textSize="30sp"
-
+            android:enabled="false"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:inputType="text"
+            android:minHeight="60dp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +73,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:background="@drawable/ic_house" />
+                android:background="@drawable/ic_house"
+                android:contentDescription="@string/TODO" />
 
             <EditText
                 android:layout_marginStart="8dp"
@@ -81,6 +86,8 @@
                 android:enabled="false"
                 android:gravity="center_vertical"
                 android:text="Địa chỉ"
+                android:autofillHints=""
+                android:inputType="text"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -93,7 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:background="@drawable/ic_contact_phone" />
+                android:background="@drawable/ic_contact_phone"
+                android:contentDescription="@string/TODO" />
 
             <EditText
 
@@ -105,7 +113,10 @@
                 android:enabled="false"
                 android:gravity="center_vertical"
                 android:text="Số điện thoại"
-                android:textColor="@color/black" />
+                android:autofillHints=""
+                android:inputType="phone"
+                android:textColor="@color/black"
+                tools:ignore="LabelFor" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:background="@drawable/ic_email" />
+                android:background="@drawable/ic_email"
+                android:contentDescription="@string/TODO" />
 
             <EditText
 
@@ -129,6 +141,8 @@
                 android:enabled="false"
                 android:gravity="center_vertical"
                 android:text="Email"
+                android:autofillHints=""
+                android:inputType="textEmailAddress"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -141,7 +155,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:background="@drawable/ic_visibility" />
+                android:background="@drawable/ic_visibility"
+                android:contentDescription="@string/TODO" />
 
             <EditText
 
@@ -153,6 +168,8 @@
                 android:enabled="false"
                 android:gravity="center_vertical"
                 android:text="Mật khẩu"
+                android:autofillHints=""
+                android:inputType="text"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -163,20 +180,19 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-
             app:ael_expanded="false">
 
             <Button
                 android:id="@+id/a_button_save_setting"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/a_button_cancel_setting"
+                android:layout_toStartOf="@+id/a_button_cancel_setting"
                 android:backgroundTint="@color/green"
                 android:text="Lưu lại" />
 
             <Button
                 android:id="@+id/a_button_cancel_setting"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="50dp"
@@ -188,6 +204,7 @@
 
     <LinearLayout
         android:layout_marginTop="8dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/custom_background_white"
@@ -198,7 +215,7 @@
             android:id="@+id/a_boarding_house_landlord"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="8dp"
+
             android:gravity="center_vertical"
             android:text="Khu trọ"
             android:textSize="20sp" />
@@ -207,9 +224,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewBoardingHouse"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

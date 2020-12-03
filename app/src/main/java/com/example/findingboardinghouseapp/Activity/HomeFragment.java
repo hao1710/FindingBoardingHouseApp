@@ -1,16 +1,21 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.findingboardinghouseapp.Adapter.RoomRecommendationAdapter;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -91,6 +95,7 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private Boolean pressButton = false;
     private EditText editTextSearch;
+    private Button buttonRefresh;
     RecyclerView recyclerViewRoomRecommendation;
     private ImageView imageViewNumberPeople, imageViewPrice, imageViewDistance;
 
@@ -103,9 +108,9 @@ public class HomeFragment extends Fragment {
 
         // mapping
         recyclerViewRoomRecommendation = view.findViewById(R.id.recyclerViewRoomRecommendation);
-        ExpandableRelativeLayout expandableRelativeLayout = view.findViewById(R.id.h_expandable_layout);
+
 //        Button buttonSearch = view.findViewById(R.id.h_button_search);
-        ScrollView scrollView = view.findViewById(R.id.h_scrollView);
+
         editTextSearch = view.findViewById(R.id.h_editText_search);
         spinnerPrice = view.findViewById(R.id.h_spinner_price);
         spinnerDistance = view.findViewById(R.id.h_spinner_distance);
@@ -113,8 +118,8 @@ public class HomeFragment extends Fragment {
         imageViewDistance = view.findViewById(R.id.h_imageView_spinner_distance);
         imageViewNumberPeople = view.findViewById(R.id.h_imageView_spinner_number_people);
         imageViewPrice = view.findViewById(R.id.h_imageView_spinner_price);
-        ImageButton imageButtonSearch = view.findViewById(R.id.h_imageButton_search);
-        ImageButton imageButtonRefresh = view.findViewById(R.id.h_imageButton_refresh);
+        buttonRefresh = view.findViewById(R.id.h_button_refresh);
+
         // initial
         arrayListRoomRecommendation = new ArrayList<>();
         arrayListRoomSearch = new ArrayList<>();
@@ -189,34 +194,42 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
+        editTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                if (arrayListRoomRecommendation.size() > 0) {
-                    arrayListRoomSearch.clear();
-                    recyclerViewRoomRecommendation.setAdapter(adapterSearch);
-                    String input = editTextSearch.getText().toString().toLowerCase().trim();
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (arrayListRoomRecommendation.size() > 0) {
+                        arrayListRoomSearch.clear();
+                        recyclerViewRoomRecommendation.setAdapter(adapterSearch);
+                        String input = editTextSearch.getText().toString().toLowerCase().trim();
 
-                    for (Room room : arrayListRoomRecommendation) {
-                        if (room.getAddressBoardingHouse().toLowerCase().contains(input) || room.getNameBoardingHouse().toLowerCase().contains(input)) {
-                            arrayListRoomSearch.add(room);
+                        for (Room room : arrayListRoomRecommendation) {
+                            if (room.getAddressBoardingHouse().toLowerCase().contains(input) || room.getNameBoardingHouse().toLowerCase().contains(input)) {
+                                arrayListRoomSearch.add(room);
+                            }
                         }
-                    }
-                    if (arrayListRoomSearch.size() == 0) {
-                        Toast.makeText(getContext(), "Không tìm thấy nhà trọ", Toast.LENGTH_SHORT).show();
-                    }
-                    pressButton = true;
-                    adapterSearch.notifyDataSetChanged();
+                        if (arrayListRoomSearch.size() == 0) {
+                            Toast.makeText(getContext(), "Không tìm thấy nhà trọ", Toast.LENGTH_SHORT).show();
+                        }
+                        pressButton = true;
+                        adapterSearch.notifyDataSetChanged();
 //                    expandableRelativeLayout.expand();
-                    arrayListRoomSearchTemp.clear();
-                    arrayListRoomSearchTemp.addAll(arrayListRoomSearch);
+                        arrayListRoomSearchTemp.clear();
+                        arrayListRoomSearchTemp.addAll(arrayListRoomSearch);
 
-                } else {
-                    Toast.makeText(getContext(), "Không còn phòng trống", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Không còn phòng trống", Toast.LENGTH_SHORT).show();
+
+                    }
+                    editTextSearch.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editTextSearch.getWindowToken(), 0);
+                    return true;
                 }
+                return false;
             }
         });
-        imageButtonRefresh.setOnClickListener(new View.OnClickListener() {
+        buttonRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerViewRoomRecommendation.setAdapter(adapter);
@@ -227,7 +240,7 @@ public class HomeFragment extends Fragment {
                 spinnerDistance.setSelection(0);
                 spinnerPrice.setSelection(0);
                 spinnerNumberPeople.setSelection(0);
-//                expandableRelativeLayout.collapse();
+
                 pressButton = false;
             }
         });

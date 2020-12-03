@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Thông tin nhà trọ"
+            android:text="Tên nhà trọ"
             android:textColor="@color/white"
             android:textSize="20sp" />
 

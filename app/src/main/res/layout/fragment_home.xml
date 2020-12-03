@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,32 +35,38 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp">
 
                 <EditText
+
                     android:id="@+id/h_editText_search"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
                     android:layout_marginEnd="4dp"
-                    android:layout_toStartOf="@id/h_imageButton_search"
+
+                    android:layout_toStartOf="@id/h_button_refresh"
+                    android:autofillHints=""
                     android:background="@drawable/custom_edit_text_search"
                     android:hint="Tìm kiếm"
-                    android:autofillHints=""
+                    android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:paddingStart="15dp"
+                    android:paddingStart="10dp"
                     tools:ignore="RtlSymmetry" />
 
-                <ImageButton
-                    android:id="@+id/h_imageButton_search"
-                    android:layout_width="40dp"
+                <Button
+                    android:id="@+id/h_button_refresh"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/ic_search"
-                    android:contentDescription="TODO" />
+                    android:text="Hủy"
+                    android:textColor="@color/black" />
                 <!--                <Button-->
                 <!--                    android:id="@+id/h_button_search"-->
                 <!--                    android:layout_width="40dp"-->
@@ -71,137 +76,104 @@
                 <!--                    android:background="@drawable/ic_search" />-->
             </RelativeLayout>
 
-            <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-                android:id="@+id/h_expandable_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+
+            <HorizontalScrollView
+                android:layout_height="50dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
-                app:ael_expanded="true">
+                android:layout_width="match_parent"
+                android:layout_marginEnd="8dp"
+                android:fadeScrollbars="false"
+                android:scrollbarSize="8dp"
+                tools:ignore="UselessParent">
 
-                <TextView
-                    android:id="@+id/h_textView_filter"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-                    android:text="Lọc"
-                    android:textSize="20sp" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <ScrollView
-
-                    android:id="@+id/h_scrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_toStartOf="@+id/h_imageButton_refresh"
-                    android:layout_toEndOf="@id/h_textView_filter">
-
-                    <HorizontalScrollView
-
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_scrollview"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
+                        <Spinner
+                            android:id="@+id/h_spinner_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:background="@drawable/custom_spinner" />
+
+                        <ImageView
+                            android:id="@+id/h_imageView_spinner_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/ic_arrow_drop_down"
+                            android:contentDescription="TODO" />
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/custom_scrollview"
-                                android:orientation="horizontal">
+                    </LinearLayout>
 
-                                <Spinner
-                                    android:id="@+id/h_spinner_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/custom_spinner" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/custom_scrollview"
+                        android:orientation="horizontal">
 
-                                <ImageView
-                                    android:id="@+id/h_imageView_spinner_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:background="@drawable/ic_arrow_drop_down" />
+                        <Spinner
+                            android:id="@+id/h_spinner_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:background="@drawable/custom_spinner" />
 
-                            </LinearLayout>
+                        <ImageView
+                            android:id="@+id/h_imageView_spinner_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/ic_arrow_drop_down"
+                            android:contentDescription="TODO" />
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:background="@drawable/custom_scrollview"
-                                android:orientation="horizontal">
+                    </LinearLayout>
 
-                                <Spinner
-                                    android:id="@+id/h_spinner_distance"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/custom_scrollview"
+                        android:orientation="horizontal">
 
-                                    android:background="@drawable/custom_spinner" />
+                        <Spinner
+                            android:id="@+id/h_spinner_number_people"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:background="@drawable/custom_spinner" />
 
-                                <ImageView
-                                    android:id="@+id/h_imageView_spinner_distance"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:background="@drawable/ic_arrow_drop_down" />
+                        <ImageView
+                            android:id="@+id/h_imageView_spinner_number_people"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/ic_arrow_drop_down"
+                            android:contentDescription="TODO" />
 
-                            </LinearLayout>
+                    </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:background="@drawable/custom_scrollview"
-                                android:orientation="horizontal">
-
-                                <Spinner
-                                    android:id="@+id/h_spinner_number_people"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-
-                                    android:background="@drawable/custom_spinner" />
-
-                                <ImageView
-                                    android:id="@+id/h_imageView_spinner_number_people"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:background="@drawable/ic_arrow_drop_down"
-                                    android:contentDescription="TODO" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-                    </HorizontalScrollView>
-                </ScrollView>
-
-                <ImageButton
-                    android:id="@+id/h_imageButton_refresh"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/ic_refresh"
-                    android:layout_centerVertical="true"
-                    android:backgroundTint="@color/green"
-                    android:contentDescription="TODO" />
-                <!--                <Button-->
-                <!--                    android:id="@+id/h_button_refresh"-->
-                <!--                    android:layout_width="40dp"-->
-                <!--                    android:layout_height="40dp"-->
-                <!--                    android:layout_alignParentEnd="true"-->
-                <!--                    android:layout_centerVertical="true"-->
-                <!--                    android:background="@drawable/ic_refresh" />-->
+                </LinearLayout>
+            </HorizontalScrollView>
 
 
-            </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+            <!--                <Button-->
+            <!--                    android:id="@+id/h_button_refresh"-->
+            <!--                    android:layout_width="40dp"-->
+            <!--                    android:layout_height="40dp"-->
+            <!--                    android:layout_alignParentEnd="true"-->
+            <!--                    android:layout_centerVertical="true"-->
+            <!--                    android:background="@drawable/ic_refresh" />-->
+
 
             <LinearLayout
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
 
                 android:layout_height="match_parent"
@@ -225,7 +197,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <!-- TODO: Update blank fragment layout -->
-
 
 </LinearLayout>

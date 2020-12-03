@@ -1,10 +1,15 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -40,9 +45,15 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
     double distance;
 
     private TextInputLayout textInputName, textInputAddress, textInputDescription, textInputDistanceParent;
+    private TextInputLayout textInputDistrict, textInputVillage, textInputHamlet;
+    private TextView textViewAddress;
+    private TextInputEditText textInputEditTextHamlet, textInputEditTextAddress;
+    private AutoCompleteTextView autoCompleteTextViewDistrict, autoCompleteTextViewVillage;
     private TextInputEditText textInputDistance;
     private static MapboxDirections client;
     private DirectionsRoute currentRoute;
+    private String address;
+    private String hamletAddress, villageAddress, districtAddress, provinceAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +64,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         BoardingHouse boardingHouse = (BoardingHouse) bundle.getSerializable("boardingHouse");
 
-        // mapping
+        // findViewById
         Button buttonCreateBoardingHouse = findViewById(R.id.cbh_button_create);
         Button buttonPickLocation = findViewById(R.id.cbh_button_pick_location);
         textInputName = findViewById(R.id.cbh_textInput_name);
@@ -61,7 +72,14 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         textInputDescription = findViewById(R.id.cbh_textInput_description);
         textInputDistanceParent = findViewById(R.id.cbh_textInput_distance_parent);
         textInputDistance = findViewById(R.id.cbh_textInput_distance);
-
+        textInputDistrict = findViewById(R.id.cbh_textInput_district);
+        autoCompleteTextViewDistrict = findViewById(R.id.cbh_autoCompleteTextView_district);
+        textInputVillage = findViewById(R.id.cbh_textInput_village);
+        autoCompleteTextViewVillage = findViewById(R.id.cbh_autoCompleteTextView_village);
+        textInputHamlet = findViewById(R.id.cbh_textInput_hamlet);
+        textInputEditTextHamlet = findViewById(R.id.a12345);
+        textInputEditTextAddress = findViewById(R.id.cbh_textInputEditText_address);
+        initialSpinner();
 
         buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +110,88 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 startActivityForResult(intent1, REQUEST_CODE_FROM_CREATE_BOARDING_HOUSE);
             }
         });
+//        textInputEditTextHamlet.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                getAddress();
+//            }
+//        });
+        textInputEditTextHamlet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    getAddress();
+                }
+            }
+        });
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void getAddress() {
+        hamletAddress = textInputHamlet.getEditText().getText().toString().trim();
+        villageAddress = textInputVillage.getEditText().getText().toString().trim();
+        districtAddress = textInputDistrict.getEditText().getText().toString().trim();
+        provinceAddress = "Hậu Giang";
+        address = hamletAddress + ", " + villageAddress + ", " + districtAddress + ", " + provinceAddress;
+        if (hamletAddress.isEmpty() | villageAddress.isEmpty() | districtAddress.isEmpty()) {
+            textInputEditTextAddress.setText("");
+        } else {
+            textInputEditTextAddress.setText(address);
+        }
+
+    }
+
+    private void initialSpinner() {
+        String[] district = new String[]{"Châu Thành", "Phụng Hiệp"};
+        ArrayAdapter<String> adapterDistrict = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                R.layout.item_spinner, district);
+
+        autoCompleteTextViewDistrict.setAdapter(adapterDistrict);
+        autoCompleteTextViewDistrict.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+
+                switch (item) {
+                    case "Châu Thành":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] chauThanh = new String[]{"CT 1", "CT 2"};
+                        ArrayAdapter<String> adapterCT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, chauThanh);
+                        autoCompleteTextViewVillage.setAdapter(adapterCT);
+                        break;
+                    case "Phụng Hiệp":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+
+                        String[] phungHiep = new String[]{"PH 1", "PH 2"};
+                        ArrayAdapter<String> adapterPH = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, phungHiep);
+                        autoCompleteTextViewVillage.setAdapter(adapterPH);
+                        break;
+                }
+            }
+        });
+
+        autoCompleteTextViewVillage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getAddress();
+            }
+        });
+
     }
 
     private boolean validateName(String name) {

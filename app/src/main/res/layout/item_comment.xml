@@ -8,9 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/custom_item_comment"
         android:gravity="center|left"
         android:orientation="vertical"
@@ -20,7 +18,7 @@
             android:id="@+id/cmt_name"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:gravity="bottom"
             android:text="Name"
             android:textStyle="bold" />
@@ -28,10 +26,11 @@
         <TextView
             android:id="@+id/cmt_content"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginStart="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="Nội dung" />
+            android:text="Nội dung"
+            android:paddingBottom="4dp"/>
 
 
     </LinearLayout>
