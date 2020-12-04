@@ -3,6 +3,7 @@ package com.example.findingboardinghouseapp.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -117,6 +118,8 @@ public class BoardingHouseActivity extends AppCompatActivity {
         textViewNameBoardingHouse.setText(boardingHouse.getNameBoardingHouse());
         textViewAddressBoardingHouse.setText(boardingHouse.getAddressBoardingHouse());
         textViewDistanceBoardingHouse.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
+        textViewDescription.setMaxLines(2);
+        textViewDescription.setEllipsize(TextUtils.TruncateAt.END);
         textViewDescription.setText(boardingHouse.getDescriptionBoardingHouse());
     }
 

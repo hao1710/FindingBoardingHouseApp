@@ -3,12 +3,12 @@ package com.example.findingboardinghouseapp.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +29,10 @@ import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,14 +48,17 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
     double longitudeCTU = 105.60451156571315;
     double distance;
 
-    private TextInputLayout textInputName, textInputAddress, textInputDescription, textInputDistanceParent;
-    private TextInputLayout textInputDistrict, textInputVillage, textInputHamlet;
-    private TextView textViewAddress;
-    private TextInputEditText textInputEditTextHamlet, textInputEditTextAddress;
+    private TextInputLayout textInputName, textInputDistrict, textInputVillage, textInputHamlet, textInputDescription, textInputDistance;
+    private TextInputEditText textInputEditTextHamlet, textInputEditTextDistance;
     private AutoCompleteTextView autoCompleteTextViewDistrict, autoCompleteTextViewVillage;
-    private TextInputEditText textInputDistance;
+    private ImageButton imageButtonPickLocation;
+    private Button buttonCreateBoardingHouse;
+    private TextView textViewAddress;
+
+    private BoardingHouse boardingHouse;
     private static MapboxDirections client;
     private DirectionsRoute currentRoute;
+
     private String address;
     private String hamletAddress, villageAddress, districtAddress, provinceAddress;
 
@@ -62,37 +69,29 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        BoardingHouse boardingHouse = (BoardingHouse) bundle.getSerializable("boardingHouse");
+        boardingHouse = (BoardingHouse) bundle.getSerializable("boardingHouse");
 
-        // findViewById
-        Button buttonCreateBoardingHouse = findViewById(R.id.cbh_button_create);
-        Button buttonPickLocation = findViewById(R.id.cbh_button_pick_location);
-        textInputName = findViewById(R.id.cbh_textInput_name);
-        textInputAddress = findViewById(R.id.cbh_textInput_address);
-        textInputDescription = findViewById(R.id.cbh_textInput_description);
-        textInputDistanceParent = findViewById(R.id.cbh_textInput_distance_parent);
-        textInputDistance = findViewById(R.id.cbh_textInput_distance);
-        textInputDistrict = findViewById(R.id.cbh_textInput_district);
-        autoCompleteTextViewDistrict = findViewById(R.id.cbh_autoCompleteTextView_district);
-        textInputVillage = findViewById(R.id.cbh_textInput_village);
-        autoCompleteTextViewVillage = findViewById(R.id.cbh_autoCompleteTextView_village);
-        textInputHamlet = findViewById(R.id.cbh_textInput_hamlet);
-        textInputEditTextHamlet = findViewById(R.id.a12345);
-        textInputEditTextAddress = findViewById(R.id.cbh_textInputEditText_address);
+        // findView
+        findView();
+
         initialSpinner();
 
         buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = textInputName.getEditText().getText().toString().trim();
-                String address = textInputAddress.getEditText().getText().toString().trim();
-                String description = textInputDescription.getEditText().getText().toString().trim();
-                String distanceIn = textInputDistance.getText().toString().trim();
-                if (!validateDescription(description) | !validateName(name) | !validateAddress(address) | !validateDistance(distanceIn)) {
+                String nameV = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
+                String addressV = textViewAddress.getText().toString().trim();
+                String districtV = Objects.requireNonNull(textInputDistrict.getEditText()).getText().toString().trim();
+                String villageV = Objects.requireNonNull(textInputVillage.getEditText()).getText().toString().trim();
+                String hamletV = Objects.requireNonNull(textInputHamlet.getEditText()).getText().toString().trim();
+                String descriptionV = Objects.requireNonNull(textInputDescription.getEditText()).getText().toString().trim();
+                String distanceV = Objects.requireNonNull(textInputDistance.getEditText()).getText().toString().trim();
+                if (!validateName(nameV) | !validateDistrict(districtV) | !validateVillage(villageV) | !validateHamlet(hamletV)
+                        | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
                     return;
                 }
                 BoardingHouseCRUD boardingHouseCRUD = new BoardingHouseCRUD();
-                boardingHouseCRUD.setName(name);
+                boardingHouseCRUD.setName(nameV);
                 boardingHouseCRUD.setAddress(address);
                 boardingHouseCRUD.setDistance(distance);
                 GeoPoint point = new GeoPoint(latitude, longitude);
@@ -103,7 +102,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Thêm nhà trọ thành công", Toast.LENGTH_SHORT).show();
             }
         });
-        buttonPickLocation.setOnClickListener(new View.OnClickListener() {
+        imageButtonPickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(getApplicationContext(), PickLocationActivity.class);
@@ -137,23 +136,43 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
 
     }
 
+    private void findView() {
+        textInputName = findViewById(R.id.cbh_textInput_name);
+        textViewAddress = findViewById(R.id.cbh_textView_address);
+        textInputDistrict = findViewById(R.id.cbh_textInput_district);
+        textInputVillage = findViewById(R.id.cbh_textInput_village);
+        textInputHamlet = findViewById(R.id.cbh_textInput_hamlet);
+        textInputDescription = findViewById(R.id.cbh_textInput_description);
+        textInputDistance = findViewById(R.id.cbh_textInput_distance);
+
+        autoCompleteTextViewDistrict = findViewById(R.id.cbh_autoCompleteTextView_district);
+        autoCompleteTextViewVillage = findViewById(R.id.cbh_autoCompleteTextView_village);
+        textInputEditTextHamlet = findViewById(R.id.cbh_textInputEditText_hamlet);
+        textInputEditTextDistance = findViewById(R.id.cbh_textInputEditText_distance);
+
+        imageButtonPickLocation = findViewById(R.id.cbh_imageButton_pick_location);
+        buttonCreateBoardingHouse = findViewById(R.id.cbh_button_create);
+
+    }
+
     @SuppressLint("SetTextI18n")
     private void getAddress() {
-        hamletAddress = textInputHamlet.getEditText().getText().toString().trim();
-        villageAddress = textInputVillage.getEditText().getText().toString().trim();
-        districtAddress = textInputDistrict.getEditText().getText().toString().trim();
+        hamletAddress = Objects.requireNonNull(textInputEditTextHamlet.getText()).toString().trim();
+        villageAddress = autoCompleteTextViewVillage.getText().toString().trim();
+        districtAddress = autoCompleteTextViewDistrict.getText().toString().trim();
         provinceAddress = "Hậu Giang";
         address = hamletAddress + ", " + villageAddress + ", " + districtAddress + ", " + provinceAddress;
         if (hamletAddress.isEmpty() | villageAddress.isEmpty() | districtAddress.isEmpty()) {
-            textInputEditTextAddress.setText("");
+            textViewAddress.setText("Vui lòng chọn địa chỉ");
         } else {
-            textInputEditTextAddress.setText(address);
+            textViewAddress.setText(address);
         }
 
     }
 
     private void initialSpinner() {
-        String[] district = new String[]{"Châu Thành", "Phụng Hiệp"};
+        String[] district = new String[]{"Thành phố Vị Thanh", "Thị xã Ngã Bảy", "Thị xã Long Mỹ",
+                "Huyện Vị Thủy", "Huyện Long Mỹ", "Huyện Phụng Hiệp", "Huyện Châu Thành", "Huyện Châu Thành A"};
         ArrayAdapter<String> adapterDistrict = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
                 R.layout.item_spinner, district);
 
@@ -164,33 +183,84 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 String item = parent.getItemAtPosition(position).toString();
 
                 switch (item) {
-                    case "Châu Thành":
+                    case "Thành phố Vị Thanh":
                         getAddress();
                         autoCompleteTextViewVillage.setText("");
-                        String[] chauThanh = new String[]{"CT 1", "CT 2"};
-                        ArrayAdapter<String> adapterCT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, chauThanh);
-                        autoCompleteTextViewVillage.setAdapter(adapterCT);
+                        String[] tpVT = new String[]{"Phường 1", "Phường 3", "Phường 4", "Phường 5", "Phường 7",
+                                "Xã Vị Tân", "Xã Hỏa Lựu", "Xã Tân Tiến", "Xã Hỏa Tiến"};
+                        ArrayAdapter<String> adapterTPVT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, tpVT);
+                        autoCompleteTextViewVillage.setAdapter(adapterTPVT);
                         break;
-                    case "Phụng Hiệp":
+                    case "Thị xã Ngã Bảy":
                         getAddress();
                         autoCompleteTextViewVillage.setText("");
-
-                        String[] phungHiep = new String[]{"PH 1", "PH 2"};
-                        ArrayAdapter<String> adapterPH = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, phungHiep);
-                        autoCompleteTextViewVillage.setAdapter(adapterPH);
+                        String[] txNB = new String[]{"Phường Ngã Bảy", "Phường Lái Hiếu", "Phường Hiệp Thành",
+                                "Xã Hiệp Lợi", "Xã Đại Thành", "Xã Tân Thành"};
+                        ArrayAdapter<String> adapterTXNB = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, txNB);
+                        autoCompleteTextViewVillage.setAdapter(adapterTXNB);
+                        break;
+                    case "Thị xã Long Mỹ":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] txLM = new String[]{"Phường Thuận An", "Phường Bình Thành", "Phường Vĩnh Tường", "Phường Trà Lồng",
+                                "Xã Long Bình", "Xã Long Trị", "Xã Long Trị A", "Xã Tân Phú", "Xã Long Phú"};
+                        ArrayAdapter<String> adapterTXLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, txLM);
+                        autoCompleteTextViewVillage.setAdapter(adapterTXLM);
+                        break;
+                    case "Huyện Vị Thủy":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] hVT = new String[]{"Thị trấn Nàng Mau", "Xã Vị Bình", "Xã Vị Đông", "Xã Vị Thanh", "Xã Vị Thắng", "Xã Vị Thủy",
+                                "Xã Vị Trung", "Xã Vĩnh Thuận Tây", "Xã Vĩnh Thuận Trung", "Xã Vĩnh Tường"};
+                        ArrayAdapter<String> adapterHVT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, hVT);
+                        autoCompleteTextViewVillage.setAdapter(adapterHVT);
+                        break;
+                    case "Huyện Long Mỹ":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] hLM = new String[]{"Xã Thuận Hòa", "Xã Thuận Hưng", "Xã Vĩnh Thuận Đông", "Xã Vĩnh Viễn", "Xã Vĩnh Viễn A",
+                                "Xã Xà Phiên", "Xã Lương Tâm", "Xã Lương Nghĩa"};
+                        ArrayAdapter<String> adapterHLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, hLM);
+                        autoCompleteTextViewVillage.setAdapter(adapterHLM);
+                        break;
+                    case "Huyện Phụng Hiệp":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] hPH = new String[]{"Thị trấn Cây Dương", "Thị trấn Kinh Cùng", "Thị trấn Búng Tàu",
+                                "Xã Phụng Hiệp", "Xã Tân Phước Hưng", "Xã Tân Bình", "Xã Hòa Anh", "Xã Phương Bình", "Xã Phương Phú",
+                                "Xã Hòa Mỹ", "Xã Hiệp Hưng", "Xã Thạnh Hòa", "Xã Bình Thành", "Xã Tân Long", "Xã Long Thạnh"};
+                        ArrayAdapter<String> adapterHPH = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, hPH);
+                        autoCompleteTextViewVillage.setAdapter(adapterHPH);
+                        break;
+                    case "Huyện Châu Thành":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] hCT = new String[]{"Thị trấn Ngã Sáu", "Thị trấn Mái Dầm",
+                                "Xã Đông Phước", "Xã Đông Phước A", "Xã Phú Hữu", "Xã Phú Tân", "Xã Phú An", "Xã Đông Phú", "Xã Đông Thạnh"};
+                        ArrayAdapter<String> adapterHCT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, hCT);
+                        autoCompleteTextViewVillage.setAdapter(adapterHCT);
+                        break;
+                    case "Huyện Châu Thành A":
+                        getAddress();
+                        autoCompleteTextViewVillage.setText("");
+                        String[] hCTA = new String[]{"Thị trấn Một Ngàn", "Thị trấn Bảy Ngàn", "Thị trấn Cái Tắc", "Thị trấn Rạch Gồi",
+                                "Xã Thạnh Xuân", "Xã Tân Phú Thạnh", "Xã Tân Hòa", "Xã Trường Long Tây", "Xã Trường Long A", "Xã Nhơn Nghĩa A"};
+                        ArrayAdapter<String> adapterHCTA = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                                R.layout.item_spinner, hCTA);
+                        autoCompleteTextViewVillage.setAdapter(adapterHCTA);
                         break;
                 }
             }
         });
 
-        autoCompleteTextViewVillage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getAddress();
-            }
-        });
+        autoCompleteTextViewVillage.setOnItemClickListener((parent, view, position, id) -> getAddress());
 
     }
 
@@ -205,24 +275,32 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateAddress(String address) {
-        if (address.isEmpty()) {
-            textInputAddress.setError("Vui lòng điền địa chỉ nhà trọ");
+    private boolean validateDistrict(String district) {
+        if (district.isEmpty()) {
+            textInputDistrict.setError("Vui lòng chọn huyện");
             return false;
         } else {
-            textInputAddress.setError(null);
-//            textInputEmail.setEnabled(false);
+            textInputDistrict.setError(null);
             return true;
         }
     }
 
-    private boolean validateDistance(String distance) {
-        if (distance.isEmpty()) {
-            textInputDistanceParent.setError("Vui lòng chọn vị trí nhà trọ");
+    private boolean validateVillage(String village) {
+        if (village.isEmpty()) {
+            textInputVillage.setError("Vui lòng chọn xã");
             return false;
         } else {
-            textInputDistanceParent.setError(null);
-//            textInputEmail.setEnabled(false);
+            textInputVillage.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateHamlet(String hamlet) {
+        if (hamlet.isEmpty()) {
+            textInputHamlet.setError("Vui lòng điền ấp");
+            return false;
+        } else {
+            textInputHamlet.setError(null);
             return true;
         }
     }
@@ -238,6 +316,18 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         }
     }
 
+    private boolean validateDistance(String distance) {
+        if (distance.isEmpty()) {
+            textInputDistance.setError("Vui lòng chọn vị trí nhà trọ");
+            return false;
+        } else {
+            textInputDistance.setError(null);
+//            textInputEmail.setEnabled(false);
+            return true;
+        }
+    }
+
+
     private void getRoute(MapboxMap mapboxMap, Point origin, Point destination) {
         client = MapboxDirections.builder()
                 .origin(origin)
@@ -249,7 +339,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
 
         client.enqueueCall(new Callback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+            public void onResponse(@NotNull Call<DirectionsResponse> call, @NotNull Response<DirectionsResponse> response) {
                 // You can get the generic HTTP info about the response
                 Timber.d("Response code: " + response.code());
                 if (response.body() == null) {
@@ -264,7 +354,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 currentRoute = response.body().routes().get(0);
                 double tempDistance = currentRoute.distance() / 1000;
                 distance = Math.ceil(tempDistance * 100) / 100;
-                textInputDistance.setText("Cách ĐHCT " + distance + " km");
+                textInputEditTextDistance.setText("Cách ĐHCT " + distance + " km");
 
             }
 
@@ -292,8 +382,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_FROM_CREATE_BOARDING_HOUSE && resultCode == PickLocationActivity.RESULT_CODE_FROM_PICK_LOCATION && data != null) {
             latitude = data.getDoubleExtra("latitude", requestCode);
             longitude = data.getDoubleExtra("longitude", requestCode);
-            Log.i("DHCT", String.valueOf(latitude) + " " + longitude);
-//            calDistance(latitude, longitude);
+
             Point ctu = Point.fromLngLat(longitudeCTU, latitudeCTU);
             Point bh = Point.fromLngLat(longitude, latitude);
             getRoute(null, ctu, bh);
