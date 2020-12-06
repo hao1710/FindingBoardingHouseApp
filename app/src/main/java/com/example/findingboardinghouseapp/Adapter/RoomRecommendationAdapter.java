@@ -35,8 +35,7 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_room_recommendation, null);
-        MyViewHolder myViewHolder = new MyViewHolder(v);
-        return myViewHolder;
+        return new MyViewHolder(v);
     }
 
     @SuppressLint("SetTextI18n")
@@ -47,10 +46,13 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
         holder.textViewDescription.setMaxLines(2);
         holder.textViewDescription.setEllipsize(TextUtils.TruncateAt.END);
         holder.textViewDescription.setText(roomRecommendation.getDescriptionRoomType());
+
         holder.textViewNameBoardingHouse.setText(roomRecommendation.getNameBoardingHouse());
+
         holder.textViewAddressBoardingHouse.setMaxLines(2);
         holder.textViewAddressBoardingHouse.setEllipsize(TextUtils.TruncateAt.END);
         holder.textViewAddressBoardingHouse.setText(roomRecommendation.getAddressBoardingHouse());
+
         holder.textViewPriceRoom.setText(roomRecommendation.getPriceRoomType() + " triệu");
 
         Picasso.with(context).load(roomRecommendation.getImageRoom())
@@ -58,12 +60,6 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
                 .placeholder(R.drawable.load_image_room)
                 .error(R.drawable.ic_app)
                 .into(holder.imageViewRoom);
-
-
-//        holder.textViewName.setText(roomRecommendation.getNameRoom());
-//
-//        holder.textViewAddress.setText(Boolean.toString(roomRecommendation.isStatus()));
-//        holder.textViewPrice.setText((int) roomRecommendation.getPriceRoomType());
     }
 
     @Override
@@ -86,12 +82,11 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent i = new Intent(context, RoomDetailActivity.class);
                     Room room = arrayList.get(getPosition());
                     i.putExtra("room", (Serializable) room);
-                    ArrayList<BoardingHouse> list = new ArrayList<>();
 
+                    ArrayList<BoardingHouse> list = new ArrayList<>();
                     for (Room room1 : arrayList) {
                         BoardingHouse pointGeo = new BoardingHouse();
                         pointGeo.setNameBoardingHouse(room1.getNameBoardingHouse());
@@ -99,7 +94,7 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
                         pointGeo.setLongitude(room1.getLongitude());
                         list.add(pointGeo);
                     }
-                    i.putExtra("a", list);
+                    i.putExtra("listBH", list);
 
                     context.startActivity(i);
                 }

@@ -1,12 +1,12 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,56 +45,60 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class RoomDetailActivity extends AppCompatActivity {
-    private TextView textViewDescriptionRoom, textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewNumberPeople, textViewDescriptionBoardingHouse, textViewPrice, textViewArea;
-    protected ImageView imageView;
-    protected RecyclerView recyclerViewComment, recyclerViewFacility;
+    private ImageView imageViewRoom;
+    private TextView textViewDescriptionRoom, textViewNameBoardingHouse;
+    private TextView textViewAreaRoom, textViewPriceRoom, textViewNumberPeople;
+    private TextView textViewViewMap;
+    private TextView textViewElectricityPrice, textViewWaterPrice;
+    private TextView textViewAddressBoardingHouse, textViewDescriptionBoardingHouse, textViewPhoneNumber;
+    private RecyclerView recyclerViewFacility, recyclerViewComment;
+    private ExpandableLinearLayout expandLayoutComment;
+    private ImageButton imageButtonCreateComment;
+    private EditText editTextName, editTextContent;
+    private Button buttonComment, buttonCancel;
+
+    private Room room;
+
     protected CommentAdapter adapter;
     protected ArrayList<Comment> arrayList;
     protected FirebaseFirestore firebaseFirestore;
-    protected Room room;
+
     public ArrayList<Facility> arrayListFacility;
     public FacilityAdapter facilityAdapter;
     private ArrayList<BoardingHouse> listBoardingHouse;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_detail);
 
-        mapping();
+        findView();
+
+        Intent intent = getIntent();
+        room = (Room) intent.getSerializableExtra("room");
+        listBoardingHouse = (ArrayList<BoardingHouse>) intent.getSerializableExtra("listBH");
+        Set<BoardingHouse> pointGeoSet = new HashSet<>(listBoardingHouse);
+        listBoardingHouse = new ArrayList<BoardingHouse>();
+        listBoardingHouse.addAll(pointGeoSet);
 
         // underline textView
-        TextView textViewViewMap = findViewById(R.id.rd_textView_view_map);
         String create = "Xem map";
         SpannableString spannableString = new SpannableString(create);
         spannableString.setSpan(new UnderlineSpan(), 0, create.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewViewMap.setText(spannableString);
 
-        Intent intent = getIntent();
-        room = (Room) intent.getSerializableExtra("room");
-        listBoardingHouse = (ArrayList<BoardingHouse>) intent.getSerializableExtra("a");
-        Set<BoardingHouse> pointGeoSet = new HashSet<>();
-        Log.i("meme", String.valueOf(listBoardingHouse.size()));
-        pointGeoSet.addAll(listBoardingHouse);
-        listBoardingHouse = new ArrayList<BoardingHouse>();
-        listBoardingHouse.addAll(pointGeoSet);
-        Log.i("meme", String.valueOf(listBoardingHouse.size()));
+        //
+        expandLayoutComment.collapse();
 
-        // findViewById
-        textViewDescriptionRoom.setText(room.getDescriptionRoomType());
-        textViewNameBoardingHouse.setText(room.getNameBoardingHouse());
-        textViewAddressBoardingHouse.setText("Địa chỉ: " + room.getAddressBoardingHouse());
-        textViewPrice.setText(room.getPriceRoomType() + " triệu đồng");
-        ImageButton imageButtonCreateComment = findViewById(R.id.rd_imageButton_create_comment);
-        textViewArea.setText(room.getAreaRoomType() + " m2");
-        textViewNumberPeople.setText(room.getNumberPeopleRoomType() + " người");
-        textViewDescriptionBoardingHouse.setText(room.getDescriptionBoardingHouse());
-        ExpandableLinearLayout expandableLinearLayout = findViewById(R.id.rd_expand_layout_comment);
-        Button buttonCancel = findViewById(R.id.rd_button_cancel_comment);
-        EditText editTextName = findViewById(R.id.rd_editText_name);
-        EditText editTextContent = findViewById(R.id.rd_editText_content);
+        //
+        setText();
+
+
         textViewViewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,21 +115,18 @@ public class RoomDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 editTextName.setText("");
                 editTextContent.setText("");
-                expandableLinearLayout.collapse();
+                expandLayoutComment.collapse();
             }
         });
-
 
         imageButtonCreateComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                expandableLinearLayout.expand();
+                expandLayoutComment.expand();
             }
         });
 
-        Button buttonCreateComment = findViewById(R.id.rd_button_create_comment);
-        buttonCreateComment.setOnClickListener(new View.OnClickListener() {
+        buttonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = editTextName.getText().toString().trim();
@@ -141,7 +142,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                     editTextName.setText("");
                     editTextContent.setText("");
-                    expandableLinearLayout.collapse();
+                    expandLayoutComment.collapse();
                     getComment(new FirestoreCallBack() {
                         @Override
                         public void onCallback(List<Comment> list) {
@@ -158,33 +159,13 @@ public class RoomDetailActivity extends AppCompatActivity {
             }
         });
 
-
-//        new StfalconImageViewer.Builder<>(getApplicationContext(), room.getImageRoom(), new ImageLoader<String>() {
-//            @Override
-//            public void loadImage(ImageView imageView, String image) {
-//                Picasso.with(getApplicationContext()).load(room.getImageRoom())
-//                        .fit().centerCrop()
-//                        .placeholder(R.drawable.load_image_room)
-//                        .error(R.drawable.ic_app)
-//                        .into(imageView);
-//            }
-//        }).show();
         Picasso.with(getApplicationContext()).load(room.getImageRoom())
                 .fit().centerCrop()
                 .placeholder(R.drawable.load_image_room)
                 .error(R.drawable.ic_app)
-                .into(imageView);
-//    new StfalconImageViewer.Builder<String>(this, Collections.singletonList(room.getImageRoom()), new ImageLoader<String>() {
-//        @Override
-//        public void loadImage(ImageView imageView, String image) {
-//            Picasso.with(getApplicationContext()).load(room.getImageRoom())
-//                    .placeholder(R.drawable.load_image_room)
-//                    .error(R.drawable.ic_app)
-//                    .into(imageView);
-//        }
-//    }).show();
+                .into(imageViewRoom);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        imageViewRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new StfalconImageViewer.Builder<String>(v.getContext(), Collections.singletonList(room.getImageRoom()), new ImageLoader<String>() {
@@ -198,9 +179,10 @@ public class RoomDetailActivity extends AppCompatActivity {
                 }).withBackgroundColor(Color.WHITE).show();
             }
         });
+
         arrayList = new ArrayList<>();
         adapter = new CommentAdapter(getApplicationContext(), arrayList);
-        recyclerViewComment = findViewById(R.id.recyclerViewComment);
+
         recyclerViewComment.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerViewComment.setLayoutManager(linearLayout);
@@ -208,7 +190,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
         arrayListFacility = new ArrayList<>();
         facilityAdapter = new FacilityAdapter(getApplicationContext(), arrayListFacility);
-        recyclerViewFacility = findViewById(R.id.rd_recyclerView_facility);
+
         recyclerViewFacility.setHasFixedSize(true);
         LinearLayoutManager layoutFacility = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -235,15 +217,29 @@ public class RoomDetailActivity extends AppCompatActivity {
             public void onCallback(List<Comment> list) {
                 if (list.size() > 0) {
                     arrayList.clear();
-                    for (Comment comment : list) {
-                        arrayList.add(comment);
-                    }
+                    arrayList.addAll(list);
                 }
                 adapter.notifyDataSetChanged();
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
+    private void setText() {
+        textViewDescriptionRoom.setText(room.getDescriptionRoomType());
+        textViewNameBoardingHouse.setText(room.getNameBoardingHouse());
+
+        textViewAreaRoom.setText(room.getAreaRoomType() + " m2");
+        textViewPriceRoom.setText(room.getPriceRoomType() + " triệu đồng");
+        textViewNumberPeople.setText(room.getNumberPeopleRoomType() + " người");
+
+        textViewElectricityPrice.setText(room.getElectricityPriceBoardingHouse() + " ngàn đồng");
+        textViewWaterPrice.setText(room.getWaterPriceBoardingHouse() + " ngàn đồng");
+
+        textViewAddressBoardingHouse.setText("Địa chỉ: " + room.getAddressBoardingHouse());
+        textViewDescriptionBoardingHouse.setText(room.getDescriptionBoardingHouse());
+
+    }
 
     protected interface FirestoreCallBack {
         void onCallback(List<Comment> list);
@@ -263,7 +259,9 @@ public class RoomDetailActivity extends AppCompatActivity {
                     DocumentSnapshot documentSnapshot = task.getResult();
 
                     Map<String, Object> data = new HashMap<>();
+                    assert documentSnapshot != null;
                     data = documentSnapshot.getData();
+                    assert data != null;
                     for (Map.Entry<String, Object> data1 : data.entrySet()) {
                         if (data1.getKey().equals("facility")) {
                             Map<String, Object> allFacility = (Map<String, Object>) data1.getValue();
@@ -276,7 +274,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                                         facility.setImage(d.getValue().toString());
                                     }
                                     if (d.getKey().equals("name")) {
-                                        Log.i("FAcmnr", d.getValue().toString());
+
                                         facility.setName(d.getValue().toString());
                                     }
                                     if (d.getKey().equals("status")) {
@@ -287,7 +285,6 @@ public class RoomDetailActivity extends AppCompatActivity {
                                 }
                             }
                         }
-
                     }
                 }
                 callback.onCallback(list);
@@ -295,23 +292,20 @@ public class RoomDetailActivity extends AppCompatActivity {
         });
     }
 
-    protected void getComment(FirestoreCallBack firestoreCallBack) {
+    private void getComment(FirestoreCallBack firestoreCallBack) {
         List<Comment> list = new ArrayList<>();
         firebaseFirestore.collection("comment").whereEqualTo("boardingHouse", room.getIdBoardingHouse()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                            for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult()).getDocuments()) {
                                 Comment comment = new Comment();
                                 comment.setIdComment(documentSnapshot.getId());
                                 comment.setNameTenant(documentSnapshot.getString("name"));
                                 comment.setContentComment(documentSnapshot.getString("content"));
                                 comment.setIdBoardingHouse(documentSnapshot.getString("boardingHouse"));
-
                                 list.add(comment);
-
-
                             }
                         }
                         firestoreCallBack.onCallback(list);
@@ -319,16 +313,32 @@ public class RoomDetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void mapping() {
-        imageView = findViewById(R.id.rd_image_room);
+    private void findView() {
+        imageViewRoom = findViewById(R.id.rd_image_room);
+
         textViewDescriptionRoom = findViewById(R.id.rd_description_room);
         textViewNameBoardingHouse = findViewById(R.id.rd_name_boarding_house);
-        textViewAddressBoardingHouse = findViewById(R.id.rd_address_boarding_house);
-        textViewArea = findViewById(R.id.rd_area_room);
-        textViewPrice = findViewById(R.id.rd_price_room);
+
+        textViewAreaRoom = findViewById(R.id.rd_area_room);
+        textViewPriceRoom = findViewById(R.id.rd_price_room);
         textViewNumberPeople = findViewById(R.id.rd_number_people);
+
+        textViewElectricityPrice = findViewById(R.id.rd_electricityPrice);
+        textViewWaterPrice = findViewById(R.id.rd_waterPrice);
+
+        textViewAddressBoardingHouse = findViewById(R.id.rd_address_boarding_house);
+        textViewViewMap = findViewById(R.id.rd_textView_view_map);
         textViewDescriptionBoardingHouse = findViewById(R.id.rd_textView_description_bh);
+        textViewPhoneNumber = findViewById(R.id.rd_textView_phoneNumber);
 
+        recyclerViewFacility = findViewById(R.id.rd_recyclerView_facility);
+        recyclerViewComment = findViewById(R.id.recyclerViewComment);
 
+        expandLayoutComment = findViewById(R.id.rd_expand_layout_comment);
+        imageButtonCreateComment = findViewById(R.id.rd_imageButton_create_comment);
+        editTextName = findViewById(R.id.rd_editText_name);
+        editTextContent = findViewById(R.id.rd_editText_content);
+        buttonComment = findViewById(R.id.rd_button_create_comment);
+        buttonCancel = findViewById(R.id.rd_button_cancel_comment);
     }
 }

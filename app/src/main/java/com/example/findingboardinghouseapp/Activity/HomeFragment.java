@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,9 +32,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -140,10 +142,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (arrayListRoomSearch.size() == 0) {
-
                     readData(list -> {
-                        ArrayList<Room> arrayList = new ArrayList<>();
-                        arrayList.addAll(list);
+                        ArrayList<Room> arrayList = new ArrayList<>(list);
                         recyclerViewRoomRecommendation.setAdapter(adapter);
                         if (arrayList.size() > 0) {
                             arrayListRoomRecommendation.clear();
@@ -153,9 +153,7 @@ public class HomeFragment extends Fragment {
                     });
                 } else {
                     readData(list -> {
-                        ArrayList<Room> arrayList = new ArrayList<>();
-                        arrayList.addAll(list);
-
+                        ArrayList<Room> arrayList = new ArrayList<>(list);
                         if (arrayList.size() > 0) {
                             arrayListRoomRecommendation.clear();
                             arrayListRoomRecommendation.addAll(arrayList);
@@ -169,10 +167,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (arrayListRoomSearch.size() == 0) {
-
                     readData(list -> {
-                        ArrayList<Room> arrayList = new ArrayList<>();
-                        arrayList.addAll(list);
+                        ArrayList<Room> arrayList = new ArrayList<>(list);
                         recyclerViewRoomRecommendation.setAdapter(adapter);
                         if (arrayList.size() > 0) {
                             arrayListRoomRecommendation.clear();
@@ -182,16 +178,13 @@ public class HomeFragment extends Fragment {
                     });
                 } else {
                     readData(list -> {
-                        ArrayList<Room> arrayList = new ArrayList<>();
-                        arrayList.addAll(list);
-
+                        ArrayList<Room> arrayList = new ArrayList<>(list);
                         if (arrayList.size() > 0) {
                             arrayListRoomRecommendation.clear();
                             arrayListRoomRecommendation.addAll(arrayList);
                         }
                     });
                 }
-
             }
         });
         editTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -222,7 +215,7 @@ public class HomeFragment extends Fragment {
 
                     }
                     editTextSearch.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(editTextSearch.getWindowToken(), 0);
                     return true;
                 }
@@ -240,21 +233,12 @@ public class HomeFragment extends Fragment {
                 spinnerDistance.setSelection(0);
                 spinnerPrice.setSelection(0);
                 spinnerNumberPeople.setSelection(0);
-
                 pressButton = false;
             }
         });
-
-        // update status of room
-//        firebaseFirestore.collection("boardingHouse").document("JYYwAzho2pZ09NCTg8EJ").collection("roomType").document("QVfTthtQrdM8IjXj7OKo")
-//                .update("room.11", false);
-//        firebaseFirestore.collection("boardingHouse").document("JYYwAzho2pZ09NCTg8EJ").collection("roomType").document("QVfTthtQrdM8IjXj7OKo")
-//                .update("room.image.1", "for fun");
-
         initialSpinner();
         return view;
     }
-
     private void searchRoom(double price, double distance, double numberPeople) {
         arrayListRoomSearch.clear();
         recyclerViewRoomRecommendation.setAdapter(adapterSearch);
@@ -273,8 +257,6 @@ public class HomeFragment extends Fragment {
             }
         }
         adapterSearch.notifyDataSetChanged();
-
-
     }
 
     private void initialSpinner() {
@@ -368,7 +350,6 @@ public class HomeFragment extends Fragment {
                 searchRoom(price, distance, numberPeople);
 
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -377,7 +358,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    class ObjectSpinner {
+    static class ObjectSpinner {
         double key;
         String value;
 
@@ -403,7 +384,7 @@ public class HomeFragment extends Fragment {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return value;
         }
     }
@@ -426,9 +407,11 @@ public class HomeFragment extends Fragment {
                     roomBoardingHouse.setAddressBoardingHouse(documentSnapshot.getString("address"));
                     roomBoardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
                     roomBoardingHouse.setDistanceBoardingHouse(documentSnapshot.getDouble("distance"));
+                    roomBoardingHouse.setElectricityPriceBoardingHouse(documentSnapshot.getDouble("electricityPrice"));
                     roomBoardingHouse.setIdOwnerBoardingHouse(documentSnapshot.getString("owner"));
-                    roomBoardingHouse.setLatitude(documentSnapshot.getGeoPoint("point").getLatitude());
-                    roomBoardingHouse.setLongitude(documentSnapshot.getGeoPoint("point").getLongitude());
+                    roomBoardingHouse.setLatitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLatitude());
+                    roomBoardingHouse.setLongitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLongitude());
+                    roomBoardingHouse.setWaterPriceBoardingHouse(documentSnapshot.getDouble("waterPrice"));
                     listBoardingHouse.add(roomBoardingHouse);
                 }
                 for (Room room : listBoardingHouse) {
@@ -437,22 +420,15 @@ public class HomeFragment extends Fragment {
                                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots1.getDocuments()) {
                                     Room roomRoomType = new Room();
                                     roomRoomType = room;
-//                                        roomRoomType.setIdBoardingHouse(room.getIdBoardingHouse());
-//                                        roomRoomType.setNameBoardingHouse(room.getNameBoardingHouse());
-//                                        roomRoomType.setAddressBoardingHouse(room.getAddressBoardingHouse());
-//                                        roomRoomType.setDescriptionBoardingHouse(room.getDescriptionBoardingHouse());
-//                                        roomRoomType.setDistanceBoardingHouse(room.getDistanceBoardingHouse());
-//                                        roomRoomType.setIdOwnerBoardingHouse(room.getIdOwnerBoardingHouse());
 
                                     roomRoomType.setIdRoomType(documentSnapshot.getId());
                                     roomRoomType.setNameRoomType(documentSnapshot.getString("name"));
-                                    roomRoomType.setNumberPeopleRoomType(documentSnapshot.getDouble("numberPeople").intValue());
+                                    roomRoomType.setNumberPeopleRoomType(Objects.requireNonNull(documentSnapshot.getDouble("numberPeople")).intValue());
                                     roomRoomType.setPriceRoomType(documentSnapshot.getDouble("price"));
                                     roomRoomType.setAreaRoomType(documentSnapshot.getDouble("area"));
                                     roomRoomType.setDescriptionRoomType(documentSnapshot.getString("description"));
 
                                     Map<String, Object> map = documentSnapshot.getData();
-
                                     assert map != null;
                                     for (Map.Entry<String, Object> entry : map.entrySet()) {
                                         if (entry.getKey().equals("room")) {
@@ -465,9 +441,11 @@ public class HomeFragment extends Fragment {
                                                 roomRoom.setAddressBoardingHouse(roomRoomType.getAddressBoardingHouse());
                                                 roomRoom.setDescriptionBoardingHouse(roomRoomType.getDescriptionBoardingHouse());
                                                 roomRoom.setDistanceBoardingHouse(roomRoomType.getDistanceBoardingHouse());
+                                                roomRoom.setElectricityPriceBoardingHouse(roomRoomType.getElectricityPriceBoardingHouse());
                                                 roomRoom.setIdOwnerBoardingHouse(roomRoomType.getIdOwnerBoardingHouse());
                                                 roomRoom.setLatitude(roomRoomType.getLatitude());
                                                 roomRoom.setLongitude(roomRoomType.getLongitude());
+                                                roomRoom.setWaterPriceBoardingHouse(roomRoomType.getWaterPriceBoardingHouse());
 
                                                 roomRoom.setIdRoomType(roomRoomType.getIdRoomType());
                                                 roomRoom.setNameRoomType(roomRoomType.getNameRoomType());
@@ -475,20 +453,17 @@ public class HomeFragment extends Fragment {
                                                 roomRoom.setPriceRoomType(roomRoomType.getPriceRoomType());
                                                 roomRoom.setAreaRoomType(roomRoomType.getAreaRoomType());
                                                 roomRoom.setDescriptionRoomType(roomRoomType.getDescriptionRoomType());
+
                                                 Map<String, Object> mapField = (Map<String, Object>) field.getValue();
-                                                for (Map.Entry<String, Object> image : mapField.entrySet()) {
-
-//                                                    Log.i("MAP", image.getKey().toString() + ": " + image.getValue().toString());
-                                                    if (image.getKey().equals("image")) {
-                                                        roomRoom.setImageRoom(image.getValue().toString());
+                                                for (Map.Entry<String, Object> roomField : mapField.entrySet()) {
+                                                    if (roomField.getKey().equals("image")) {
+                                                        roomRoom.setImageRoom(roomField.getValue().toString());
                                                     }
-
-                                                    if (image.getKey().equals("status")) {
-                                                        if (image.getValue().toString().equals("false")) {
+                                                    if (roomField.getKey().equals("status")) {
+                                                        if (roomField.getValue().toString().equals("false")) {
                                                             listRoom.add(roomRoom);
                                                         }
                                                     }
-
                                                 }
                                             }
                                         }

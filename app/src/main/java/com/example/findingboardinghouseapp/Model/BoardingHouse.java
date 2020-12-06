@@ -8,11 +8,29 @@ public class BoardingHouse implements Serializable {
     protected String addressBoardingHouse;
     protected String descriptionBoardingHouse;
     protected double distanceBoardingHouse;
+    protected double electricityPriceBoardingHouse;
+    protected double waterPriceBoardingHouse;
     protected String idOwnerBoardingHouse;
     protected double latitude;
     protected double longitude;
 
     public BoardingHouse() {
+    }
+
+    public double getElectricityPriceBoardingHouse() {
+        return electricityPriceBoardingHouse;
+    }
+
+    public void setElectricityPriceBoardingHouse(double electricityPriceBoardingHouse) {
+        this.electricityPriceBoardingHouse = electricityPriceBoardingHouse;
+    }
+
+    public double getWaterPriceBoardingHouse() {
+        return waterPriceBoardingHouse;
+    }
+
+    public void setWaterPriceBoardingHouse(double waterPriceBoardingHouse) {
+        this.waterPriceBoardingHouse = waterPriceBoardingHouse;
     }
 
     public String getIdBoardingHouse() {

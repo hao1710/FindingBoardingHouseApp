@@ -1,48 +1,57 @@
 package com.example.findingboardinghouseapp.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.findingboardinghouseapp.Model.Landlord;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.findingboardinghouseapp.Model.LandlordCRUD;
 import com.example.findingboardinghouseapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class CreateAccountActivity extends AppCompatActivity {
+    private ProgressBar progressBar;
     private TextInputLayout textInputName, textInputAddress, textInputPhoneNumber, textInputEmail, textInputPassword;
+    private Button buttonCreateAccount;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        // mapping
-        textInputName = findViewById(R.id.ca_text_input_name);
-        textInputAddress = findViewById(R.id.ca_text_input_address);
-        textInputPhoneNumber = findViewById(R.id.ca_text_input_phone_number);
-        textInputEmail = findViewById(R.id.ca_text_input_email);
-        textInputPassword = findViewById(R.id.ca_text_input_password);
-        Button buttonCreateAccount = findViewById(R.id.ca_button_create_account);
+        findView();
 
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // do something
+        textInputPassword.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    textInputPassword.getEditText().clearFocus();
+                }
+                return false;
+            }
+        });
 
-
-        // onClick
         buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String name = textInputName.getEditText().getText().toString().trim();
                 String address = textInputAddress.getEditText().getText().toString().trim();
                 String phoneNumber = textInputPhoneNumber.getEditText().getText().toString().trim();
@@ -51,16 +60,50 @@ public class CreateAccountActivity extends AppCompatActivity {
                 if (!validateName(name) | !validateEmail(email) | !validatePhoneNumber(phoneNumber) | !validatePassword(password) | !validateAddress(address)) {
                     return;
                 }
-                LandlordCRUD landlord = new LandlordCRUD();
-                landlord.setName(name);
-                landlord.setAddress(address);
-                landlord.setPhoneNumber(phoneNumber);
-                landlord.setPassword(password);
-                landlord.setEmail(email);
-                FirebaseFirestore.getInstance().collection("landlord").add(landlord);
-                Toast.makeText(getApplicationContext(), "Tạo tài khoản thành công", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.VISIBLE);
+                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(CreateAccountActivity.this, "Đăng ký thành công, vui lòng kiểm tra email và xác nhận", Toast.LENGTH_SHORT).show();
+
+                                        LandlordCRUD landlord = new LandlordCRUD();
+                                        landlord.setName(name);
+                                        landlord.setAddress(address);
+                                        landlord.setPhoneNumber(phoneNumber);
+                                        landlord.setPassword(password);
+                                        landlord.setEmail(email);
+                                        FirebaseFirestore.getInstance().collection("landlord").add(landlord);
+
+                                    } else {
+                                        Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
+    }
+
+    private void findView() {
+        progressBar = findViewById(R.id.ca_progressBar);
+
+        textInputName = findViewById(R.id.ca_textInput_name);
+        textInputAddress = findViewById(R.id.ca_textInput_address);
+        textInputPhoneNumber = findViewById(R.id.ca_textInput_phoneNumber);
+        textInputEmail = findViewById(R.id.ca_textInput_email);
+        textInputPassword = findViewById(R.id.ca_textInput_password);
+
+        buttonCreateAccount = findViewById(R.id.ca_button_create);
     }
 
     private boolean validateName(String name) {
@@ -91,7 +134,6 @@ public class CreateAccountActivity extends AppCompatActivity {
             return false;
         } else if (phoneNumber.length() > 11 || phoneNumber.length() < 10 || !phoneNumber.startsWith("0")) {
             textInputPhoneNumber.setError("Vui lòng điền đúng số điện thoại");
-            Toast.makeText(getApplicationContext(), phoneNumber, Toast.LENGTH_SHORT).show();
             return false;
 
         } else {
@@ -120,9 +162,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         if (password.isEmpty()) {
             textInputPassword.setError("Vui lòng điền mật khẩu");
             return false;
+        }
+        if (password.length() < 6) {
+            textInputPassword.setError("Mật khẩu phải có ít nhất 6 kí tự");
+            return false;
         } else {
             textInputPassword.setError(null);
-//            textInputEmail.setEnabled(false);
             return true;
         }
     }

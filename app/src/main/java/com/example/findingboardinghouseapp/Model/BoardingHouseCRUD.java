@@ -1,7 +1,6 @@
 package com.example.findingboardinghouseapp.Model;
 
 import com.google.firebase.firestore.GeoPoint;
-import com.mapbox.geojson.Point;
 
 public class BoardingHouseCRUD {
 
@@ -9,6 +8,8 @@ public class BoardingHouseCRUD {
     private String address;
     private String description;
     private double distance;
+    private double electricityPrice;
+    private double waterPrice;
     private String owner;
     private GeoPoint point;
 
@@ -61,5 +62,21 @@ public class BoardingHouseCRUD {
 
     public void setPoint(GeoPoint point) {
         this.point = point;
+    }
+
+    public double getElectricityPrice() {
+        return electricityPrice;
+    }
+
+    public void setElectricityPrice(double electricityPrice) {
+        this.electricityPrice = electricityPrice;
+    }
+
+    public double getWaterPrice() {
+        return waterPrice;
+    }
+
+    public void setWaterPrice(double waterPrice) {
+        this.waterPrice = waterPrice;
     }
 }

@@ -3,7 +3,11 @@ package com.example.findingboardinghouseapp.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -48,7 +52,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
     double longitudeCTU = 105.60451156571315;
     double distance;
 
-    private TextInputLayout textInputName, textInputDistrict, textInputVillage, textInputHamlet, textInputDescription, textInputDistance;
+    private TextInputLayout textInputName, textInputDistrict, textInputVillage, textInputHamlet, textInputElectricityPrice, textInputWaterPrice, textInputDescription, textInputDistance;
     private TextInputEditText textInputEditTextHamlet, textInputEditTextDistance;
     private AutoCompleteTextView autoCompleteTextViewDistrict, autoCompleteTextViewVillage;
     private ImageButton imageButtonPickLocation;
@@ -75,25 +79,46 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         findView();
 
         initialSpinner();
-
+        textInputElectricityPrice.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    Editable e = textInputWaterPrice.getEditText().getText();
+                    Selection.setSelection(e, textInputWaterPrice.getEditText().getText().length());
+                }
+                return false;
+            }
+        });
+        textInputDescription.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    textInputDescription.getEditText().clearFocus();
+                }
+                return false;
+            }
+        });
         buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String nameV = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
-                String addressV = textViewAddress.getText().toString().trim();
                 String districtV = Objects.requireNonNull(textInputDistrict.getEditText()).getText().toString().trim();
                 String villageV = Objects.requireNonNull(textInputVillage.getEditText()).getText().toString().trim();
                 String hamletV = Objects.requireNonNull(textInputHamlet.getEditText()).getText().toString().trim();
+                String ePrice = Objects.requireNonNull(textInputElectricityPrice.getEditText()).getText().toString().trim();
+                String wPrice = Objects.requireNonNull(textInputWaterPrice.getEditText()).getText().toString().trim();
                 String descriptionV = Objects.requireNonNull(textInputDescription.getEditText()).getText().toString().trim();
                 String distanceV = Objects.requireNonNull(textInputDistance.getEditText()).getText().toString().trim();
                 if (!validateName(nameV) | !validateDistrict(districtV) | !validateVillage(villageV) | !validateHamlet(hamletV)
-                        | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
+                        | !validateElectricityPrice(ePrice) | !validateWaterPrice(wPrice) | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
                     return;
                 }
                 BoardingHouseCRUD boardingHouseCRUD = new BoardingHouseCRUD();
                 boardingHouseCRUD.setName(nameV);
                 boardingHouseCRUD.setAddress(address);
                 boardingHouseCRUD.setDistance(distance);
+                boardingHouseCRUD.setElectricityPrice(Double.parseDouble(ePrice));
+                boardingHouseCRUD.setWaterPrice(Double.parseDouble(wPrice));
                 GeoPoint point = new GeoPoint(latitude, longitude);
                 boardingHouseCRUD.setOwner(boardingHouse.getIdOwnerBoardingHouse());
                 boardingHouseCRUD.setPoint(point);
@@ -109,22 +134,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 startActivityForResult(intent1, REQUEST_CODE_FROM_CREATE_BOARDING_HOUSE);
             }
         });
-//        textInputEditTextHamlet.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                getAddress();
-//            }
-//        });
+
         textInputEditTextHamlet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -142,6 +152,8 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         textInputDistrict = findViewById(R.id.cbh_textInput_district);
         textInputVillage = findViewById(R.id.cbh_textInput_village);
         textInputHamlet = findViewById(R.id.cbh_textInput_hamlet);
+        textInputElectricityPrice = findViewById(R.id.cbh_textInput_electricityPrice);
+        textInputWaterPrice = findViewById(R.id.cbh_textInput_waterPrice);
         textInputDescription = findViewById(R.id.cbh_textInput_description);
         textInputDistance = findViewById(R.id.cbh_textInput_distance);
 
@@ -222,7 +234,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                     case "Huyện Long Mỹ":
                         getAddress();
                         autoCompleteTextViewVillage.setText("");
-                        String[] hLM = new String[]{"Xã Thuận Hòa", "Xã Thuận Hưng", "Xã Vĩnh Thuận Đông", "Xã Vĩnh Viễn", "Xã Vĩnh Viễn A",
+                        String[] hLM = new String[]{"Xã Thuận Hoà", "Xã Thuận Hưng", "Xã Vĩnh Thuận Đông", "Xã Vĩnh Viễn", "Xã Vĩnh Viễn A",
                                 "Xã Xà Phiên", "Xã Lương Tâm", "Xã Lương Nghĩa"};
                         ArrayAdapter<String> adapterHLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
                                 R.layout.item_spinner, hLM);
@@ -232,8 +244,8 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                         getAddress();
                         autoCompleteTextViewVillage.setText("");
                         String[] hPH = new String[]{"Thị trấn Cây Dương", "Thị trấn Kinh Cùng", "Thị trấn Búng Tàu",
-                                "Xã Phụng Hiệp", "Xã Tân Phước Hưng", "Xã Tân Bình", "Xã Hòa Anh", "Xã Phương Bình", "Xã Phương Phú",
-                                "Xã Hòa Mỹ", "Xã Hiệp Hưng", "Xã Thạnh Hòa", "Xã Bình Thành", "Xã Tân Long", "Xã Long Thạnh"};
+                                "Xã Phụng Hiệp", "Xã Tân Phước Hưng", "Xã Tân Bình", "Xã Hoà An", "Xã Phương Bình", "Xã Phương Phú",
+                                "Xã Hoà Mỹ", "Xã Hiệp Hưng", "Xã Thạnh Hoà", "Xã Bình Thành", "Xã Tân Long", "Xã Long Thạnh"};
                         ArrayAdapter<String> adapterHPH = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
                                 R.layout.item_spinner, hPH);
                         autoCompleteTextViewVillage.setAdapter(adapterHPH);
@@ -251,7 +263,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                         getAddress();
                         autoCompleteTextViewVillage.setText("");
                         String[] hCTA = new String[]{"Thị trấn Một Ngàn", "Thị trấn Bảy Ngàn", "Thị trấn Cái Tắc", "Thị trấn Rạch Gồi",
-                                "Xã Thạnh Xuân", "Xã Tân Phú Thạnh", "Xã Tân Hòa", "Xã Trường Long Tây", "Xã Trường Long A", "Xã Nhơn Nghĩa A"};
+                                "Xã Thạnh Xuân", "Xã Tân Phú Thạnh", "Xã Tân Hoà", "Xã Trường Long Tây", "Xã Trường Long A", "Xã Nhơn Nghĩa A"};
                         ArrayAdapter<String> adapterHCTA = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
                                 R.layout.item_spinner, hCTA);
                         autoCompleteTextViewVillage.setAdapter(adapterHCTA);
@@ -301,6 +313,26 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
             return false;
         } else {
             textInputHamlet.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateElectricityPrice(String ePrice) {
+        if (ePrice.isEmpty()) {
+            textInputElectricityPrice.setError("Vui lòng điền giá điện");
+            return false;
+        } else {
+            textInputElectricityPrice.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateWaterPrice(String wPrice) {
+        if (wPrice.isEmpty()) {
+            textInputWaterPrice.setError("Vui lòng điền giá nước");
+            return false;
+        } else {
+            textInputWaterPrice.setError(null);
             return true;
         }
     }

@@ -25,8 +25,9 @@
 
         <ImageButton
             android:id="@+id/bh_imageButton_menu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_more_vert"
@@ -36,7 +37,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:paddingStart="8dp"
+        android:padding="8dp"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +46,6 @@
         tools:ignore="RtlSymmetry">
 
         <LinearLayout
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -91,7 +91,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginBottom="4dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -127,7 +127,7 @@
             android:layout_height="40dp"
             android:gravity="center_vertical"
             android:text="Danh sách phòng"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="8dp"

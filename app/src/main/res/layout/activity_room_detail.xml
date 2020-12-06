@@ -58,52 +58,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/black">
-
-                </LinearLayout>
+                    android:background="@color/black" />
 
                 <TextView
                     android:id="@+id/rd_name_boarding_house"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-
-                    android:text="Name Boarding House"
+                    android:text="@string/app_name"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
-
-                <TextView
-                    android:id="@+id/rd_address_boarding_house"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="40dp"
-                    android:text="Address"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/rd_textView_view_map"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Xem map"
-                    android:textColor="@color/blue" />
-
-
-                <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/black">
-
-                </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:baselineAligned="false"
+                    android:orientation="horizontal"
                     android:weightSum="3">
 
                     <LinearLayout
@@ -120,6 +90,7 @@
                             android:text="Diện tích" />
 
                         <TextView
+                            android:textColor="@color/deepPink"
                             android:id="@+id/rd_area_room"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
@@ -141,6 +112,7 @@
                             android:text="Giá" />
 
                         <TextView
+                            android:textColor="@color/deepPink"
                             android:id="@+id/rd_price_room"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
@@ -162,6 +134,7 @@
                             android:text="Số người ở" />
 
                         <TextView
+                            android:textColor="@color/deepPink"
                             android:id="@+id/rd_number_people"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
@@ -173,12 +146,94 @@
                 </LinearLayout>
 
                 <LinearLayout
-
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/black">
+                    android:background="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Giá điện" />
+
+                        <TextView
+                            android:id="@+id/rd_electricityPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:gravity="center_vertical"
+                            android:text="4 ngàn đồng"
+                            android:textColor="@color/deepPink" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Giá nước" />
+
+                        <TextView
+                            android:id="@+id/rd_waterPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:gravity="center_vertical"
+                            android:text="4 ngàn đồng"
+                            android:textColor="@color/deepPink" />
+                    </LinearLayout>
+
 
                 </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+
+                android:background="@drawable/custom_background_white"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+
+                <TextView
+                    android:id="@+id/rd_address_boarding_house"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:text="Address"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/rd_textView_view_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Xem map"
+                    android:textColor="@color/blue" />
 
                 <TextView
                     android:id="@+id/rd_textView_description_bh"
@@ -188,22 +243,39 @@
                     android:minHeight="40dp"
                     android:text="Mô tả trọ" />
 
-                <LinearLayout
+
+                <TextView
+                    android:id="@+id/rd_textView_phoneNumber"
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/black" />
+                    android:layout_height="40dp"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:text="Số điện thoại"
+                    app:drawableStartCompat="@drawable/ic_contact_phone" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/custom_background_white"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                 
+
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:text="Tiện nghi"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical"
+                        android:text="Tiện nghi" />
 
                     <androidx.recyclerview.widget.RecyclerView
 
@@ -212,7 +284,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <LinearLayout
@@ -228,40 +299,40 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                   >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:gravity="center_vertical"
                         android:text="Bình luận"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <ImageButton
                         android:id="@+id/rd_imageButton_create_comment"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:backgroundTint="@color/green"
                         android:background="@drawable/ic_add_comment"
                         android:contentDescription="TODO" />
                 </RelativeLayout>
 
                 <com.github.aakira.expandablelayout.ExpandableLinearLayout
-
                     android:id="@+id/rd_expand_layout_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:ael_expanded="false">
+                    android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/rd_editText_name"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_above="@+id/rd_editText_content"
-                        android:hint="Tên của bạn" />
+                        android:autofillHints=""
+                        android:hint="Tên của bạn"
+                        android:inputType="text" />
 
                     <EditText
                         android:id="@+id/rd_editText_content"
@@ -270,28 +341,26 @@
                         android:hint="Nội dung" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:gravity="center"
-
+                        android:layout_height="40dp"
+                        android:layout_width="match_parent"
                         android:orientation="horizontal">
 
                         <Button
-
                             android:id="@+id/rd_button_create_comment"
                             android:layout_width="100dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="75dp"
+                            android:layout_marginEnd="50dp"
                             android:backgroundTint="@color/green"
                             android:text="Tạo" />
 
                         <Button
-
                             android:id="@+id/rd_button_cancel_comment"
                             android:layout_width="100dp"
                             android:layout_height="40dp"
                             android:backgroundTint="@color/green"
-                            android:text="Hủy" />
+                            android:text="Hủy"
+                            tools:ignore="ButtonStyle" />
                     </LinearLayout>
                 </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 

@@ -7,14 +7,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,6 +32,8 @@ import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -90,7 +95,8 @@ public class AccountFragment extends Fragment {
     public static final int RESULT_CODE_FROM_ACCOUNT_FRAGMENT = 33;
     public static final String MY_PREFERENCES = "MyPre";
     public SharedPreferences sharedPreferences;
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
     private ImageButton imageButtonMenu;
     private EditText editTextName, editTextAddress, editTextPhoneNumber, editTextEmail, editTextPassword;
     private ExpandableRelativeLayout expandLayoutSetting;
@@ -109,7 +115,8 @@ public class AccountFragment extends Fragment {
 
         // sharedPreferences
         sharedPreferences = Objects.requireNonNull(getContext()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         //
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -122,9 +129,39 @@ public class AccountFragment extends Fragment {
 
         // do something
         setTextDataLandlord(landlord);
-
+        expandLayoutSetting.collapse();
         readDataBoardingHouse();
 
+        editTextName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    Editable e = editTextAddress.getText();
+                    Selection.setSelection(e, editTextAddress.getText().length());
+
+                }
+                return false;
+            }
+        });
+        editTextAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    Editable e = editTextPhoneNumber.getText();
+                    Selection.setSelection(e, editTextPhoneNumber.getText().length());
+                }
+                return false;
+            }
+        });
+        editTextPhoneNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    editTextPhoneNumber.clearFocus();
+                }
+                return false;
+            }
+        });
         imageButtonMenu.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(getContext(), imageButtonMenu);
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_af, popupMenu.getMenu());
@@ -134,10 +171,14 @@ public class AccountFragment extends Fragment {
                         SharedPreferences.Editor editor = Objects.requireNonNull(getContext()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
                         editor.clear();
                         editor.apply();
+
+                        FirebaseAuth.getInstance().signOut();
+
                         Fragment fragment = new LogInFragment();
                         FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frame_layout, fragment);
                         fragmentTransaction.commit();
+
                         return true;
                     case R.id.a_item_create_boarding_house:
                         BoardingHouse boardingHouse = new BoardingHouse();
@@ -149,13 +190,6 @@ public class AccountFragment extends Fragment {
                         startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
                         return true;
                     case R.id.a_item_setting_account:
-//                                Bundle bundle1 = new Bundle();
-//                                bundle1.putSerializable("landlord", landlord);
-//
-//                                Intent intent4 = new Intent(getContext(), AccountSettingActivity.class);
-//                                intent4.putExtras(bundle1);
-//                                startActivityForResult(intent4, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
-
                         expandLayoutSetting.expand();
                         editTextName.setEnabled(true);
                         editTextName.requestFocus();
@@ -169,8 +203,6 @@ public class AccountFragment extends Fragment {
 //                                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                         editTextAddress.setEnabled(true);
                         editTextPhoneNumber.setEnabled(true);
-                        editTextEmail.setEnabled(true);
-                        editTextPassword.setEnabled(true);
                 }
                 return false;
             });
@@ -237,6 +269,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void setTextDataLandlord(Landlord landlord) {
+
         editTextName.setText(landlord.getNameLandlord());
         editTextAddress.setText(landlord.getAddressLandlord());
         editTextPhoneNumber.setText(landlord.getPhoneNumberLandlord());

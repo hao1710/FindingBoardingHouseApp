@@ -7,23 +7,33 @@
     android:orientation="vertical"
     tools:context=".Activity.CreateAccountActivity">
 
-    <LinearLayout
-
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_background_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/custom_background_title">
 
         <TextView
             android:id="@+id/bh_name_boarding_house"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+
             android:gravity="center_vertical"
-            android:text="Thông tin"
+            android:layout_centerInParent="true"
+            android:text="Tạo tài khoản"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+
+        <ProgressBar
+
+            android:id="@+id/ca_progressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="8dp"
+            android:indeterminateTint="@color/black"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +50,7 @@
             android:gravity="center_vertical"
             android:text="Vui lòng điền các thông tin bên dưới"
             android:textColor="@color/black"
-            android:textSize="17sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -52,15 +62,14 @@
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ca_text_input_name"
+            android:id="@+id/ca_textInput_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Họ tên"
+            app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
             app:errorEnabled="true">
-            <!--            app:counterEnabled="true"-->
-            <!--            app:counterMaxLength="30"-->
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,10 +79,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ca_text_input_address"
+            android:id="@+id/ca_textInput_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Địa chỉ"
+            app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
             app:errorEnabled="true">
@@ -88,10 +98,11 @@
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ca_text_input_phone_number"
+            android:id="@+id/ca_textInput_phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Số điện thoại"
+            app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
             app:errorEnabled="true">
@@ -99,15 +110,15 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ca_text_input_email"
+            android:id="@+id/ca_textInput_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
+            app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
             app:errorEnabled="true">
@@ -120,10 +131,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ca_text_input_password"
+            android:id="@+id/ca_textInput_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mật khẩu"
+            app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
             app:counterEnabled="true"
@@ -142,11 +154,11 @@
 
 
         <Button
-            android:id="@+id/ca_button_create_account"
-            android:layout_width="100dp"
+            android:id="@+id/ca_button_create"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:backgroundTint="@color/green"
-            android:text="Tạo" />
+            android:text="Đăng ký" />
     </LinearLayout>
 
 </LinearLayout>

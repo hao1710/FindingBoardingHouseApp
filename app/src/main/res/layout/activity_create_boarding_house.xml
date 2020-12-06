@@ -59,6 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Tên nhà trọ"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
@@ -109,6 +110,7 @@
                 android:layout_height="wrap_content"
 
                 android:hint="Huyện"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
                 app:endIconMode="dropdown_menu"
                 app:errorEnabled="true"
@@ -128,6 +130,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Xã"
+                app:boxStrokeColor="@color/boxStrokeColor"
+
+
                 android:textColorHint="@color/green"
                 app:endIconMode="dropdown_menu"
                 app:errorEnabled="true"
@@ -147,6 +152,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ấp"
+                app:boxStrokeColor="@color/boxStrokeColor"
+
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
@@ -162,12 +169,66 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cbh_textInput_electricityPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:hint="Giá điện"
+                    android:textColorHint="@color/green"
+                    app:boxStrokeColor="@color/boxStrokeColor"
+                    app:errorEnabled="true"
+
+                    app:hintTextColor="@color/green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cbh_textInput_waterPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Giá nước"
+                    android:layout_marginStart="4dp"
+                    android:textColorHint="@color/green"
+
+                    app:boxStrokeColor="@color/boxStrokeColor"
+                    app:errorEnabled="true"
+
+                    app:hintTextColor="@color/green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cbh_textInput_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mô tả"
+                app:boxStrokeColor="@color/boxStrokeColor"
+
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
 
@@ -216,6 +277,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Khoảng cách"
+                app:boxStrokeColor="@color/boxStrokeColor"
+
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">

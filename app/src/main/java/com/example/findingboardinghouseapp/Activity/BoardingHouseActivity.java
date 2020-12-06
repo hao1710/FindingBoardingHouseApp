@@ -58,8 +58,8 @@ public class BoardingHouseActivity extends AppCompatActivity {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
-                        case R.id.bh_item_update:
-                            return true;
+//                        case R.id.bh_item_update:
+//                            return true;
                         case R.id.bh_item_create_room_type:
                             RoomType roomType = new RoomType();
                             roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());

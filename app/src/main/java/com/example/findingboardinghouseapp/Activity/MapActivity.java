@@ -1,5 +1,6 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -162,12 +162,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return null;
             }
             ArrayList<BoardingHouse> listing = params[0];
-            Log.i("Tell me why", "Params " + params[0]);
+
             List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
 
             for (int i = 0; i < listing.size(); i++) {
                 BoardingHouse pointGeo = listing.get(i);
-                Log.i("Tell me why", "Params " + listing.get(i));
+
                 Feature singleFeatureTwo = Feature.fromGeometry(
                         Point.fromLngLat(pointGeo.getLongitude(), pointGeo.getLatitude()));
                 singleFeatureTwo.addStringProperty("name", pointGeo.getNameBoardingHouse());
@@ -352,12 +352,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             setSelected(i);
 
                         }
-                        System.out.println(origin);
-                        System.out.println(destination);
                         getRoute(mapboxMap, origin, destination);
 
-                        System.out.println(screenPoint.x + " aaaa");
-                        System.out.println("get source " + source);
                     }
                 }
             }
@@ -565,18 +561,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 // Get the directions route
                 currentRoute = response.body().routes().get(0);
 
+                double tempDistance = currentRoute.distance() / 1000;
+                double distance = Math.ceil(tempDistance * 100) / 100;
+//
                 // Make a toast which displays the route's distance
-                Toast.makeText(MapActivity.this, String.format(
-                        getString(R.string.directions_activity_toast_message),
-                        currentRoute.distance()), Toast.LENGTH_SHORT).show();
-                System.out.println(currentRoute.distance() + " is m.");
+                Toast.makeText(MapActivity.this, "Cách ĐHCT " + distance + " km", Toast.LENGTH_SHORT).show();
                 if (mapboxMap != null) {
                     mapboxMap.getStyle(new Style.OnStyleLoaded() {
                         @Override
                         public void onStyleLoaded(@NonNull Style style) {
-
                             //style.addSource(new GeoJsonSource(ROUTE_SOURCE_ID));
-
                             Feature f1 = Feature.fromGeometry(origin);
                             Feature f2 = Feature.fromGeometry(destination);
                             List<Feature> f = new ArrayList<>();
@@ -587,12 +581,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             //style.addSource(iconGeoJsonSource);
                             // Retrieve and update the source designated for showing the directions route
                             GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
-                            System.out.println(source + " aaaaaa");
+
                             // Create a LineString with the directions route's geometry and
                             // reset the GeoJSON source for the route LineLayer source
                             if (source != null) {
                                 source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
-
                             }
 
                         }
