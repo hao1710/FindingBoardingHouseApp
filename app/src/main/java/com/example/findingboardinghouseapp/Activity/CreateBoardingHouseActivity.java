@@ -79,17 +79,17 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         findView();
 
         initialSpinner();
-        textInputElectricityPrice.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        Objects.requireNonNull(textInputElectricityPrice.getEditText()).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    Editable e = textInputWaterPrice.getEditText().getText();
+                    Editable e = Objects.requireNonNull(textInputWaterPrice.getEditText()).getText();
                     Selection.setSelection(e, textInputWaterPrice.getEditText().getText().length());
                 }
                 return false;
             }
         });
-        textInputDescription.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        Objects.requireNonNull(textInputDescription.getEditText()).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -143,7 +143,6 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void findView() {
@@ -164,7 +163,6 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
 
         imageButtonPickLocation = findViewById(R.id.cbh_imageButton_pick_location);
         buttonCreateBoardingHouse = findViewById(R.id.cbh_button_create);
-
     }
 
     @SuppressLint("SetTextI18n")

@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,11 +27,8 @@ import com.example.findingboardinghouseapp.Model.Facility;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.imageviewer.StfalconImageViewer;
 import com.stfalcon.imageviewer.loader.ImageLoader;
@@ -57,7 +51,7 @@ public class RoomDetailActivity extends AppCompatActivity {
     private TextView textViewAddressBoardingHouse, textViewDescriptionBoardingHouse, textViewPhoneNumber;
     private RecyclerView recyclerViewFacility, recyclerViewComment;
     private ExpandableLinearLayout expandLayoutComment;
-    private ImageButton imageButtonCreateComment;
+    private TextView textViewComment;
     private EditText editTextName, editTextContent;
     private Button buttonComment, buttonCancel;
 
@@ -92,70 +86,48 @@ public class RoomDetailActivity extends AppCompatActivity {
         spannableString.setSpan(new UnderlineSpan(), 0, create.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewViewMap.setText(spannableString);
 
-        //
         expandLayoutComment.collapse();
-
-        //
-        setText();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
 
-        textViewViewMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent1 = new Intent(v.getContext(), MapActivity.class);
-                intent1.putExtra("name", room.getNameBoardingHouse());
-                intent1.putExtra("latitude", room.getLatitude());
-                intent1.putExtra("longitude", room.getLongitude());
-                intent1.putExtra("list", listBoardingHouse);
-                startActivity(intent1);
-            }
+        textViewViewMap.setOnClickListener(v -> {
+            Intent intent1 = new Intent(v.getContext(), MapActivity.class);
+            intent1.putExtra("name", room.getNameBoardingHouse());
+            intent1.putExtra("latitude", room.getLatitude());
+            intent1.putExtra("longitude", room.getLongitude());
+            intent1.putExtra("list", listBoardingHouse);
+            startActivity(intent1);
         });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonCancel.setOnClickListener(v -> {
+            editTextName.setText("");
+            editTextContent.setText("");
+            expandLayoutComment.collapse();
+        });
+
+        textViewComment.setOnClickListener(v -> expandLayoutComment.expand());
+
+        buttonComment.setOnClickListener(v -> {
+            String name = editTextName.getText().toString().trim();
+            String content = editTextContent.getText().toString().trim();
+            if (name.equals("") || content.equals("")) {
+                Toast.makeText(v.getContext(), "Vui lòng đủ tên và nội dung", Toast.LENGTH_SHORT).show();
+            } else {
+                CommentCRUD commentCRUD = new CommentCRUD();
+                commentCRUD.setBoardingHouse(room.getIdBoardingHouse());
+                commentCRUD.setContent(content);
+                commentCRUD.setName(name);
+                FirebaseFirestore.getInstance().collection("comment").add(commentCRUD);
+
                 editTextName.setText("");
                 editTextContent.setText("");
                 expandLayoutComment.collapse();
-            }
-        });
-
-        imageButtonCreateComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                expandLayoutComment.expand();
-            }
-        });
-
-        buttonComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = editTextName.getText().toString().trim();
-                String content = editTextContent.getText().toString().trim();
-                if (name.equals("") || content.equals("")) {
-                    Toast.makeText(v.getContext(), "Vui lòng đủ tên và nội dung", Toast.LENGTH_SHORT).show();
-                } else {
-                    CommentCRUD commentCRUD = new CommentCRUD();
-                    commentCRUD.setBoardingHouse(room.getIdBoardingHouse());
-                    commentCRUD.setContent(content);
-                    commentCRUD.setName(name);
-                    FirebaseFirestore.getInstance().collection("comment").add(commentCRUD);
-
-                    editTextName.setText("");
-                    editTextContent.setText("");
-                    expandLayoutComment.collapse();
-                    getComment(new FirestoreCallBack() {
-                        @Override
-                        public void onCallback(List<Comment> list) {
-                            if (list.size() > 0) {
-                                arrayList.clear();
-                                for (Comment comment : list) {
-                                    arrayList.add(comment);
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-                }
+                getComment(list -> {
+                    if (list.size() > 0) {
+                        arrayList.clear();
+                        arrayList.addAll(list);
+                    }
+                    adapter.notifyDataSetChanged();
+                });
             }
         });
 
@@ -165,20 +137,15 @@ public class RoomDetailActivity extends AppCompatActivity {
                 .error(R.drawable.ic_app)
                 .into(imageViewRoom);
 
-        imageViewRoom.setOnClickListener(new View.OnClickListener() {
+        imageViewRoom.setOnClickListener(v -> new StfalconImageViewer.Builder<>(v.getContext(), Collections.singletonList(room.getImageRoom()), new ImageLoader<String>() {
             @Override
-            public void onClick(View v) {
-                new StfalconImageViewer.Builder<String>(v.getContext(), Collections.singletonList(room.getImageRoom()), new ImageLoader<String>() {
-                    @Override
-                    public void loadImage(ImageView imageView, String image) {
-                        Picasso.with(getApplicationContext()).load(room.getImageRoom())
-                                .placeholder(R.drawable.load_image_room)
-                                .error(R.drawable.ic_app)
-                                .into(imageView);
-                    }
-                }).withBackgroundColor(Color.WHITE).show();
+            public void loadImage(ImageView imageView, String image) {
+                Picasso.with(getApplicationContext()).load(room.getImageRoom())
+                        .placeholder(R.drawable.load_image_room)
+                        .error(R.drawable.ic_app)
+                        .into(imageView);
             }
-        });
+        }).withBackgroundColor(Color.WHITE).show());
 
         arrayList = new ArrayList<>();
         adapter = new CommentAdapter(getApplicationContext(), arrayList);
@@ -192,35 +159,30 @@ public class RoomDetailActivity extends AppCompatActivity {
         facilityAdapter = new FacilityAdapter(getApplicationContext(), arrayListFacility);
 
         recyclerViewFacility.setHasFixedSize(true);
-        LinearLayoutManager layoutFacility = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 5);
         gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerViewFacility.setLayoutManager(gridLayoutManager);
         recyclerViewFacility.setAdapter(facilityAdapter);
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        getFacility(new FacilityCallback() {
-            @Override
-            public void onCallback(List<Facility> list) {
-                if (list.size() > 0) {
-                    arrayListFacility.clear();
-                    for (Facility facility : list) {
-                        arrayListFacility.add(facility);
-                    }
-                }
-                facilityAdapter.notifyDataSetChanged();
-            }
+        getNameLandlord(room1 -> {
+            room.setNameOwnerBoardingHouse(room1.getNameOwnerBoardingHouse());
+            room.setPhoneNumberOwnerBoardingHouse(room1.getPhoneNumberOwnerBoardingHouse());
+            setText();
         });
-        getComment(new FirestoreCallBack() {
-            @Override
-            public void onCallback(List<Comment> list) {
-                if (list.size() > 0) {
-                    arrayList.clear();
-                    arrayList.addAll(list);
-                }
-                adapter.notifyDataSetChanged();
+
+        getFacility(list -> {
+            if (list.size() > 0) {
+                arrayListFacility.clear();
+                arrayListFacility.addAll(list);
             }
+            facilityAdapter.notifyDataSetChanged();
+        });
+        getComment(list -> {
+            if (list.size() > 0) {
+                arrayList.clear();
+                arrayList.addAll(list);
+            }
+            adapter.notifyDataSetChanged();
         });
     }
 
@@ -238,6 +200,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
         textViewAddressBoardingHouse.setText("Địa chỉ: " + room.getAddressBoardingHouse());
         textViewDescriptionBoardingHouse.setText(room.getDescriptionBoardingHouse());
+        textViewPhoneNumber.setText("Chủ trọ: " + room.getNameOwnerBoardingHouse() + " - SĐT: " + room.getPhoneNumberOwnerBoardingHouse());
 
     }
 
@@ -249,68 +212,83 @@ public class RoomDetailActivity extends AppCompatActivity {
         void onCallback(List<Facility> list);
     }
 
+    protected interface FNameCallback {
+        void onCallback(Room room);
+    }
+
+    private void getNameLandlord(FNameCallback fNameCallback) {
+        Room roomN = new Room();
+        firebaseFirestore.collection("landlord").document(room.getIdOwnerBoardingHouse()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                assert documentSnapshot != null;
+                roomN.setNameOwnerBoardingHouse(documentSnapshot.getString("name"));
+                roomN.setPhoneNumberOwnerBoardingHouse(documentSnapshot.getString("phoneNumber"));
+            }
+            fNameCallback.onCallback(roomN);
+        });
+    }
+
     private void getFacility(FacilityCallback callback) {
         List<Facility> list = new ArrayList<>();
         firebaseFirestore.collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").document(room.getIdRoomType())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
 
-                    Map<String, Object> data = new HashMap<>();
-                    assert documentSnapshot != null;
-                    data = documentSnapshot.getData();
-                    assert data != null;
-                    for (Map.Entry<String, Object> data1 : data.entrySet()) {
-                        if (data1.getKey().equals("facility")) {
-                            Map<String, Object> allFacility = (Map<String, Object>) data1.getValue();
-                            for (Map.Entry<String, Object> eachFacility : allFacility.entrySet()) {
-                                Map<String, Object> entry = (Map<String, Object>) eachFacility.getValue();
-                                Facility facility = new Facility();
-                                for (Map.Entry<String, Object> d : entry.entrySet()) {
+                Map<String, Object> data = new HashMap<>();
+                assert documentSnapshot != null;
+                data = documentSnapshot.getData();
+                assert data != null;
+                for (Map.Entry<String, Object> data1 : data.entrySet()) {
+                    if (data1.getKey().equals("facility")) {
+                        Map<String, Object> allFacility = (Map<String, Object>) data1.getValue();
+                        for (Map.Entry<String, Object> eachFacility : allFacility.entrySet()) {
+                            Map<String, Object> entry = (Map<String, Object>) eachFacility.getValue();
+                            Facility facility = new Facility();
+                            for (Map.Entry<String, Object> d : entry.entrySet()) {
 
-                                    if (d.getKey().equals("image")) {
-                                        facility.setImage(d.getValue().toString());
-                                    }
-                                    if (d.getKey().equals("name")) {
-
-                                        facility.setName(d.getValue().toString());
-                                    }
-                                    if (d.getKey().equals("status")) {
-                                        if (d.getValue().toString().equals("true")) {
-                                            list.add(facility);
-                                        }
+                                if (d.getKey().equals("image")) {
+                                    facility.setImage(d.getValue().toString());
+                                }
+                                if (d.getKey().equals("name")) {
+                                    facility.setName(d.getValue().toString());
+                                }
+                                if (d.getKey().equals("status")) {
+                                    if (d.getValue().toString().equals("true")) {
+                                        list.add(facility);
                                     }
                                 }
                             }
                         }
                     }
                 }
-                callback.onCallback(list);
             }
+            callback.onCallback(list);
         });
     }
 
     private void getComment(FirestoreCallBack firestoreCallBack) {
         List<Comment> list = new ArrayList<>();
-        firebaseFirestore.collection("comment").whereEqualTo("boardingHouse", room.getIdBoardingHouse()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult()).getDocuments()) {
-                                Comment comment = new Comment();
-                                comment.setIdComment(documentSnapshot.getId());
-                                comment.setNameTenant(documentSnapshot.getString("name"));
-                                comment.setContentComment(documentSnapshot.getString("content"));
-                                comment.setIdBoardingHouse(documentSnapshot.getString("boardingHouse"));
-                                list.add(comment);
-                            }
-                        }
-                        firestoreCallBack.onCallback(list);
-                    }
-                });
+        firebaseFirestore.collection("comment").whereEqualTo("boardingHouse", room.getIdBoardingHouse()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult()).getDocuments()) {
+                    Comment comment = new Comment();
+                    comment.setIdComment(documentSnapshot.getId());
+                    comment.setNameTenant(documentSnapshot.getString("name"));
+                    comment.setContentComment(documentSnapshot.getString("content"));
+                    comment.setIdBoardingHouse(documentSnapshot.getString("boardingHouse"));
+                    list.add(comment);
+                }
+            }
+            firestoreCallBack.onCallback(list);
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 
     private void findView() {
@@ -335,7 +313,8 @@ public class RoomDetailActivity extends AppCompatActivity {
         recyclerViewComment = findViewById(R.id.recyclerViewComment);
 
         expandLayoutComment = findViewById(R.id.rd_expand_layout_comment);
-        imageButtonCreateComment = findViewById(R.id.rd_imageButton_create_comment);
+
+        textViewComment = findViewById(R.id.rd_textView_comment);
         editTextName = findViewById(R.id.rd_editText_name);
         editTextContent = findViewById(R.id.rd_editText_content);
         buttonComment = findViewById(R.id.rd_button_create_comment);

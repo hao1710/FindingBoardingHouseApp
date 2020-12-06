@@ -11,10 +11,28 @@ public class BoardingHouse implements Serializable {
     protected double electricityPriceBoardingHouse;
     protected double waterPriceBoardingHouse;
     protected String idOwnerBoardingHouse;
+    protected String nameOwnerBoardingHouse;
+    protected String phoneNumberOwnerBoardingHouse;
     protected double latitude;
     protected double longitude;
 
     public BoardingHouse() {
+    }
+
+    public String getNameOwnerBoardingHouse() {
+        return nameOwnerBoardingHouse;
+    }
+
+    public void setNameOwnerBoardingHouse(String nameOwnerBoardingHouse) {
+        this.nameOwnerBoardingHouse = nameOwnerBoardingHouse;
+    }
+
+    public String getPhoneNumberOwnerBoardingHouse() {
+        return phoneNumberOwnerBoardingHouse;
+    }
+
+    public void setPhoneNumberOwnerBoardingHouse(String phoneNumberOwnerBoardingHouse) {
+        this.phoneNumberOwnerBoardingHouse = phoneNumberOwnerBoardingHouse;
     }
 
     public double getElectricityPriceBoardingHouse() {

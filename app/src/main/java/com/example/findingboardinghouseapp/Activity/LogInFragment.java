@@ -33,6 +33,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Objects;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LogInFragment#newInstance} factory method to
@@ -112,7 +114,7 @@ public class LogInFragment extends Fragment {
         textViewCreateAccount.setText(spannableString);
 
         // sharedPreferences
-        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(this.getActivity()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
 
         // do something
         textViewCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +124,7 @@ public class LogInFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        textInputPassword.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        Objects.requireNonNull(textInputPassword.getEditText()).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -134,7 +136,7 @@ public class LogInFragment extends Fragment {
         buttonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = textInputEmail.getEditText().getText().toString().trim();
+                String email = Objects.requireNonNull(textInputEmail.getEditText()).getText().toString().trim();
                 String password = textInputPassword.getEditText().getText().toString().trim();
                 if (!validateEmail(email) | !validatePassword(password)) {
                     return;
@@ -145,7 +147,7 @@ public class LogInFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                            if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
                                 firebaseFirestore.collection("landlord").whereEqualTo("email", email).whereEqualTo("password", password).get()
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
