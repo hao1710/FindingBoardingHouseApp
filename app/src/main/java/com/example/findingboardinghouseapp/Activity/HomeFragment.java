@@ -1,10 +1,12 @@
 package com.example.findingboardinghouseapp.Activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -12,10 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,7 +87,8 @@ public class HomeFragment extends Fragment {
     }
 
     // My code under
-
+    private RelativeLayout relativeLayout;
+    private NestedScrollView nestedScrollView;
     private EditText editTextSearch;
     private Button buttonRefresh;
     private Spinner spinnerPrice, spinnerDistance, spinnerNumberPeople;
@@ -99,12 +104,14 @@ public class HomeFragment extends Fragment {
 
     private ImageView imageViewNumberPeople, imageViewPrice, imageViewDistance;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         findView(view);
+
 
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -215,6 +222,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void findView(View view) {
+        relativeLayout = view.findViewById(R.id.h_layout);
+
         editTextSearch = view.findViewById(R.id.h_editText_search);
         buttonRefresh = view.findViewById(R.id.h_button_refresh);
 
