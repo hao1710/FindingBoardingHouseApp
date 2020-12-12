@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,10 +19,10 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Tên nhà trọ"
+            android:text="@string/name"
             android:textColor="@color/white"
-            android:textSize="20sp" />
-
+            android:textSize="20sp"
+            tools:ignore="RelativeOverlap" />
 
         <ImageButton
             android:id="@+id/bh_imageButton_menu"
@@ -32,7 +33,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/ic_more_vert"
             android:backgroundTint="@color/white"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/TODO" />
 
     </RelativeLayout>
 
@@ -45,73 +46,39 @@
         android:orientation="vertical"
         tools:ignore="RtlSymmetry">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/bh_address_boarding_house"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:text="@string/address"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/ic_house" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_boarding_house" />
+        <TextView
+            android:id="@+id/bh_distance_boarding_house"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/distance"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/ic_insights" />
 
-            <TextView
-                android:id="@+id/bh_address_boarding_house"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:minHeight="40dp"
-                android:text="Địa chỉ"
-                android:textSize="16sp" />
 
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/bh_textView_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:text="@string/description"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/ic_description" />
 
-            <ImageView
-
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_distance" />
-
-            <TextView
-                android:id="@+id/bh_distance_boarding_house"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:text="Khoảng cách"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_description" />
-
-            <TextView
-                android:id="@+id/bh_textView_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:minHeight="40dp"
-                android:text="Mô tả"
-                android:textSize="16sp" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -126,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Danh sách phòng"
+            android:text="@string/room"
             android:textSize="18sp"/>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activity.CreateBoardingHouseActivity">
+    tools:context=".Activity.UpdateBoardingHouseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Thông tin"
+            android:text="@string/updateBoardingHouse"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
@@ -32,15 +32,13 @@
         android:layout_marginRight="8dp"
         android:orientation="vertical">
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Vui lòng điền các thông tin bên dưới"
+            android:text="@string/info"
             android:textColor="@color/black"
             android:textSize="18sp" />
-
     </LinearLayout>
 
     <ScrollView
@@ -55,29 +53,29 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_name"
+                android:id="@+id/ubh_textInput_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tên nhà trọ"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="@string/nameBoardingHouse"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ubh_textInputEditText_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
-
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/cbh_textView_address"
+                android:id="@+id/ubh_textView_address"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center_vertical"
-                android:layout_width="match_parent"
                 android:text="Vui lòng chọn địa chỉ"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -104,62 +102,61 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_district"
+                android:id="@+id/ubh_textInput_district"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:hint="Huyện"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="@string/district"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:endIconMode="dropdown_menu"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <AutoCompleteTextView
-                    android:id="@+id/cbh_autoCompleteTextView_district"
+                    android:id="@+id/ubh_autoCompleteTextView_district"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_village"
+                android:id="@+id/ubh_textInput_village"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Xã"
-                app:boxStrokeColor="@color/boxStrokeColor"
-
-
+                android:hint="@string/village"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:endIconMode="dropdown_menu"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <AutoCompleteTextView
-                    android:id="@+id/cbh_autoCompleteTextView_village"
+                    android:id="@+id/ubh_autoCompleteTextView_village"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_hamlet"
+                android:id="@+id/ubh_textInput_hamlet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ấp"
-                app:boxStrokeColor="@color/boxStrokeColor"
-
+                android:hint="@string/hamlet"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cbh_textInputEditText_hamlet"
+                    android:id="@+id/ubh_textInputEditText_hamlet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -172,16 +169,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cbh_textInput_electricityPrice"
+                    android:id="@+id/ubh_textInput_electricityPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:hint="Giá điện"
+                    android:hint="@string/electricityPrice"
                     android:textColorHint="@color/green"
                     app:boxStrokeColor="@color/boxStrokeColor"
                     app:errorEnabled="true"
@@ -189,6 +187,7 @@
                     app:hintTextColor="@color/green">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ubh_textInputEditText_electricityPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number">
@@ -198,12 +197,12 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cbh_textInput_waterPrice"
+                    android:id="@+id/ubh_textInput_waterPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Giá nước"
                     android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:hint="@string/waterPrice"
                     android:textColorHint="@color/green"
 
                     app:boxStrokeColor="@color/boxStrokeColor"
@@ -212,6 +211,7 @@
                     app:hintTextColor="@color/green">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ubh_textInputEditText_waterPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number">
@@ -223,16 +223,17 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_description"
+                android:id="@+id/ubh_textInput_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mô tả"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="@string/description"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ubh_textInputEditText_description"
                     android:layout_width="match_parent"
                     android:imeOptions="actionDone"
                     android:layout_height="wrap_content"
@@ -243,24 +244,24 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <RelativeLayout
-                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@+id/cbh_imageButton_pick_location"
-                    android:minHeight="40dp"
                     android:gravity="center_vertical"
+                    android:minHeight="40dp"
                     android:padding="0dp"
-                    android:textColor="@color/black"
                     android:text="Nhấn biểu tượng bên cạnh để chọn vị trí nhà trọ"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <ImageButton
-                    android:id="@+id/cbh_imageButton_pick_location"
+                    android:id="@+id/ubh_imageButton_pick_location"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
@@ -272,38 +273,33 @@
             </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_distance"
+                android:id="@+id/ubh_textInput_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/distance"
-                app:boxStrokeColor="@color/boxStrokeColor"
-
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cbh_textInputEditText_distance"
+                    android:id="@+id/ubh_textInputEditText_distance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:inputType="text"
                     android:textColor="@color/black">
-
                 </com.google.android.material.textfield.TextInputEditText>
-
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <Button
-                android:id="@+id/cbh_button_create"
-                android:layout_width="100dp"
+                android:id="@+id/ubh_button_update"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/green"
-                android:text="Tạo" />
+                android:text="@string/update"
+                android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>
-
-
 </LinearLayout>

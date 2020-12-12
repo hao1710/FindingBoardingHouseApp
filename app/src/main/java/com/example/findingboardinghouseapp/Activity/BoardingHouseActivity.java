@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -29,17 +28,15 @@ public class BoardingHouseActivity extends AppCompatActivity {
 
     private BoardingHouse boardingHouse;
     private RoomTypeAdapter adapter;
-    //    private ArrayList<RoomType> arrayList;
     private FirebaseFirestore firebaseFirestore;
 
     public static final int REQUEST_CODE_FROM_BOARDING_HOUSE = 32;
-    public static final int RESULT_CODE_FROM_BOARDING_HOUSE = 31;
 
     private ImageButton imageButtonMenu;
     private TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewDistanceBoardingHouse, textViewDescription;
     private RecyclerView recyclerViewRoomType;
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,25 +50,29 @@ public class BoardingHouseActivity extends AppCompatActivity {
         imageButtonMenu.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(getApplicationContext(), imageButtonMenu);
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_bha, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @SuppressLint("NonConstantResourceId")
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-//                        case R.id.bh_item_update:
-//                            return true;
-                        case R.id.bh_item_create_room_type:
-                            RoomType roomType = new RoomType();
-                            roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("newRoomType", roomType);
-                            Intent intent1 = new Intent(BoardingHouseActivity.this, CreateRoomTypeActivity.class);
-                            intent1.putExtras(bundle);
-                            startActivityForResult(intent1, REQUEST_CODE_FROM_BOARDING_HOUSE);
-                            return true;
-                    }
-                    return false;
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.bh_item_update:
+                        BoardingHouse boardingHouseUpdate = new BoardingHouse();
+                        boardingHouseUpdate = boardingHouse;
+//             
+                        Bundle bundleUpdate = new Bundle();
+                        bundleUpdate.putSerializable("boardingHouseUpdate", boardingHouseUpdate);
+                        Intent intentUpdate = new Intent(BoardingHouseActivity.this, UpdateBoardingHouseActivity.class);
+                        intentUpdate.putExtras(bundleUpdate);
+                        startActivityForResult(intentUpdate, REQUEST_CODE_FROM_BOARDING_HOUSE);
+                        return true;
+                    case R.id.bh_item_create_room_type:
+                        RoomType roomType = new RoomType();
+                        roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("newRoomType", roomType);
+                        Intent intent1 = new Intent(BoardingHouseActivity.this, CreateRoomTypeActivity.class);
+                        intent1.putExtras(bundle);
+                        startActivityForResult(intent1, REQUEST_CODE_FROM_BOARDING_HOUSE);
+                        return true;
                 }
+                return false;
             });
             popupMenu.show();
 
@@ -134,6 +135,11 @@ public class BoardingHouseActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE && resultCode == CreateRoomTypeActivity.RESULT_CODE_FROM_CREATE_ROOM_TYPE && data != null) {
             readDataRoomType();
         }
+        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE && resultCode == UpdateBoardingHouseActivity.RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE && data != null) {
+            Bundle bundle1 = data.getExtras();
+            boardingHouse = (BoardingHouse) bundle1.getSerializable("boardingHouseResult");
+            setTextBoardingHouse(boardingHouse);
+        }
     }
 
     private void readDataRoomType() {
@@ -151,6 +157,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
                             roomType.setNameRoomType(documentSnapshot.getString("name"));
                             roomType.setAreaRoomType(documentSnapshot.getDouble("area"));
                             roomType.setPriceRoomType(documentSnapshot.getDouble("price"));
+
                             roomType.setNumberPeopleRoomType(Objects.requireNonNull(documentSnapshot.getDouble("numberPeople")).intValue());
 
                             roomTypeArrayList.add(roomType);

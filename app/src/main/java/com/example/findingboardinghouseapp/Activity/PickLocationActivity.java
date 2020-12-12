@@ -188,10 +188,10 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
 
     @Override
     public void onBackPressed() {
-        Intent intent3 = new Intent();
-        intent3.putExtra("latitude", latitude);
-        intent3.putExtra("longitude", longitude);
-        setResult(RESULT_CODE_FROM_PICK_LOCATION, intent3);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("latitude", latitude);
+        resultIntent.putExtra("longitude", longitude);
+        setResult(RESULT_CODE_FROM_PICK_LOCATION, resultIntent);
         finish();
         super.onBackPressed();
     }

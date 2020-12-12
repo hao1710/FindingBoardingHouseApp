@@ -187,86 +187,83 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 R.layout.item_spinner, district);
 
         autoCompleteTextViewDistrict.setAdapter(adapterDistrict);
-        autoCompleteTextViewDistrict.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
+        autoCompleteTextViewDistrict.setOnItemClickListener((parent, view, position, id) -> {
+            String item = parent.getItemAtPosition(position).toString();
 
-                switch (item) {
-                    case "Thành phố Vị Thanh":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] tpVT = new String[]{"Phường 1", "Phường 3", "Phường 4", "Phường 5", "Phường 7",
-                                "Xã Vị Tân", "Xã Hỏa Lựu", "Xã Tân Tiến", "Xã Hỏa Tiến"};
-                        ArrayAdapter<String> adapterTPVT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, tpVT);
-                        autoCompleteTextViewVillage.setAdapter(adapterTPVT);
-                        break;
-                    case "Thị xã Ngã Bảy":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] txNB = new String[]{"Phường Ngã Bảy", "Phường Lái Hiếu", "Phường Hiệp Thành",
-                                "Xã Hiệp Lợi", "Xã Đại Thành", "Xã Tân Thành"};
-                        ArrayAdapter<String> adapterTXNB = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, txNB);
-                        autoCompleteTextViewVillage.setAdapter(adapterTXNB);
-                        break;
-                    case "Thị xã Long Mỹ":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] txLM = new String[]{"Phường Thuận An", "Phường Bình Thành", "Phường Vĩnh Tường", "Phường Trà Lồng",
-                                "Xã Long Bình", "Xã Long Trị", "Xã Long Trị A", "Xã Tân Phú", "Xã Long Phú"};
-                        ArrayAdapter<String> adapterTXLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, txLM);
-                        autoCompleteTextViewVillage.setAdapter(adapterTXLM);
-                        break;
-                    case "Huyện Vị Thủy":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] hVT = new String[]{"Thị trấn Nàng Mau", "Xã Vị Bình", "Xã Vị Đông", "Xã Vị Thanh", "Xã Vị Thắng", "Xã Vị Thủy",
-                                "Xã Vị Trung", "Xã Vĩnh Thuận Tây", "Xã Vĩnh Thuận Trung", "Xã Vĩnh Tường"};
-                        ArrayAdapter<String> adapterHVT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, hVT);
-                        autoCompleteTextViewVillage.setAdapter(adapterHVT);
-                        break;
-                    case "Huyện Long Mỹ":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] hLM = new String[]{"Xã Thuận Hoà", "Xã Thuận Hưng", "Xã Vĩnh Thuận Đông", "Xã Vĩnh Viễn", "Xã Vĩnh Viễn A",
-                                "Xã Xà Phiên", "Xã Lương Tâm", "Xã Lương Nghĩa"};
-                        ArrayAdapter<String> adapterHLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, hLM);
-                        autoCompleteTextViewVillage.setAdapter(adapterHLM);
-                        break;
-                    case "Huyện Phụng Hiệp":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] hPH = new String[]{"Thị trấn Cây Dương", "Thị trấn Kinh Cùng", "Thị trấn Búng Tàu",
-                                "Xã Phụng Hiệp", "Xã Tân Phước Hưng", "Xã Tân Bình", "Xã Hoà An", "Xã Phương Bình", "Xã Phương Phú",
-                                "Xã Hoà Mỹ", "Xã Hiệp Hưng", "Xã Thạnh Hoà", "Xã Bình Thành", "Xã Tân Long", "Xã Long Thạnh"};
-                        ArrayAdapter<String> adapterHPH = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, hPH);
-                        autoCompleteTextViewVillage.setAdapter(adapterHPH);
-                        break;
-                    case "Huyện Châu Thành":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] hCT = new String[]{"Thị trấn Ngã Sáu", "Thị trấn Mái Dầm",
-                                "Xã Đông Phước", "Xã Đông Phước A", "Xã Phú Hữu", "Xã Phú Tân", "Xã Phú An", "Xã Đông Phú", "Xã Đông Thạnh"};
-                        ArrayAdapter<String> adapterHCT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, hCT);
-                        autoCompleteTextViewVillage.setAdapter(adapterHCT);
-                        break;
-                    case "Huyện Châu Thành A":
-                        getAddress();
-                        autoCompleteTextViewVillage.setText("");
-                        String[] hCTA = new String[]{"Thị trấn Một Ngàn", "Thị trấn Bảy Ngàn", "Thị trấn Cái Tắc", "Thị trấn Rạch Gồi",
-                                "Xã Thạnh Xuân", "Xã Tân Phú Thạnh", "Xã Tân Hoà", "Xã Trường Long Tây", "Xã Trường Long A", "Xã Nhơn Nghĩa A"};
-                        ArrayAdapter<String> adapterHCTA = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
-                                R.layout.item_spinner, hCTA);
-                        autoCompleteTextViewVillage.setAdapter(adapterHCTA);
-                        break;
-                }
+            switch (item) {
+                case "Thành phố Vị Thanh":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] tpVT = new String[]{"Phường 1", "Phường 3", "Phường 4", "Phường 5", "Phường 7",
+                            "Xã Vị Tân", "Xã Hỏa Lựu", "Xã Tân Tiến", "Xã Hỏa Tiến"};
+                    ArrayAdapter<String> adapterTPVT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, tpVT);
+                    autoCompleteTextViewVillage.setAdapter(adapterTPVT);
+                    break;
+                case "Thị xã Ngã Bảy":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] txNB = new String[]{"Phường Ngã Bảy", "Phường Lái Hiếu", "Phường Hiệp Thành",
+                            "Xã Hiệp Lợi", "Xã Đại Thành", "Xã Tân Thành"};
+                    ArrayAdapter<String> adapterTXNB = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, txNB);
+                    autoCompleteTextViewVillage.setAdapter(adapterTXNB);
+                    break;
+                case "Thị xã Long Mỹ":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] txLM = new String[]{"Phường Thuận An", "Phường Bình Thành", "Phường Vĩnh Tường", "Phường Trà Lồng",
+                            "Xã Long Bình", "Xã Long Trị", "Xã Long Trị A", "Xã Tân Phú", "Xã Long Phú"};
+                    ArrayAdapter<String> adapterTXLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, txLM);
+                    autoCompleteTextViewVillage.setAdapter(adapterTXLM);
+                    break;
+                case "Huyện Vị Thủy":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] hVT = new String[]{"Thị trấn Nàng Mau", "Xã Vị Bình", "Xã Vị Đông", "Xã Vị Thanh", "Xã Vị Thắng", "Xã Vị Thủy",
+                            "Xã Vị Trung", "Xã Vĩnh Thuận Tây", "Xã Vĩnh Thuận Trung", "Xã Vĩnh Tường"};
+                    ArrayAdapter<String> adapterHVT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, hVT);
+                    autoCompleteTextViewVillage.setAdapter(adapterHVT);
+                    break;
+                case "Huyện Long Mỹ":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] hLM = new String[]{"Xã Thuận Hoà", "Xã Thuận Hưng", "Xã Vĩnh Thuận Đông", "Xã Vĩnh Viễn", "Xã Vĩnh Viễn A",
+                            "Xã Xà Phiên", "Xã Lương Tâm", "Xã Lương Nghĩa"};
+                    ArrayAdapter<String> adapterHLM = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, hLM);
+                    autoCompleteTextViewVillage.setAdapter(adapterHLM);
+                    break;
+                case "Huyện Phụng Hiệp":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] hPH = new String[]{"Thị trấn Cây Dương", "Thị trấn Kinh Cùng", "Thị trấn Búng Tàu",
+                            "Xã Phụng Hiệp", "Xã Tân Phước Hưng", "Xã Tân Bình", "Xã Hoà An", "Xã Phương Bình", "Xã Phương Phú",
+                            "Xã Hoà Mỹ", "Xã Hiệp Hưng", "Xã Thạnh Hoà", "Xã Bình Thành", "Xã Tân Long", "Xã Long Thạnh"};
+                    ArrayAdapter<String> adapterHPH = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, hPH);
+                    autoCompleteTextViewVillage.setAdapter(adapterHPH);
+                    break;
+                case "Huyện Châu Thành":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] hCT = new String[]{"Thị trấn Ngã Sáu", "Thị trấn Mái Dầm",
+                            "Xã Đông Phước", "Xã Đông Phước A", "Xã Phú Hữu", "Xã Phú Tân", "Xã Phú An", "Xã Đông Phú", "Xã Đông Thạnh"};
+                    ArrayAdapter<String> adapterHCT = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, hCT);
+                    autoCompleteTextViewVillage.setAdapter(adapterHCT);
+                    break;
+                case "Huyện Châu Thành A":
+                    getAddress();
+                    autoCompleteTextViewVillage.setText("");
+                    String[] hCTA = new String[]{"Thị trấn Một Ngàn", "Thị trấn Bảy Ngàn", "Thị trấn Cái Tắc", "Thị trấn Rạch Gồi",
+                            "Xã Thạnh Xuân", "Xã Tân Phú Thạnh", "Xã Tân Hoà", "Xã Trường Long Tây", "Xã Trường Long A", "Xã Nhơn Nghĩa A"};
+                    ArrayAdapter<String> adapterHCTA = new ArrayAdapter<>(CreateBoardingHouseActivity.this,
+                            R.layout.item_spinner, hCTA);
+                    autoCompleteTextViewVillage.setAdapter(adapterHCTA);
+                    break;
             }
         });
 
@@ -389,8 +386,8 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
-                Timber.e("Error: " + throwable.getMessage());
+            public void onFailure(@NotNull Call<DirectionsResponse> call, @NotNull Throwable throwable) {
+                Timber.e("Error: %s", throwable.getMessage());
                 Toast.makeText(CreateBoardingHouseActivity.this, "Error: " + throwable.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }

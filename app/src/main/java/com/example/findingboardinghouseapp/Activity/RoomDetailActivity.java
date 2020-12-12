@@ -77,7 +77,7 @@ public class RoomDetailActivity extends AppCompatActivity {
         room = (Room) intent.getSerializableExtra("room");
         listBoardingHouse = (ArrayList<BoardingHouse>) intent.getSerializableExtra("listBH");
         Set<BoardingHouse> pointGeoSet = new HashSet<>(listBoardingHouse);
-        listBoardingHouse = new ArrayList<BoardingHouse>();
+        listBoardingHouse = new ArrayList<>();
         listBoardingHouse.addAll(pointGeoSet);
 
         // underline textView
@@ -104,7 +104,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             expandLayoutComment.collapse();
         });
 
-        textViewComment.setOnClickListener(v -> expandLayoutComment.expand());
+        textViewComment.setOnClickListener(v -> expandLayoutComment.toggle());
 
         buttonComment.setOnClickListener(v -> {
             String name = editTextName.getText().toString().trim();
@@ -137,15 +137,10 @@ public class RoomDetailActivity extends AppCompatActivity {
                 .error(R.drawable.ic_app)
                 .into(imageViewRoom);
 
-        imageViewRoom.setOnClickListener(v -> new StfalconImageViewer.Builder<>(v.getContext(), Collections.singletonList(room.getImageRoom()), new ImageLoader<String>() {
-            @Override
-            public void loadImage(ImageView imageView, String image) {
-                Picasso.with(getApplicationContext()).load(room.getImageRoom())
-                        .placeholder(R.drawable.load_image_room)
-                        .error(R.drawable.ic_app)
-                        .into(imageView);
-            }
-        }).withBackgroundColor(Color.WHITE).show());
+        imageViewRoom.setOnClickListener(v -> new StfalconImageViewer.Builder<>(v.getContext(), Collections.singletonList(room.getImageRoom()), (imageView, image) -> Picasso.with(getApplicationContext()).load(room.getImageRoom())
+                .placeholder(R.drawable.load_image_room)
+                .error(R.drawable.ic_app)
+                .into(imageView)).withBackgroundColor(Color.WHITE).show());
 
         arrayList = new ArrayList<>();
         adapter = new CommentAdapter(getApplicationContext(), arrayList);
@@ -236,7 +231,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
 
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data;
                 assert documentSnapshot != null;
                 data = documentSnapshot.getData();
                 assert data != null;

@@ -142,27 +142,20 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
                 public void onClick(View v) {
                     PopupMenu popupMenu = new PopupMenu(v.getContext(), imageButton);
                     popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_rta, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.rt_item_update:
-                                    Toast.makeText(v.getContext(), "Chỉnh sửa", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                case R.id.rt_item_create_room:
-                                    Room room = new Room();
-                                    RoomType roomType = arrayList.get(getAdapterPosition());
-                                    room.setIdBoardingHouse(roomType.getIdBoardingHouse());
-                                    room.setIdRoomType(roomType.getIdRoomType());
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("newRoom", room);
-                                    Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
-                                    intent.putExtras(bundle);
-                                    ((Activity) view.getContext()).startActivityForResult(intent, 0);
-                                    return true;
-                            }
-                            return false;
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        if (item.getItemId() == R.id.rt_item_create_room) {
+                            Room room = new Room();
+                            RoomType roomType = arrayList.get(getAdapterPosition());
+                            room.setIdBoardingHouse(roomType.getIdBoardingHouse());
+                            room.setIdRoomType(roomType.getIdRoomType());
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("newRoom", room);
+                            Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
+                            intent.putExtras(bundle);
+                            ((Activity) view.getContext()).startActivityForResult(intent, 0);
+                           // return true;
                         }
+                        return false;
                     });
                     popupMenu.show();
                 }

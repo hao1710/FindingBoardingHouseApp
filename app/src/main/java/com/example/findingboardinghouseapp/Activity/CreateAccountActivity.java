@@ -48,49 +48,43 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonCreateAccount.setOnClickListener(v -> {
 
-                String name = textInputName.getEditText().getText().toString().trim();
-                String address = textInputAddress.getEditText().getText().toString().trim();
-                String phoneNumber = textInputPhoneNumber.getEditText().getText().toString().trim();
-                String email = textInputEmail.getEditText().getText().toString().trim();
-                String password = textInputPassword.getEditText().getText().toString().trim();
-                if (!validateName(name) | !validateEmail(email) | !validatePhoneNumber(phoneNumber) | !validatePassword(password) | !validateAddress(address)) {
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(CreateAccountActivity.this, "Đăng ký thành công, vui lòng kiểm tra email và xác nhận", Toast.LENGTH_SHORT).show();
-
-                                        LandlordCRUD landlord = new LandlordCRUD();
-                                        landlord.setName(name);
-                                        landlord.setAddress(address);
-                                        landlord.setPhoneNumber(phoneNumber);
-                                        landlord.setPassword(password);
-                                        landlord.setEmail(email);
-                                        FirebaseFirestore.getInstance().collection("landlord").add(landlord);
-
-                                    } else {
-                                        Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        } else {
-                            Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            String name = textInputName.getEditText().getText().toString().trim();
+            String address = textInputAddress.getEditText().getText().toString().trim();
+            String phoneNumber = textInputPhoneNumber.getEditText().getText().toString().trim();
+            String email = textInputEmail.getEditText().getText().toString().trim();
+            String password = textInputPassword.getEditText().getText().toString().trim();
+            if (!validateName(name) | !validateEmail(email) | !validatePhoneNumber(phoneNumber) | !validatePassword(password) | !validateAddress(address)) {
+                return;
             }
+            progressBar.setVisibility(View.VISIBLE);
+            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(CreateAccountActivity.this, "Đăng ký thành công, vui lòng kiểm tra email và xác nhận", Toast.LENGTH_SHORT).show();
+
+                                LandlordCRUD landlord = new LandlordCRUD();
+                                landlord.setName(name);
+                                landlord.setAddress(address);
+                                landlord.setPhoneNumber(phoneNumber);
+                                landlord.setPassword(password);
+                                landlord.setEmail(email);
+                                FirebaseFirestore.getInstance().collection("landlord").add(landlord);
+
+                            } else {
+                                Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 

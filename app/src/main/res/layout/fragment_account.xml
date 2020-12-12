@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,13 +18,14 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Tài khoản"
+            android:text="@string/account"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="RelativeOverlap" />
 
         <ImageButton
-            android:layout_width="30dp"
             android:id="@+id/a_imageButton_menu"
+            android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="8dp"
             android:layout_alignParentEnd="true"
@@ -37,173 +39,77 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:background="@drawable/custom_background_white"
+        android:layout_marginTop="8dp"
         android:padding="8dp">
 
-        <EditText
-            android:id="@+id/a_editText_name"
-            android:background="@drawable/custom_background_white"
+        <TextView
+            android:id="@+id/a_textView_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints=""
             android:gravity="center"
-            android:text="Tên"
-            android:textSize="30sp"
-            android:enabled="false"
-            android:textColor="@color/black"
-            android:inputType="text"
             android:minHeight="60dp"
-            android:textStyle="bold"
-            tools:ignore="LabelFor" />
+            android:text="@string/name"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/black" />
 
-        <LinearLayout
-
+        <TextView
+            android:id="@+id/a_textView_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:text="@string/address"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_house" />
 
-            <ImageView
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:background="@drawable/ic_house"
-                android:contentDescription="@string/TODO" />
-
-            <EditText
-                android:id="@+id/a_editText_address"
-                android:layout_marginStart="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                android:singleLine="false"
-                android:background="@drawable/custom_background_white"
-                android:enabled="false"
-                android:gravity="center_vertical"
-                android:text="Địa chỉ"
-                android:autofillHints=""
-                android:inputType="text"
-                android:textColor="@color/black"
-                tools:ignore="LabelFor" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/a_textView_phoneNumber"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:background="@drawable/ic_contact_phone"
-                android:contentDescription="@string/TODO" />
-
-            <EditText
-                android:id="@+id/a_editText_phoneNumber"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/custom_background_white"
-                android:enabled="false"
-                android:gravity="center_vertical"
-                android:text="Số điện thoại"
-                android:imeOptions="actionDone"
-                android:autofillHints=""
-                android:inputType="phone"
-                android:textColor="@color/black"
-                tools:ignore="LabelFor" />
-        </LinearLayout>
-
-        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-            android:id="@+id/a_expand_layout_setting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/a_button_save_setting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/a_button_cancel_setting"
-                android:backgroundTint="@color/green"
-                android:text="Lưu lại" />
-
-            <Button
-                android:id="@+id/a_button_cancel_setting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="50dp"
-                android:backgroundTint="@color/green"
-                android:text="Hủy" />
-        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+            android:layout_height="40dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/phoneNumber"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_contact_phone" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/black" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/a_textView_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:text="@string/email"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_email" />
 
-            <ImageView
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:background="@drawable/ic_email"
-                android:contentDescription="@string/TODO" />
-
-            <EditText
-
-                android:id="@+id/a_editText_email"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/custom_background_white"
-                android:enabled="false"
-                android:gravity="center_vertical"
-                android:text="Email"
-                android:autofillHints=""
-                android:inputType="textEmailAddress"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/a_textView_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:background="@drawable/ic_visibility"
-                android:contentDescription="@string/TODO" />
-
-            <EditText
-
-                android:layout_marginStart="8dp"
-                android:id="@+id/a_editText_password"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/custom_background_white"
-                android:enabled="false"
-                android:gravity="center_vertical"
-                android:text="Mật khẩu"
-                android:autofillHints=""
-                android:inputType="text"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:text="@string/password"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_visibility" />
 
     </LinearLayout>
 
@@ -215,23 +121,25 @@
         android:background="@drawable/custom_background_white"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/a_boarding_house_landlord"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-
             android:gravity="center_vertical"
-            android:text="Khu trọ"
+            android:text="@string/inn"
             android:textSize="18sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="8dp"
             android:id="@+id/recyclerViewBoardingHouse"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
     </LinearLayout>
-
 
 </LinearLayout>
