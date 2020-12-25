@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,7 +99,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public String name;
     public double latitude;
     public double longitude;
+    private ImageButton imageButton;
     private ArrayList<BoardingHouse> listBoardingHouse;
+
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +114,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // This contains the MapView in XML and needs to be called after the access token is configured.
         setContentView(R.layout.activity_map);
 
-
         mapView = findViewById(R.id.mapView);
+        imageButton = findViewById(R.id.m_imageButton_menu);
+        imageButton.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), imageButton);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_map, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_streets:
+                        mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS),
+                                style -> {
+                                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                                            .target(new LatLng(latitude, longitude)).zoom(14).build();
+                                    new LoadGeoJsonDataTask(MapActivity.this).execute(listBoardingHouse);
+                                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                    mapboxMap.addOnMapClickListener(MapActivity.this);
+                                });
+                        return true;
+                    case R.id.menu_satellite_streets:
+                        mapboxMap.setStyle(new Style.Builder().fromUri(Style.SATELLITE_STREETS),
+                                style -> {
+                                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                                            .target(new LatLng(latitude, longitude)).zoom(14).build();
+                                    new LoadGeoJsonDataTask(MapActivity.this).execute(listBoardingHouse);
+                                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                    mapboxMap.addOnMapClickListener(MapActivity.this);
+                                });
+                        return true;
+                }
+                return false;
+            });
+            popupMenu.show();
+        });
 
         mapView.onCreate(savedInstanceState);
         Intent intent = getIntent();
@@ -264,7 +299,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .withProperties(
                         iconImage(ICON_PIN_ID),
                         iconAllowOverlap(true),
-                        iconOffset(new Float[]{0f, 0f}),
+                        iconOffset(new Float[]{0f, -30f}),
                         iconSize(0.3f)
                 ));
     }
@@ -309,7 +344,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         iconImage("{name}"),
 
                         /* set anchor of icon to bottom-left */
-                        iconAnchor(ICON_ANCHOR_BOTTOM),
+                        iconAnchor(Property.ICON_ANCHOR_CENTER),
 
                         /* all info window and marker image to appear at the same time*/
                         iconAllowOverlap(true),
@@ -497,7 +532,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     activity.refreshSource();
                 }
             }
-            Toast.makeText(activity, "Nhấn vào marker", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "Nhấn vào marker", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -594,7 +629,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<DirectionsResponse> call, @NotNull Throwable throwable) {
                 Timber.e("Error: " + throwable.getMessage());
                 Toast.makeText(MapActivity.this, "Error: " + throwable.getMessage(),
                         Toast.LENGTH_SHORT).show();
@@ -641,7 +676,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }

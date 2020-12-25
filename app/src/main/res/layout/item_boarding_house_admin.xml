@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/item_r_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="10sp"
+        tools:ignore="RtlSymmetry,UselessParent">
+
+        <TextView
+            android:id="@+id/itemBHA_name"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/itemBHA_switch"
+            android:gravity="center_vertical"
+            android:text="@string/name"
+            android:textColor="@color/black"
+            tools:ignore="UnknownIdInLayout" />
+
+        <Switch
+            android:id="@+id/itemBHA_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:clickable="false"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"/>
+</LinearLayout>

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,51 +29,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AccountFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public AccountFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AccountFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AccountFragment newInstance(String param1, String param2) {
-        AccountFragment fragment = new AccountFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     //
@@ -83,9 +46,11 @@ public class AccountFragment extends Fragment {
     public SharedPreferences sharedPreferences;
 
     private ImageButton imageButtonMenu;
-    private TextView textViewName, textViewAddress, textViewPhoneNumber, textViewEmail, textViewPassword;
+    private TextView textViewName, textViewAddress, textViewPhoneNumber, textViewEmail;
     private Landlord landlord;
-    private RecyclerView recyclerViewBoardingHouse;
+    private RecyclerView rvBoardingHouse;
+    private TextView tvEnableInn;
+
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -97,7 +62,7 @@ public class AccountFragment extends Fragment {
         findView(view);
 
         // sharedPreferences
-        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(this.getActivity()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
 
         //
         Bundle bundle = getArguments();
@@ -105,9 +70,10 @@ public class AccountFragment extends Fragment {
         landlord = (Landlord) bundle.getSerializable("landlord");
 
         // recyclerView
-        recyclerViewBoardingHouse.setHasFixedSize(true);
+        rvBoardingHouse.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerViewBoardingHouse.setLayoutManager(linearLayout);
+        rvBoardingHouse.setLayoutManager(linearLayout);
+
 
         // do something
         setTextDataLandlord(landlord);
@@ -120,15 +86,16 @@ public class AccountFragment extends Fragment {
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.a_item_log_out:
+                        FirebaseAuth.getInstance().signOut();
+
                         SharedPreferences.Editor editor = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
                         editor.clear();
                         editor.apply();
 
-                        FirebaseAuth.getInstance().signOut();
-
                         Fragment fragment = new LogInFragment();
-                        FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.frame_layout, fragment);
+                        FragmentTransaction fragmentTransaction = AccountFragment.this.getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        fragmentTransaction.replace(R.id.main_frameLayout, fragment);
                         fragmentTransaction.commit();
 
                         return true;
@@ -170,9 +137,12 @@ public class AccountFragment extends Fragment {
         textViewAddress = view.findViewById(R.id.a_textView_address);
         textViewPhoneNumber = view.findViewById(R.id.a_textView_phoneNumber);
         textViewEmail = view.findViewById(R.id.a_textView_email);
-        textViewPassword = view.findViewById(R.id.a_textView_password);
+        //textViewPassword = view.findViewById(R.id.a_textView_password);
 
-        recyclerViewBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
+        tvEnableInn = view.findViewById(R.id.account_tv_enableInn);
+
+
+        rvBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
     }
 
     private void setTextDataLandlord(Landlord landlord) {
@@ -180,13 +150,17 @@ public class AccountFragment extends Fragment {
         textViewAddress.setText(landlord.getAddressLandlord());
         textViewPhoneNumber.setText(landlord.getPhoneNumberLandlord());
         textViewEmail.setText(landlord.getEmailLandlord());
-        textViewPassword.setText(landlord.getPasswordLandlord());
+//        textViewPassword.setText(landlord.getPasswordLandlord());
     }
 
     private void readDataBoardingHouse() {
         ArrayList<BoardingHouse> arrayList = new ArrayList();
         BoardingHouseAdapter adapter = new BoardingHouseAdapter(getContext(), arrayList);
-        recyclerViewBoardingHouse.setAdapter(adapter);
+        rvBoardingHouse.setAdapter(adapter);
+
+        ArrayList<BoardingHouse> arrayList2 = new ArrayList<>();
+        BoardingHouseAdapter adapter2 = new BoardingHouseAdapter(getContext(), arrayList2);
+
         FirebaseFirestore.getInstance().collection("boardingHouse").whereEqualTo("owner", landlord.getIdLandlord()).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -199,11 +173,24 @@ public class AccountFragment extends Fragment {
                             boardingHouse.setElectricityPriceBoardingHouse(documentSnapshot.getDouble("electricityPrice"));
                             boardingHouse.setWaterPriceBoardingHouse(documentSnapshot.getDouble("waterPrice"));
                             boardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
+                            boardingHouse.setStatusBoardingHouse(documentSnapshot.getBoolean("status"));
+
                             arrayList.add(boardingHouse);
+
+
                         }
+                    }
+                    adapter2.notifyDataSetChanged();
+                    if (arrayList.size() > 0) {
+                        tvEnableInn.setText("Khu trọ của bạn");
+                       //tvEnableInn.setBackgroundColor(AccountFragment.this.getResources().getColor(R.color.colorTitle));
+                    } else {
+                        tvEnableInn.setText(null);
+                       // tvEnableInn.setBackgroundColor(AccountFragment.this.getResources().getColor(R.color.white));
                     }
                     adapter.notifyDataSetChanged();
                 });
+
     }
 
     @Override

@@ -22,12 +22,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.findingboardinghouseapp.Model.Admin;
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -101,11 +101,9 @@ public class LogInFragment extends Fragment {
 
         findView(view);
 
-
         // initial
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-
 
         // underline textView
         String create = "Bạn chưa có tài khoản? Đăng kí ngay";
@@ -133,67 +131,97 @@ public class LogInFragment extends Fragment {
                 return false;
             }
         });
-        buttonLogIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = Objects.requireNonNull(textInputEmail.getEditText()).getText().toString().trim();
-                String password = textInputPassword.getEditText().getText().toString().trim();
-                if (!validateEmail(email) | !validatePassword(password)) {
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
-                                firebaseFirestore.collection("landlord").whereEqualTo("email", email).whereEqualTo("password", password).get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (task.getResult().size() > 0) {
-                                                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                                                        Landlord landlord = new Landlord();
-                                                        landlord.setIdLandlord(documentSnapshot.getId());
-                                                        landlord.setNameLandlord(documentSnapshot.getString("name"));
-                                                        landlord.setAddressLandlord(documentSnapshot.getString("address"));
-                                                        landlord.setPhoneNumberLandlord(documentSnapshot.getString("phoneNumber"));
-                                                        landlord.setEmailLandlord(email);
-                                                        landlord.setPasswordLandlord(password);
+        buttonLogIn.setOnClickListener(v -> {
+            String email = Objects.requireNonNull(textInputEmail.getEditText()).getText().toString().trim();
+            String password = textInputPassword.getEditText().getText().toString().trim();
+            if (!validateEmail(email) | !validatePassword(password)) {
+                return;
+            }
+            progressBar.setVisibility(View.VISIBLE);
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
+                        if (firebaseAuth.getCurrentUser().getEmail().equals("anhhaovo1710@gmail.com")) {
+                            firebaseFirestore.collection("admin").whereEqualTo("email", email)
+                                    .whereEqualTo("password", password).get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.getResult().size() > 0) {
+                                                for(DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
+                                                    Admin admin = new Admin();
+                                                    admin.setIdAdmin(documentSnapshot.getId());
+                                                    admin.setEmailAdmin(email);
+                                                    admin.setPasswordAdmin(password);
 
-                                                        SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
-                                                        editor.putString("id", landlord.getIdLandlord());
-                                                        editor.putString("name", landlord.getNameLandlord());
-                                                        editor.putString("address", landlord.getAddressLandlord());
-                                                        editor.putString("phoneNumber", landlord.getPhoneNumberLandlord());
-                                                        editor.putString("email", email);
-                                                        editor.putString("password", password);
-                                                        editor.apply();
+                                                    SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
+                                                    editor.putString("id", admin.getEmailAdmin());
+                                                    editor.putString("email", email);
+                                                    editor.putString("password", password);
+                                                    editor.apply();
 
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putSerializable("landlord", landlord);
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("admin", admin);
 
-                                                        Fragment fragment = new AccountFragment();
-                                                        fragment.setArguments(bundle);
-                                                        FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
-                                                        fragmentTransaction.replace(R.id.frame_layout, fragment);
-                                                        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                                        fragmentTransaction.commit();
-                                                    }
+                                                    Fragment fragment = new AdminFragment();
+                                                    fragment.setArguments(bundle);
+                                                    FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                                                    fragmentTransaction.replace(R.id.main_frameLayout, fragment);
+                                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                                    fragmentTransaction.commit();
                                                 }
                                             }
-                                        });
-                            } else {
-                                Toast.makeText(getContext(), "Vui lòng xác nhận địa chỉ email", Toast.LENGTH_SHORT).show();
-                            }
-
+                                        }
+                                    });
                         } else {
-                            Toast.makeText(getContext(), "Sai email hoặc mật khẩu, vui lòng kiểm tra lại", Toast.LENGTH_SHORT).show();
+                            firebaseFirestore.collection("landlord").whereEqualTo("email", email)
+                                    .whereEqualTo("password", password).get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.getResult().size() > 0) {
+                                                for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                                    Landlord landlord = new Landlord();
+                                                    landlord.setIdLandlord(documentSnapshot.getId());
+                                                    landlord.setNameLandlord(documentSnapshot.getString("name"));
+                                                    landlord.setAddressLandlord(documentSnapshot.getString("address"));
+                                                    landlord.setPhoneNumberLandlord(documentSnapshot.getString("phoneNumber"));
+                                                    landlord.setEmailLandlord(email);
+                                                    landlord.setPasswordLandlord(password);
+
+                                                    SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
+                                                    editor.putString("id", landlord.getIdLandlord());
+                                                    editor.putString("name", landlord.getNameLandlord());
+                                                    editor.putString("address", landlord.getAddressLandlord());
+                                                    editor.putString("phoneNumber", landlord.getPhoneNumberLandlord());
+                                                    editor.putString("email", email);
+                                                    editor.putString("password", password);
+                                                    editor.apply();
+
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("landlord", landlord);
+
+                                                    Fragment fragment = new AccountFragment();
+                                                    fragment.setArguments(bundle);
+                                                    FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                                                    fragmentTransaction.replace(R.id.main_frameLayout, fragment);
+                                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                                    fragmentTransaction.commit();
+                                                }
+                                            }
+                                        }
+                                    });
                         }
+
+                    } else {
+                        Toast.makeText(getContext(), "Vui lòng xác nhận địa chỉ email", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
+
+                } else {
+                    Toast.makeText(getContext(), "Sai email hoặc mật khẩu, vui lòng kiểm tra lại", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
 

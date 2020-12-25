@@ -1,8 +1,10 @@
 package com.example.findingboardinghouseapp.Model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class BoardingHouse implements Serializable {
+
     protected String idBoardingHouse;
     protected String nameBoardingHouse;
     protected String addressBoardingHouse;
@@ -15,8 +17,17 @@ public class BoardingHouse implements Serializable {
     protected String phoneNumberOwnerBoardingHouse;
     protected double latitude;
     protected double longitude;
+    protected boolean statusBoardingHouse;
 
     public BoardingHouse() {
+    }
+
+    public boolean isStatusBoardingHouse() {
+        return statusBoardingHouse;
+    }
+
+    public void setStatusBoardingHouse(boolean statusBoardingHouse) {
+        this.statusBoardingHouse = statusBoardingHouse;
     }
 
     public String getNameOwnerBoardingHouse() {
@@ -113,5 +124,30 @@ public class BoardingHouse implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardingHouse that = (BoardingHouse) o;
+        return Double.compare(that.distanceBoardingHouse, distanceBoardingHouse) == 0 &&
+                Double.compare(that.electricityPriceBoardingHouse, electricityPriceBoardingHouse) == 0 &&
+                Double.compare(that.waterPriceBoardingHouse, waterPriceBoardingHouse) == 0 &&
+                Double.compare(that.latitude, latitude) == 0 &&
+                Double.compare(that.longitude, longitude) == 0 &&
+                statusBoardingHouse == that.statusBoardingHouse &&
+                Objects.equals(idBoardingHouse, that.idBoardingHouse) &&
+                Objects.equals(nameBoardingHouse, that.nameBoardingHouse) &&
+                Objects.equals(addressBoardingHouse, that.addressBoardingHouse) &&
+                Objects.equals(descriptionBoardingHouse, that.descriptionBoardingHouse) &&
+                Objects.equals(idOwnerBoardingHouse, that.idOwnerBoardingHouse) &&
+                Objects.equals(nameOwnerBoardingHouse, that.nameOwnerBoardingHouse) &&
+                Objects.equals(phoneNumberOwnerBoardingHouse, that.phoneNumberOwnerBoardingHouse);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idBoardingHouse, nameBoardingHouse, addressBoardingHouse, descriptionBoardingHouse, distanceBoardingHouse, electricityPriceBoardingHouse, waterPriceBoardingHouse, idOwnerBoardingHouse, nameOwnerBoardingHouse, phoneNumberOwnerBoardingHouse, latitude, longitude, statusBoardingHouse);
     }
 }

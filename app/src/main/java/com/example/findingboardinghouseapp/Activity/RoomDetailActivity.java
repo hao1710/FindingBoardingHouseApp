@@ -13,11 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.findingboardinghouseapp.Adapter.CommentAdapter;
 import com.example.findingboardinghouseapp.Adapter.FacilityAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
@@ -27,20 +31,20 @@ import com.example.findingboardinghouseapp.Model.Facility;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.imageviewer.StfalconImageViewer;
-import com.stfalcon.imageviewer.loader.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class RoomDetailActivity extends AppCompatActivity {
     private ImageView imageViewRoom;
@@ -64,7 +68,8 @@ public class RoomDetailActivity extends AppCompatActivity {
     public ArrayList<Facility> arrayListFacility;
     public FacilityAdapter facilityAdapter;
     private ArrayList<BoardingHouse> listBoardingHouse;
-
+    ImageSlider imageSlider;
+    HashSet<BoardingHouse> hashSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +78,46 @@ public class RoomDetailActivity extends AppCompatActivity {
 
         findView();
 
+
         Intent intent = getIntent();
         room = (Room) intent.getSerializableExtra("room");
-        listBoardingHouse = (ArrayList<BoardingHouse>) intent.getSerializableExtra("listBH");
-        Set<BoardingHouse> pointGeoSet = new HashSet<>(listBoardingHouse);
+        setText2();
         listBoardingHouse = new ArrayList<>();
-        listBoardingHouse.addAll(pointGeoSet);
+        FirebaseFirestore.getInstance().collection("boardingHouse").whereEqualTo("status", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                        BoardingHouse boardingHouse = new BoardingHouse();
+                        boardingHouse.setIdBoardingHouse(documentSnapshot.getId());
+                        boardingHouse.setLatitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLatitude());
+                        boardingHouse.setLongitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLongitude());
+                        boardingHouse.setNameBoardingHouse(documentSnapshot.getString("name"));
+                        listBoardingHouse.add(boardingHouse);
+                    }
+                    hashSet = new HashSet<>(listBoardingHouse);
+                    listBoardingHouse.clear();
+                    listBoardingHouse.addAll(hashSet);
+                }
 
+            }
+        });
+        //image
+        ArrayList<SlideModel> imageList = new ArrayList<>();
+        for (int i = 0; i < room.getImageRoom().size(); i++) {
+
+            imageList.add(new SlideModel(room.getImageRoom().get(i), ScaleTypes.CENTER_CROP));
+        }
+        imageSlider.setImageList(imageList);
+
+        imageSlider.setItemClickListener(i ->
+                {
+                    new StfalconImageViewer.Builder<>(RoomDetailActivity.this, Collections.singletonList(imageList), (imageView, image) -> Picasso.get().load(imageList.get(i).getImageUrl())
+                            .placeholder(R.drawable.load_image_room)
+                            .error(R.drawable.ic_app)
+                            .into(imageView)).withBackgroundColor(Color.WHITE).show();
+                }
+        );
         // underline textView
         String create = "Xem map";
         SpannableString spannableString = new SpannableString(create);
@@ -88,7 +126,6 @@ public class RoomDetailActivity extends AppCompatActivity {
 
         expandLayoutComment.collapse();
         firebaseFirestore = FirebaseFirestore.getInstance();
-
 
         textViewViewMap.setOnClickListener(v -> {
             Intent intent1 = new Intent(v.getContext(), MapActivity.class);
@@ -131,16 +168,17 @@ public class RoomDetailActivity extends AppCompatActivity {
             }
         });
 
-        Picasso.with(getApplicationContext()).load(room.getImageRoom())
-                .fit().centerCrop()
-                .placeholder(R.drawable.load_image_room)
-                .error(R.drawable.ic_app)
-                .into(imageViewRoom);
 
-        imageViewRoom.setOnClickListener(v -> new StfalconImageViewer.Builder<>(v.getContext(), Collections.singletonList(room.getImageRoom()), (imageView, image) -> Picasso.with(getApplicationContext()).load(room.getImageRoom())
-                .placeholder(R.drawable.load_image_room)
-                .error(R.drawable.ic_app)
-                .into(imageView)).withBackgroundColor(Color.WHITE).show());
+//        Picasso.get().load(room.getImageRoom())
+//                .fit().centerCrop()
+//                .placeholder(R.drawable.load_image_room)
+//                .error(R.drawable.ic_app)
+//                .into(imageViewRoom);
+
+//        imageViewRoom.setOnClickListener(v -> new StfalconImageViewer.Builder<>(v.getContext(), Collections.singletonList(room.getImageRoom()), (imageView, image) -> Picasso.get().load(room.getImageRoom())
+//                .placeholder(R.drawable.load_image_room)
+//                .error(R.drawable.ic_app)
+//                .into(imageView)).withBackgroundColor(Color.WHITE).show());
 
         arrayList = new ArrayList<>();
         adapter = new CommentAdapter(getApplicationContext(), arrayList);
@@ -183,10 +221,16 @@ public class RoomDetailActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void setText() {
+
+        textViewPhoneNumber.setText("Chủ trọ: " + room.getNameOwnerBoardingHouse() + " - SĐT: " + room.getPhoneNumberOwnerBoardingHouse());
+
+    }
+    private void setText2(){
         textViewDescriptionRoom.setText(room.getDescriptionRoomType());
         textViewNameBoardingHouse.setText(room.getNameBoardingHouse());
 
-        textViewAreaRoom.setText(room.getAreaRoomType() + " m2");
+//        textViewAreaRoom.setText(Html.fromHtml(room.getAreaRoomType()+ "m<sup>2</sup>"));
+        textViewAreaRoom.setText(room.getDistanceBoardingHouse() + " m\u00b2");
         textViewPriceRoom.setText(room.getPriceRoomType() + " triệu đồng");
         textViewNumberPeople.setText(room.getNumberPeopleRoomType() + " người");
 
@@ -195,10 +239,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
         textViewAddressBoardingHouse.setText("Địa chỉ: " + room.getAddressBoardingHouse());
         textViewDescriptionBoardingHouse.setText(room.getDescriptionBoardingHouse());
-        textViewPhoneNumber.setText("Chủ trọ: " + room.getNameOwnerBoardingHouse() + " - SĐT: " + room.getPhoneNumberOwnerBoardingHouse());
-
     }
-
     protected interface FirestoreCallBack {
         void onCallback(List<Comment> list);
     }
@@ -224,13 +265,13 @@ public class RoomDetailActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void getFacility(FacilityCallback callback) {
         List<Facility> list = new ArrayList<>();
         firebaseFirestore.collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").document(room.getIdRoomType())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
-
                 Map<String, Object> data;
                 assert documentSnapshot != null;
                 data = documentSnapshot.getData();
@@ -288,7 +329,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
     private void findView() {
         imageViewRoom = findViewById(R.id.rd_image_room);
-
+        imageSlider = findViewById(R.id.rd_imageSlider);
         textViewDescriptionRoom = findViewById(R.id.rd_description_room);
         textViewNameBoardingHouse = findViewById(R.id.rd_name_boarding_house);
 

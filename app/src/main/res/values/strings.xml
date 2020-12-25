@@ -2,19 +2,27 @@
     <string name="app_name">Nhà trọ Hòa An</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="updateAccount">Cập nhật thông tin tài khoản</string>
+    <string name="email">Email</string>
+    <string name="logIn">Đăng nhập</string>
+    <string name="logOut">Đăng xuất</string>
+    <string name="address">Địa chỉ</string>
+    <string name="home">Home</string>
+    <string name="cancel">Hủy</string>
+    <string name="roomType">Loại phòng</string>
+    <string name="password">Mật khẩu</string>
+    <string name="disableInn">Nhà trọ bị vô hiệu hóa</string>
+    <string name="enableInn">Nhà trọ đang hoạt động</string>
+    <string name="status">Trạng thái</string>
+    <string name="createAccount">Tạo tài khoản</string>
+    <string name="account">Tài khoản</string>
     <string name="TODO">TO DO</string>
     <string name="search">Tìm kiếm</string>
-    <string name="cancel">Hủy</string>
     <string name="room">Phòng trọ</string>
-    <string name="account">Tài khoản</string>
     <string name="name">Tên</string>
-    <string name="address">Địa chỉ</string>
     <string name="phoneNumber">Số điện thoại</string>
-    <string name="email">Email</string>
-    <string name="password">Mật khẩu</string>
-    <string name="inn">Nhà trọ</string>
-    <string name="createAccount">Tạo tài khoản</string>
-    <string name="updateAccount">Cập nhật thông tin tài khoản</string>
+
     <string name="updateBoardingHouse">Cập nhật thông tin nhà trọ</string>
     <string name="info">Thông tin</string>
     <string name="update">Cập nhật</string>
@@ -33,6 +41,7 @@
     <string name="district">Huyện</string>
     <string name="village">Xã</string>
     <string name="hamlet">Ấp</string>
+    <string name="admin">Admin</string>
 
 
     <!--    Mapbox-->

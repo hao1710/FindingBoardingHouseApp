@@ -17,5 +17,9 @@
     <color name="blue">#0000ff</color>
     <color name="boxStrokeColor">#327E32</color>
     <color name="deepPink">#FF1493</color>
+    <color name="red">#FF0000</color>
+    <color name="colorTitle">#64bbd6</color>
+    <color name="c">#fcd770</color>
+    <color name="a">#f24949</color>
 
 </resources>

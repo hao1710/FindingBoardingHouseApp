@@ -1,17 +1,19 @@
 package com.example.findingboardinghouseapp.Model;
 
+import java.util.ArrayList;
+
 public class RoomCRUD {
-    private String image;
+    private ArrayList<String> image;
     private boolean status;
 
     public RoomCRUD() {
     }
 
-    public String getImage() {
+    public ArrayList<String> getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(ArrayList<String> image) {
         this.image = image;
     }
 

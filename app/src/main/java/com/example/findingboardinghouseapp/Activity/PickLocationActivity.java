@@ -111,7 +111,7 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
                 // Transform the appearance of the button to become the cancel button
                 selectLocationButton.setBackgroundColor(
                         ContextCompat.getColor(PickLocationActivity.this, R.color.green));
-                selectLocationButton.setText("Chọn vị trí");
+                selectLocationButton.setText("Chọn vị trí nhà trọ");
 
                 selectLocationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -154,7 +154,7 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
                             // Switch the button appearance back to select a location.
                             selectLocationButton.setBackgroundColor(
                                     ContextCompat.getColor(PickLocationActivity.this, R.color.green));
-                            selectLocationButton.setText("Chọn vị trí");
+                            selectLocationButton.setText("Chọn vị trí nhà trọ");
 
                             // Show the red hovering ImageView marker
                             hoveringMarker.setVisibility(View.VISIBLE);

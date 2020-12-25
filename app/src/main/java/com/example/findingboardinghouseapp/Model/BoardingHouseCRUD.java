@@ -12,8 +12,17 @@ public class BoardingHouseCRUD {
     private double waterPrice;
     private String owner;
     private GeoPoint point;
+    private boolean status;
 
     public BoardingHouseCRUD() {
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public String getName() {

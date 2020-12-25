@@ -11,10 +11,6 @@ public class Landlord implements Serializable {
     protected String emailLandlord;
     protected String passwordLandlord;
 
-    public Landlord() {
-
-    }
-
     public String getIdLandlord() {
         return idLandlord;
     }

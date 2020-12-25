@@ -1,21 +1,22 @@
 package com.example.findingboardinghouseapp.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Room extends RoomType implements Serializable {
 
     protected String nameRoom;
     protected boolean statusRoom;
-    protected String imageRoom;
-
+//    protected String imageRoom;
+    protected ArrayList<String> imageRoom;
 
     public Room() {
     }
 
-    public Room(boolean statusRoom, String imageRoom) {
-        this.statusRoom = statusRoom;
-        this.imageRoom = imageRoom;
-    }
+//    public Room(boolean statusRoom, String imageRoom) {
+//        this.statusRoom = statusRoom;
+//        this.imageRoom = imageRoom;
+//    }
 
     public String getNameRoom() {
         return nameRoom;
@@ -33,12 +34,11 @@ public class Room extends RoomType implements Serializable {
         this.statusRoom = statusRoom;
     }
 
-    public String getImageRoom() {
+    public ArrayList<String> getImageRoom() {
         return imageRoom;
     }
 
-    public void setImageRoom(String imageRoom) {
+    public void setImageRoom(ArrayList<String> imageRoom) {
         this.imageRoom = imageRoom;
     }
-
 }

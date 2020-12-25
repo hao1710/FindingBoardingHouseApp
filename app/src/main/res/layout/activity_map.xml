@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MapActivity">
+    android:orientation="vertical">
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapbox:mapbox_cameraZoom="14" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_background_title">
+
+        <TextView
+            android:id="@+id/bh_name_boarding_house"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:text="Bản đồ nhà trọ"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/m_imageButton_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/ic_more_vert"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO" />
+
+    </RelativeLayout>
+
 
     <!--    <TextView android:layout_height="wrap_content"-->
     <!--        android:layout_width="wrap_content"-->
@@ -16,12 +50,6 @@
     <!--        mapbox:layout_constraintBottom_toBottomOf="parent"-->
     <!--        mapbox:layout_constraintRight_toRightOf="parent"/>-->
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        mapbox:mapbox_cameraZoom="14" />
     <!--    <com.mapbox.mapboxsdk.maps.MapView-->
     <!--        android:id="@+id/mapView"-->
     <!--        android:layout_width="match_parent"-->

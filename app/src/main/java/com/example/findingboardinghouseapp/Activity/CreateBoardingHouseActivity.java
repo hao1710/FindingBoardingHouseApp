@@ -8,7 +8,6 @@ import android.text.Selection;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -16,14 +15,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.BoardingHouseCRUD;
 import com.example.findingboardinghouseapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
@@ -98,34 +101,40 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 return false;
             }
         });
-        buttonCreateBoardingHouse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String nameV = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
-                String districtV = Objects.requireNonNull(textInputDistrict.getEditText()).getText().toString().trim();
-                String villageV = Objects.requireNonNull(textInputVillage.getEditText()).getText().toString().trim();
-                String hamletV = Objects.requireNonNull(textInputHamlet.getEditText()).getText().toString().trim();
-                String ePrice = Objects.requireNonNull(textInputElectricityPrice.getEditText()).getText().toString().trim();
-                String wPrice = Objects.requireNonNull(textInputWaterPrice.getEditText()).getText().toString().trim();
-                String descriptionV = Objects.requireNonNull(textInputDescription.getEditText()).getText().toString().trim();
-                String distanceV = Objects.requireNonNull(textInputDistance.getEditText()).getText().toString().trim();
-                if (!validateName(nameV) | !validateDistrict(districtV) | !validateVillage(villageV) | !validateHamlet(hamletV)
-                        | !validateElectricityPrice(ePrice) | !validateWaterPrice(wPrice) | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
-                    return;
-                }
-                BoardingHouseCRUD boardingHouseCRUD = new BoardingHouseCRUD();
-                boardingHouseCRUD.setName(nameV);
-                boardingHouseCRUD.setAddress(address);
-                boardingHouseCRUD.setDistance(distance);
-                boardingHouseCRUD.setElectricityPrice(Double.parseDouble(ePrice));
-                boardingHouseCRUD.setWaterPrice(Double.parseDouble(wPrice));
-                GeoPoint point = new GeoPoint(latitude, longitude);
-                boardingHouseCRUD.setOwner(boardingHouse.getIdOwnerBoardingHouse());
-                boardingHouseCRUD.setPoint(point);
-                boardingHouseCRUD.setDescription(textInputDescription.getEditText().getText().toString().trim());
-                FirebaseFirestore.getInstance().collection("boardingHouse").add(boardingHouseCRUD);
-                Toast.makeText(getApplicationContext(), "Thêm nhà trọ thành công", Toast.LENGTH_SHORT).show();
+        buttonCreateBoardingHouse.setOnClickListener(v -> {
+            String nameV = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
+            String districtV = Objects.requireNonNull(textInputDistrict.getEditText()).getText().toString().trim();
+            String villageV = Objects.requireNonNull(textInputVillage.getEditText()).getText().toString().trim();
+            String hamletV = Objects.requireNonNull(textInputHamlet.getEditText()).getText().toString().trim();
+            String ePrice = Objects.requireNonNull(textInputElectricityPrice.getEditText()).getText().toString().trim();
+            String wPrice = Objects.requireNonNull(textInputWaterPrice.getEditText()).getText().toString().trim();
+            String descriptionV = Objects.requireNonNull(textInputDescription.getEditText()).getText().toString().trim();
+            String distanceV = Objects.requireNonNull(textInputDistance.getEditText()).getText().toString().trim();
+            if (!validateName(nameV) | !validateDistrict(districtV) | !validateVillage(villageV) | !validateHamlet(hamletV)
+                    | !validateElectricityPrice(ePrice) | !validateWaterPrice(wPrice) | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
+                return;
             }
+            BoardingHouseCRUD boardingHouseCRUD = new BoardingHouseCRUD();
+            boardingHouseCRUD.setName(nameV);
+            boardingHouseCRUD.setAddress(address);
+            boardingHouseCRUD.setDistance(distance);
+            boardingHouseCRUD.setElectricityPrice(Double.parseDouble(ePrice));
+            boardingHouseCRUD.setWaterPrice(Double.parseDouble(wPrice));
+            boardingHouseCRUD.setStatus(false);
+            GeoPoint point = new GeoPoint(latitude, longitude);
+            boardingHouseCRUD.setOwner(boardingHouse.getIdOwnerBoardingHouse());
+            boardingHouseCRUD.setPoint(point);
+            boardingHouseCRUD.setDescription(textInputDescription.getEditText().getText().toString().trim());
+            FirebaseFirestore.getInstance().collection("boardingHouse").add(boardingHouseCRUD).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentReference> task) {
+                    Toast.makeText(getApplicationContext(), "Thêm nhà trọ thành công", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    setResult(RESULT_CODE_FROM_CREATE_BOARDING_HOUSE, intent);
+                    finish();
+                }
+            });
+
         });
         imageButtonPickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -395,13 +404,6 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        setResult(RESULT_CODE_FROM_CREATE_BOARDING_HOUSE, intent);
-        finish();
-        super.onBackPressed();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

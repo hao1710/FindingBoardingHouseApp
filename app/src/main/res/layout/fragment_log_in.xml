@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green"
+    android:background="@color/colorTitle"
     android:orientation="vertical"
     android:weightSum="100"
     tools:context=".Activity.LogInFragment">
@@ -39,7 +39,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                tools:ignore="UselessParent">
 
                 <ProgressBar
                     android:id="@+id/li_progressBar"
@@ -52,7 +53,6 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:id="@+id/li_textInput_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Email"
+                android:hint="@string/email"
                 app:boxStrokeColor="@color/green"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:boxStrokeColor="@color/green"
-                android:hint="Mật khẩu"
+                android:hint="@string/password"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -99,20 +99,20 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text">
+                    android:inputType="textPassword">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/li_button_log_in"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/green"
-            android:text="Đăng nhập" />
+            android:textColor="@color/white"
+            android:text="@string/logIn" />
 
         <LinearLayout
             android:layout_width="300dp"

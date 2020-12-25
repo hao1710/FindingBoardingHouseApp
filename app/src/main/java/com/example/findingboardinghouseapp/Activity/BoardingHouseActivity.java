@@ -17,9 +17,11 @@ import com.example.findingboardinghouseapp.Adapter.RoomTypeAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -35,7 +37,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
     private ImageButton imageButtonMenu;
     private TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewDistanceBoardingHouse, textViewDescription;
     private RecyclerView recyclerViewRoomType;
-
+    private TextView tvDSR;
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,19 +91,27 @@ public class BoardingHouseActivity extends AppCompatActivity {
         setTextBoardingHouse(boardingHouse);
 
         FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).collection("roomType")
-                .addSnapshotListener((value, error) -> {
-                    assert value != null;
-                    for (DocumentChange dc : value.getDocumentChanges()) {
-                        DocumentSnapshot documentSnapshot = dc.getDocument();
-                        switch (dc.getType()) {
-                            case ADDED:
-                            case REMOVED:
-                                readDataRoomType();
-                                break;
-                            case MODIFIED:
-                                break;
-                        }
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
                     }
+                });
+        FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).collection("roomType")
+                .addSnapshotListener((value, error) -> {
+//                    assert value != null;
+//                    for (DocumentChange dc : value.getDocumentChanges()) {
+//                        DocumentSnapshot documentSnapshot = dc.getDocument();
+//                        switch (dc.getType()) {
+//                            case ADDED:
+//                            case REMOVED:
+//
+//                                break;
+//                            case MODIFIED:
+//                                break;
+//                        }
+//                    }
+                    readDataRoomType();
                 });
     }
 
@@ -112,6 +122,8 @@ public class BoardingHouseActivity extends AppCompatActivity {
         textViewDistanceBoardingHouse = findViewById(R.id.bh_distance_boarding_house);
         textViewDescription = findViewById(R.id.bh_textView_description);
         recyclerViewRoomType = findViewById(R.id.recyclerViewRoomType);
+
+        tvDSR = findViewById(R.id.inn_dsr);
     }
 
     @SuppressLint("SetTextI18n")
@@ -164,8 +176,12 @@ public class BoardingHouseActivity extends AppCompatActivity {
                         }
                     }
                     newAdapter.notifyDataSetChanged();
+                    if (roomTypeArrayList.size() > 0) {
+                        tvDSR.setText("Danh sách loại phòng và phòng trọ");
+                        //   tvDSR.setBackgroundColor(BoardingHouseActivity.this.getResources().getColor(R.color.colorTitle));
+                    } else {
+                        tvDSR.setText(null);
+                    }
                 });
     }
-
-
 }

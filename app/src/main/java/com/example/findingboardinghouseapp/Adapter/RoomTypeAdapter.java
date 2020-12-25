@@ -1,14 +1,14 @@
 package com.example.findingboardinghouseapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -25,9 +25,11 @@ import com.example.findingboardinghouseapp.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyViewHolder> {
@@ -48,14 +50,15 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
         return new MyViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RoomTypeAdapter.MyViewHolder holder, int position) {
         RoomType roomType = arrayList.get(position);
 
         holder.textViewNameRoomType.setText("Loại phòng: " + roomType.getNameRoomType());
         holder.textViewArea.setText("Diện tích: " + roomType.getAreaRoomType() + " m2");
-        holder.textViewPrice.setText("Giá: " + roomType.getPriceRoomType() + " tr");
-        holder.textViewNumberPeople.setText(roomType.getNumberPeopleRoomType() + " người");
+        holder.textViewPrice.setText("Giá: " + roomType.getPriceRoomType() + " triệu");
+        holder.textViewNumberPeople.setText("Tối đa "+roomType.getNumberPeopleRoomType() + " người ở");
 //        holder.expandableRelativeLayout.toggle();
 
         ArrayList<Room> arrayListRoom;
@@ -125,7 +128,7 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
             textViewPrice = view.findViewById(R.id.item_rt_price);
             imageButton = view.findViewById(R.id.rt_imageButton_menu);
 
-            expandableRelativeLayout = view.findViewById(R.id.item_rt_expandable_layout);
+            //expandableRelativeLayout = view.findViewById(R.id.item_rt_expandable_layout);
 
 
 
@@ -160,21 +163,24 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
                     popupMenu.show();
                 }
             });
-//            buttonAddRoom.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Room room = new Room();
-//                    RoomType roomType = arrayList.get(getAdapterPosition());
-//                    room.setIdBoardingHouse(roomType.getIdBoardingHouse());
-//                    room.setIdRoomType(roomType.getIdRoomType());
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("newRoom", room);
-//                    Intent intent = new Intent(view.getContext(), CreateRoomActivity.class);
-//                    intent.putExtras(bundle);
-//                    ((Activity)  view.getContext()).startActivityForResult(intent,0);
-//                }
-//            });
-
+            view.setOnLongClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage("Bạn muốn xóa loại phòng này?")
+                        .setPositiveButton("Xóa", (dialog, id) -> {
+                            // FIRE ZE MISSILES!
+                            FirebaseFirestore.getInstance().collection("boardingHouse").document(arrayList.get(getAdapterPosition()).getIdBoardingHouse())
+                                    .collection("roomType").document(arrayList.get(getAdapterPosition()).getIdRoomType()).delete();
+                            Toast.makeText(context, "Xóa loại phòng thành công", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Hủy", (dialog, id) -> {
+                            // User cancelled the dialog
+                            dialog.dismiss();
+                        });
+                // Create the AlertDialog object and return it
+                builder.create();
+                builder.show();
+                return true;
+            });
         }
 
     }

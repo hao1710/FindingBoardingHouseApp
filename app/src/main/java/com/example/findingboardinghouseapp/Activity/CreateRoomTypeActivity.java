@@ -10,13 +10,17 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.findingboardinghouseapp.Model.Facility;
 import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.Model.RoomTypeCRUD;
 import com.example.findingboardinghouseapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -159,8 +163,17 @@ public class CreateRoomTypeActivity extends AppCompatActivity {
                 roomTypeCRUD.setFacility(facility);
 
                 FirebaseFirestore.getInstance().collection("boardingHouse").document(roomType.getIdBoardingHouse()).collection("roomType")
-                        .add(roomTypeCRUD);
-                Toast.makeText(getApplicationContext(), "Thêm loại phòng thành công", Toast.LENGTH_SHORT).show();
+                        .add(roomTypeCRUD).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        Intent intent1 = new Intent();
+                        setResult(RESULT_CODE_FROM_CREATE_ROOM_TYPE, intent1);
+                        Toast.makeText(getApplicationContext(), "Thêm loại phòng thành công", Toast.LENGTH_SHORT).show();
+                        finish();
+
+                    }
+                });
+
             }
         });
     }
@@ -186,13 +199,6 @@ public class CreateRoomTypeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent1 = new Intent();
-        setResult(RESULT_CODE_FROM_CREATE_ROOM_TYPE, intent1);
-        finish();
-        super.onBackPressed();
-    }
 
     private boolean validateName(String name) {
         if (name.isEmpty()) {

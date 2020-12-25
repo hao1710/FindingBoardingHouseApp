@@ -8,7 +8,7 @@
     android:background="@color/backgroundColor"
     tools:context=".Activity.RoomDetailActivity">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
@@ -24,13 +24,26 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/rd_image_room"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/TODO"
+                    android:layout_height="match_parent">
 
-                    android:src="@drawable/ic_app" />
+                    <ImageView
+                        android:id="@+id/rd_image_room"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/TODO"
+                       />
+
+                    <com.denzcoskun.imageslider.ImageSlider
+                        android:id="@+id/rd_imageSlider"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:iss_auto_cycle="true"
+                        app:iss_delay="0"
+                        app:iss_period="5000" />
+                </FrameLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -48,7 +61,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:minHeight="60dp"
-                    android:text="@string/description"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     tools:ignore="RtlSymmetry" />
@@ -63,7 +75,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:text="@string/app_name"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -93,7 +104,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
-                            android:text="@string/area" />
+                            />
                     </LinearLayout>
 
                     <LinearLayout
@@ -115,7 +126,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
-                            android:text="@string/price" />
+                            />
                     </LinearLayout>
 
                     <LinearLayout
@@ -137,7 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
-                            android:text="@string/numberPeople" />
+                            />
                     </LinearLayout>
 
 
@@ -174,7 +185,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
-                            android:text="@string/electricityPrice"
+
                             android:textColor="@color/deepPink" />
                     </LinearLayout>
 
@@ -196,7 +207,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
-                            android:text="@string/waterPrice"
+
                             android:textColor="@color/deepPink" />
                     </LinearLayout>
 
@@ -210,6 +221,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/custom_background_white"
                 android:orientation="vertical"
+                android:paddingTop="4dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp">
 
@@ -219,7 +231,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:minHeight="40dp"
-                    android:text="@string/address"
+
                     android:textColor="@color/black" />
 
                 <TextView
@@ -227,25 +239,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/viewMap"
+
                     android:textColor="@color/blue" />
 
                 <TextView
+                    android:textColor="@color/black"
                     android:id="@+id/rd_textView_description_bh"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="40dp"
-                    android:text="@string/description" />
+                    android:minHeight="35dp"
+                    />
 
 
                 <TextView
+                    android:textColor="@color/black"
                     android:id="@+id/rd_textView_phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:drawablePadding="8dp"
                     android:gravity="center_vertical"
-                    android:text="@string/phoneNumber"
+
+                    android:textSize="16sp"
                     app:drawableStartCompat="@drawable/ic_contact_phone" />
             </LinearLayout>
 
@@ -264,6 +279,8 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:gravity="center_vertical"
@@ -314,7 +331,7 @@
                     <EditText
                         android:id="@+id/rd_editText_name"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="50dp"
                         android:layout_above="@+id/rd_editText_content"
                         android:autofillHints=""
                         android:hint="@string/name"
@@ -323,7 +340,7 @@
                     <EditText
                         android:id="@+id/rd_editText_content"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="50dp"
                         android:autofillHints=""
                         android:hint="@string/content"
                         android:inputType="text" />
@@ -338,7 +355,7 @@
                             android:textColor="@color/white"
                             android:id="@+id/rd_button_create_comment"
                             android:layout_width="wrap_content"
-                            android:minWidth="100dp"
+
                             android:layout_height="40dp"
                             android:layout_marginEnd="50dp"
                             android:backgroundTint="@color/green"
@@ -348,7 +365,7 @@
                         <Button
                             android:textColor="@color/white"
                             android:id="@+id/rd_button_cancel_comment"
-                            android:layout_width="100dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:backgroundTint="@color/green"
                             android:text="@string/cancel"
@@ -360,9 +377,10 @@
                     android:id="@+id/recyclerViewComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+
+                    tools:listitem="@layout/item_comment"
                     android:minHeight="200dp" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

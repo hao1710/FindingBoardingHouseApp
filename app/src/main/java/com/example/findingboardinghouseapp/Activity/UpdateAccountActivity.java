@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,6 +19,8 @@ import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +33,7 @@ import timber.log.Timber;
 
 public class UpdateAccountActivity extends AppCompatActivity {
     private TextInputLayout textInputName, textInputAddress, textInputPhoneNumber, textInputEmail, textInputPassword;
-    private TextInputEditText textInputEditTextName, textInputEditTextAddress, textInputEditTextPhoneNumber, textInputEditTextPassword;
+    private TextInputEditText textInputEditTextName, textInputEditTextAddress, textInputEditTextPhoneNumber, textInputEditTextEmail, textInputEditTextPassword;
     private Button buttonUpdate;
     private ProgressBar progressBar;
     private Landlord landlord;
@@ -53,11 +54,11 @@ public class UpdateAccountActivity extends AppCompatActivity {
         landlord = (Landlord) bundle.getSerializable("landlordUpdate");
 
         // setText
-        Objects.requireNonNull(textInputName.getEditText()).setText(landlord.getNameLandlord());
-        Objects.requireNonNull(textInputAddress.getEditText()).setText(landlord.getAddressLandlord());
-        Objects.requireNonNull(textInputPhoneNumber.getEditText()).setText(landlord.getPhoneNumberLandlord());
-        Objects.requireNonNull(textInputEmail.getEditText()).setText(landlord.getEmailLandlord());
-        Objects.requireNonNull(textInputPassword.getEditText()).setText(landlord.getPasswordLandlord());
+        textInputEditTextName.setText(landlord.getNameLandlord());
+        textInputEditTextAddress.setText(landlord.getAddressLandlord());
+        textInputEditTextPhoneNumber.setText(landlord.getPhoneNumberLandlord());
+        textInputEditTextEmail.setText(landlord.getEmailLandlord());
+        textInputEditTextPassword.setText(landlord.getPasswordLandlord());
 
         setOnEditorAction();
 
@@ -70,34 +71,43 @@ public class UpdateAccountActivity extends AppCompatActivity {
             if (!validateName(name) | !validateEmail(email) | !validatePhoneNumber(phoneNumber) | !validatePassword(password) | !validateAddress(address)) {
                 return;
             }
-            progressBar.setVisibility(View.VISIBLE);
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential(landlord.getEmailLandlord(), landlord.getPasswordLandlord());
             assert user != null;
-            user.updatePassword(password).addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.GONE);
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Map<String, Object> update = new HashMap<>();
-                    update.put("name", name);
-                    update.put("address", address);
-                    update.put("phoneNumber", phoneNumber);
-                    update.put("email", email);
-                    update.put("password", password);
-                    FirebaseFirestore.getInstance().collection("landlord").document(landlord.getIdLandlord()).update(update);
+                    progressBar.setVisibility(View.VISIBLE);
+                    user.updatePassword(password).addOnCompleteListener(task1 -> {
+                        progressBar.setVisibility(View.GONE);
+                        if (task1.isSuccessful()) {
+                            Map<String, Object> update = new HashMap<>();
+                            update.put("name", name);
+                            update.put("address", address);
+                            update.put("phoneNumber", phoneNumber);
+                            update.put("email", email);
+                            update.put("password", password);
+                            FirebaseFirestore.getInstance().collection("landlord").document(landlord.getIdLandlord()).update(update);
 
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFERENCES, MODE_PRIVATE).edit();
-                    editor.clear();
-                    editor.putString("id", landlord.getIdLandlord());
-                    editor.putString("name", name);
-                    editor.putString("address", address);
-                    editor.putString("phoneNumber", phoneNumber);
-                    editor.putString("email", email);
-                    editor.putString("password", password);
-                    editor.apply();
-                    Toast.makeText(getApplicationContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFERENCES, MODE_PRIVATE).edit();
+                            editor.clear();
+                            editor.putString("id", landlord.getIdLandlord());
+                            editor.putString("name", name);
+                            editor.putString("address", address);
+                            editor.putString("phoneNumber", phoneNumber);
+                            editor.putString("email", email);
+                            editor.putString("password", password);
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
+                            Timber.i("Error: %s", Objects.requireNonNull(task1.getException()).getMessage());
+                        }
+                    });
                 } else {
-                    Toast.makeText(getApplicationContext(), "Cập nhật thông tin thất bại, vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
-                    Log.i("ErrorWhy: ", task.getException().getMessage());
+                    Toast.makeText(getApplicationContext(), "Vui lòng đăng nhập lại để cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                    Timber.i("ErrorAu: %s", Objects.requireNonNull(task.getException()).getMessage());
                 }
             });
         });
@@ -143,10 +153,10 @@ public class UpdateAccountActivity extends AppCompatActivity {
         textInputEditTextName = findViewById(R.id.ua_textInputEditText_name);
         textInputEditTextAddress = findViewById(R.id.ua_textInputEditText_address);
         textInputEditTextPhoneNumber = findViewById(R.id.ua_textInputEditText_phoneNumber);
+        textInputEditTextEmail = findViewById(R.id.ua_textInputEditText_email);
         textInputEditTextPassword = findViewById(R.id.ua_textInputEditText_password);
 
         progressBar = findViewById(R.id.ua_progressBar);
-
         buttonUpdate = findViewById(R.id.ua_button_update);
     }
 
@@ -164,7 +174,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
             return false;
         } else {
             textInputName.setError(null);
-//            textInputEmail.setEnabled(false);
             return true;
         }
     }
@@ -175,7 +184,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
             return false;
         } else {
             textInputAddress.setError(null);
-//            textInputEmail.setEnabled(false);
             return true;
         }
     }
@@ -187,7 +195,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
         } else if (phoneNumber.length() > 11 || phoneNumber.length() < 10 || !phoneNumber.startsWith("0")) {
             textInputPhoneNumber.setError("Vui lòng điền đúng số điện thoại");
             return false;
-
         } else {
             textInputPhoneNumber.setError(null);
             return true;
@@ -201,14 +208,12 @@ public class UpdateAccountActivity extends AppCompatActivity {
         }
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             textInputEmail.setError(null);
-//            textInputEmail.setEnabled(false);
             return true;
         } else {
-            textInputEmail.setError("Vui lòng điền đúng định dạng email");
+            textInputEmail.setError("Vui lòng điền đúng email");
             return false;
         }
     }
-
 
     private boolean validatePassword(String password) {
         if (password.isEmpty()) {

@@ -22,10 +22,13 @@
 
             <TextView
                 android:id="@+id/item_rt_name_room_type"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:text="Name" />
+                android:text="@string/name"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                tools:ignore="RelativeOverlap" />
 
             <ImageButton
                 android:id="@+id/rt_imageButton_menu"
@@ -33,61 +36,50 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_more_vert" />
+                android:background="@drawable/ic_more_vert"
+                android:contentDescription="@string/TODO" />
 
         </RelativeLayout>
-
-        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-            android:id="@+id/item_rt_expandable_layout"
+        <LinearLayout
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingBottom="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="24dp"
-            app:ael_expanded="true"
-            tools:ignore="RtlSymmetry">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/item_rt_number_people"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/numberPeople" />
 
-                <TextView
-                    android:id="@+id/item_rt_number_people"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+            <TextView
+                android:id="@+id/item_rt_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/area" />
 
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Số người ở" />
-
-                <TextView
-                    android:id="@+id/item_rt_area"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Diện tích" />
-
-                <TextView
-                    android:id="@+id/item_rt_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Giá" />
-            </LinearLayout>
-
-
-        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+            <TextView
+                android:id="@+id/item_rt_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/price" />
+        </LinearLayout>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRoom"
@@ -95,6 +87,5 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
-
 
 </LinearLayout>

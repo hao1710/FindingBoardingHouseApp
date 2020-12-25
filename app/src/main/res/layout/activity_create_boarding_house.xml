@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Thông tin"
+            android:text="Thêm khu trọ"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
@@ -153,7 +153,6 @@
                 android:layout_height="wrap_content"
                 android:hint="Ấp"
                 app:boxStrokeColor="@color/boxStrokeColor"
-
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
@@ -181,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:hint="Giá điện"
+                    android:hint="Giá điện (nghìn đồng)"
                     android:textColorHint="@color/green"
                     app:boxStrokeColor="@color/boxStrokeColor"
                     app:errorEnabled="true"
@@ -191,7 +190,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number">
+                        android:inputType="numberDecimal">
 
                     </com.google.android.material.textfield.TextInputEditText>
 
@@ -202,7 +201,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Giá nước"
+                    android:hint="Giá nước (nghìn đồng)"
                     android:layout_marginStart="4dp"
                     android:textColorHint="@color/green"
 
@@ -214,7 +213,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number">
+                        android:inputType="numberDecimal">
 
                     </com.google.android.material.textfield.TextInputEditText>
 
@@ -226,7 +225,7 @@
                 android:id="@+id/cbh_textInput_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mô tả"
+                android:hint="Mô tả nhà trọ"
                 app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
@@ -256,6 +255,7 @@
                     android:gravity="center_vertical"
                     android:padding="0dp"
                     android:textColor="@color/black"
+
                     android:text="Nhấn biểu tượng bên cạnh để chọn vị trí nhà trọ"
                     android:textSize="16sp" />
 
@@ -299,7 +299,7 @@
                 android:id="@+id/cbh_button_create"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/green"
                 android:text="Tạo" />
         </LinearLayout>

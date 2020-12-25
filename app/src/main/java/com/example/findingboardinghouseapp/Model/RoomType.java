@@ -62,4 +62,8 @@ public class RoomType extends BoardingHouse implements Serializable {
     public void setAreaRoomType(double areaRoomType) {
         this.areaRoomType = areaRoomType;
     }
+
+
+
+
 }

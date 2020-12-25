@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.RoomTypeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="#EBF8FA"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Thông tin chủ trọ"
+            android:textSize="18sp" />
+
+        <TextView
+            android:gravity="center_vertical"
+            android:id="@+id/tv_nameL"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/name"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/name"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_email" />
+
+        <TextView
+            android:id="@+id/tv_phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="@string/name"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_contact_phone"/>
+    </LinearLayout>
+    <TextView
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Danh sách loại phòng"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        tools:listitem="@layout/item_rv_room_type_admin"
+        android:id="@+id/ad_rv_roomType"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

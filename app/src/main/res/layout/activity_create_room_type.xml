@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/backgroundColor"
+    android:background="@color/white"
     tools:context=".Activity.CreateRoomTypeActivity">
 
     <LinearLayout
@@ -80,7 +80,7 @@
                 android:id="@+id/crt_textInput_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Diện tích"
+                android:hint="Diện tích phòng (m2)"
                 app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
@@ -100,7 +100,7 @@
                 android:id="@+id/crt_textInput_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Giá phòng"
+                android:hint="Giá phòng (triệu đồng)"
                 app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
@@ -120,7 +120,7 @@
                 android:id="@+id/crt_textInput_numberPeople"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Số người ở"
+                android:hint="Số người ở tối đa"
                 app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
@@ -159,7 +159,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:text="Tiện nghi" />
+                android:text="Tiện nghi"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -234,8 +236,9 @@
 
 
             <Button
+                android:textColor="@color/white"
                 android:id="@+id/crt_button_create"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/green"

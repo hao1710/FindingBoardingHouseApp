@@ -36,8 +36,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
     @Override
     public RoomAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_room, parent, false);
-        RoomAdapter.MyViewHolder myViewHolder = new RoomAdapter.MyViewHolder(v);
-        return myViewHolder;
+        return new MyViewHolder(v);
     }
 
     @SuppressLint("SetTextI18n")
@@ -60,6 +59,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewNameRoom;
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
         public Switch aSwitchStatus;
 
         public MyViewHolder(View view) {
@@ -67,6 +67,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
             textViewNameRoom = view.findViewById(R.id.item_r_name_room);
             aSwitchStatus = view.findViewById(R.id.item_r_switch_button);
             aSwitchStatus.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View v) {
                     boolean status = aSwitchStatus.isChecked();

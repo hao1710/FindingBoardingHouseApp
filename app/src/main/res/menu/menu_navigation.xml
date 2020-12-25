@@ -3,7 +3,7 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_home"
-        android:title="Home"/>
+        android:title="@string/home"/>
 <!--    <item-->
 <!--        android:id="@+id/search"-->
 <!--        android:icon="@drawable/ic_search"-->
@@ -12,5 +12,5 @@
     <item
         android:id="@+id/account"
         android:icon="@drawable/ic_person"
-        android:title="Tài khoản"/>
+        android:title="@string/account"/>
 </menu>

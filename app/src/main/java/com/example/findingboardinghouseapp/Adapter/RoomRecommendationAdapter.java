@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findingboardinghouseapp.Activity.RoomDetailActivity;
-import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.R;
 import com.squareup.picasso.Picasso;
@@ -43,23 +42,22 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Room roomRecommendation = arrayList.get(position);
 
-        holder.textViewDescription.setMaxLines(2);
-        holder.textViewDescription.setEllipsize(TextUtils.TruncateAt.END);
-        holder.textViewDescription.setText(roomRecommendation.getDescriptionRoomType());
+        holder.tvNumberPeople.setText(roomRecommendation.getNumberPeopleRoomType() + " người ở");
 
         holder.textViewNameBoardingHouse.setText(roomRecommendation.getNameBoardingHouse());
 
-        holder.textViewAddressBoardingHouse.setMaxLines(2);
+        holder.textViewAddressBoardingHouse.setMaxLines(1);
         holder.textViewAddressBoardingHouse.setEllipsize(TextUtils.TruncateAt.END);
         holder.textViewAddressBoardingHouse.setText(roomRecommendation.getAddressBoardingHouse());
 
-        holder.textViewPriceRoom.setText(roomRecommendation.getPriceRoomType() + " triệu");
-
-        Picasso.with(context).load(roomRecommendation.getImageRoom())
+        holder.textViewPriceRoom.setText(roomRecommendation.getPriceRoomType() + " triệu / tháng");
+        holder.tvDistance.setText("Cách ĐHCT " + roomRecommendation.getDistanceBoardingHouse() + " km");
+        Picasso.get().load(roomRecommendation.getImageRoom().get(0))
                 .fit().centerCrop()
                 .placeholder(R.drawable.load_image_room)
                 .error(R.drawable.ic_app)
                 .into(holder.imageViewRoom);
+
     }
 
     @Override
@@ -69,15 +67,17 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageViewRoom;
-        public TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewPriceRoom, textViewDescription;
+        public TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewPriceRoom, tvNumberPeople;
+        public TextView tvDistance;
 
         public MyViewHolder(View view) {
             super(view);
             imageViewRoom = view.findViewById(R.id.rr_image_room);
-            textViewDescription = view.findViewById(R.id.rr_description);
+            tvNumberPeople = view.findViewById(R.id.numberPeople);
             textViewNameBoardingHouse = view.findViewById(R.id.rr_name_boarding_house);
             textViewAddressBoardingHouse = view.findViewById(R.id.rr_address_boarding_house);
             textViewPriceRoom = view.findViewById(R.id.rr_price_room);
+            tvDistance = view.findViewById(R.id.rr_distance);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,16 +85,6 @@ public class RoomRecommendationAdapter extends RecyclerView.Adapter<RoomRecommen
                     Intent i = new Intent(context, RoomDetailActivity.class);
                     Room room = arrayList.get(getPosition());
                     i.putExtra("room", (Serializable) room);
-
-                    ArrayList<BoardingHouse> list = new ArrayList<>();
-                    for (Room room1 : arrayList) {
-                        BoardingHouse pointGeo = new BoardingHouse();
-                        pointGeo.setNameBoardingHouse(room1.getNameBoardingHouse());
-                        pointGeo.setLatitude(room1.getLatitude());
-                        pointGeo.setLongitude(room1.getLongitude());
-                        list.add(pointGeo);
-                    }
-                    i.putExtra("listBH", list);
 
                     context.startActivity(i);
                 }

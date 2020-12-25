@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/h_layout"
-    android:background="@drawable/custom_background_gray"
+    android:background="@color/backgroundColor"
     tools:context=".Activity.HomeFragment">
 
     <ImageView
@@ -14,27 +15,42 @@
         android:background="@drawable/background_app"
         android:contentDescription="@string/TODO" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="220dp"
+        android:background="@drawable/custom_background_gray" />
+
     <androidx.core.widget.NestedScrollView
+
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
-            android:paddingTop="220dp"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp">
+
+                app:cardElevation="5dp"
+
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -50,7 +66,7 @@
 
                             android:id="@+id/h_editText_search"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="38dp"
                             android:layout_centerInParent="true"
                             android:layout_marginEnd="4dp"
 
@@ -67,10 +83,11 @@
                             android:id="@+id/h_button_refresh"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="52dp"
+                            android:layout_height="50dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:text="@string/cancel"
+                            android:backgroundTint="@color/white"
                             android:textColor="@color/black" />
 
                     </RelativeLayout>
@@ -168,35 +185,79 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/custom_background_white"
+
                 android:orientation="vertical"
                 android:paddingStart="8dp"
                 android:paddingTop="8dp"
                 android:paddingEnd="8dp">
 
-                <TextView
-                    android:id="@+id/h_textView_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-
-                    android:gravity="center"
-                    android:text="@string/room"
-                    android:textSize="18sp" />
-
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/black" />
+                    android:layout_height="50dp"
+                    android:background="@drawable/custom_bg_white_2">
+
+                    <TextView
+                        android:id="@+id/numberRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/room"
+                        android:textSize="18sp"
+                        tools:ignore="RelativeOverlap" />
+
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true">
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/custom_scrollview"
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/h_spinner_filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="35dp"
+                                android:background="@drawable/custom_spinner"
+                                tools:ignore="TooDeepLayout" />
+
+                            <ImageView
+                                android:id="@+id/h_iv_spinner_filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/ic_arrow_drop_down"
+                                android:contentDescription="@string/TODO" />
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+
+
+                </RelativeLayout>
+
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="1px"-->
+                <!--                    android:background="@color/black" />-->
 
                 <androidx.recyclerview.widget.RecyclerView
-
+                    android:layout_height="match_parent"
                     android:id="@+id/recyclerViewRoomRecommendation"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_room_recommendation"
 
                     android:layout_marginTop="8dp" />
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-</RelativeLayout>
+</FrameLayout>

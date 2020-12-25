@@ -27,7 +27,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private TextInputLayout textInputName, textInputAddress, textInputPhoneNumber, textInputEmail, textInputPassword;
     private Button buttonCreateAccount;
     private FirebaseAuth firebaseAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +34,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         findView();
 
-        firebaseAuth = FirebaseAuth.getInstance();
 
         // do something
         textInputPassword.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -49,7 +47,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
         buttonCreateAccount.setOnClickListener(v -> {
-
+            firebaseAuth = FirebaseAuth.getInstance();
             String name = textInputName.getEditText().getText().toString().trim();
             String address = textInputAddress.getEditText().getText().toString().trim();
             String phoneNumber = textInputPhoneNumber.getEditText().getText().toString().trim();
@@ -66,7 +64,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(CreateAccountActivity.this, "Đăng ký thành công, vui lòng kiểm tra email và xác nhận", Toast.LENGTH_SHORT).show();
 
                                 LandlordCRUD landlord = new LandlordCRUD();
                                 landlord.setName(name);
@@ -75,7 +72,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 landlord.setPassword(password);
                                 landlord.setEmail(email);
                                 FirebaseFirestore.getInstance().collection("landlord").add(landlord);
-
+                                Toast.makeText(CreateAccountActivity.this, "Đăng ký thành công, vui lòng kiểm tra email và xác nhận", Toast.LENGTH_SHORT).show();
+                                finish();
                             } else {
                                 Toast.makeText(CreateAccountActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }

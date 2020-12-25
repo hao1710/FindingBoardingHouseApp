@@ -252,13 +252,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/cbh_imageButton_pick_location"
+                    android:layout_toStartOf="@+id/ubh_imageButton_pick_location"
                     android:gravity="center_vertical"
                     android:minHeight="40dp"
                     android:padding="0dp"
                     android:text="Nhấn biểu tượng bên cạnh để chọn vị trí nhà trọ"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+
+                    tools:ignore="UnknownIdInLayout" />
 
                 <ImageButton
                     android:id="@+id/ubh_imageButton_pick_location"

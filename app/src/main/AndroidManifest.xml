@@ -7,12 +7,14 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FindingBoardingHouseApp">
-        <activity android:name=".Activity.UpdateBoardingHouseActivity"></activity>
+        <activity android:name=".Activity.InnManagementActivity"/>
+        <activity android:name=".Activity.UpdateBoardingHouseActivity" />
         <activity android:name=".Activity.UpdateAccountActivity" />
         <activity android:name=".Activity.MapActivity" />
         <activity android:name=".Activity.CreateRoomTypeActivity" />
@@ -20,7 +22,7 @@
         <activity android:name=".Activity.PickLocationActivity" />
         <activity android:name=".Activity.CreateBoardingHouseActivity" />
         <activity android:name=".Activity.CreateAccountActivity" />
-        <activity android:name=".Activity.AccountSettingActivity" />
+
         <activity android:name=".Activity.BoardingHouseActivity" />
         <activity android:name=".Activity.RoomDetailActivity" />
         <activity android:name=".Activity.MainActivity">

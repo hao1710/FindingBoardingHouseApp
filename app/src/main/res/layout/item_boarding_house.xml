@@ -6,24 +6,49 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="fill"
-        android:layout_marginBottom="8dp"
-        android:paddingStart="10dp"
-        android:background="@drawable/custom_item_recyclerview"
+        android:background="@drawable/custom_rvbh_inaccount"
+
+        android:paddingEnd="8dp"
+
         android:orientation="vertical"
         tools:ignore="RtlSymmetry,UselessParent">
+        <ImageView
+            android:background="@drawable/ic_baseline_open_in_new_24"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+        <ImageView
+            android:id="@+id/item_bh_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
 
+            android:layout_centerVertical="true" />
         <TextView
+            android:layout_marginStart="8dp"
             android:id="@+id/item_bh_name_boarding_house"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:gravity="fill"
             android:text="@string/name"
+            android:layout_toEndOf="@+id/item_bh_iv"
             android:textColor="@color/black"
-            android:textSize="16sp" />
-
+            android:textSize="20sp" />
     </RelativeLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
 </LinearLayout>
