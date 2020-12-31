@@ -97,6 +97,7 @@ public class RoomTypeFragment extends Fragment {
 
         adapter = new RoomTypeAdminAdapter(getContext(), arrayList);
         rvRoomType.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         return view;
     }
 

@@ -19,10 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="220dp"
-        android:background="@drawable/custom_background_gray" />
+        android:background="@drawable/custom_bg_home" />
 
     <androidx.core.widget.NestedScrollView
-
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:fillViewport="true">
@@ -41,13 +40,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-
-                app:cardElevation="5dp"
-
+                app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -56,27 +52,24 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp">
 
                         <EditText
-
                             android:id="@+id/h_editText_search"
                             android:layout_width="match_parent"
                             android:layout_height="38dp"
                             android:layout_centerInParent="true"
                             android:layout_marginEnd="4dp"
-
                             android:layout_toStartOf="@id/h_button_refresh"
                             android:autofillHints=""
                             android:background="@drawable/custom_edit_text_search"
                             android:hint="@string/search"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
-                            android:paddingStart="10dp"
+                            android:paddingStart="8dp"
                             tools:ignore="RtlSymmetry" />
 
                         <Button
@@ -110,15 +103,14 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/custom_scrollview"
+                                android:background="@drawable/custom_bg_spinner"
                                 android:orientation="horizontal">
 
                                 <Spinner
+                                    android:layout_height="40dp"
                                     android:id="@+id/h_spinner_price"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/custom_spinner"
-                                    tools:ignore="TooDeepLayout" />
+                                    android:background="@drawable/custom_spinner" />
 
                                 <ImageView
                                     android:id="@+id/h_imageView_spinner_price"
@@ -134,13 +126,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                android:background="@drawable/custom_scrollview"
+                                android:background="@drawable/custom_bg_spinner"
                                 android:orientation="horizontal">
 
                                 <Spinner
+                                    android:layout_height="40dp"
                                     android:id="@+id/h_spinner_distance"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
                                     android:background="@drawable/custom_spinner" />
 
                                 <ImageView
@@ -157,7 +149,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                android:background="@drawable/custom_scrollview"
+                                android:background="@drawable/custom_bg_spinner"
                                 android:orientation="horizontal">
 
                                 <Spinner
@@ -219,7 +211,7 @@
                             android:layout_height="35dp"
 
                             android:layout_marginEnd="8dp"
-                            android:background="@drawable/custom_scrollview"
+                            android:background="@drawable/custom_bg_filter"
                             android:orientation="horizontal">
 
                             <Spinner

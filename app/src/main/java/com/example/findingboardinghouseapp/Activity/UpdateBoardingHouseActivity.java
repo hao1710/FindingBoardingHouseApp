@@ -41,6 +41,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class UpdateBoardingHouseActivity extends AppCompatActivity {
+
     private BoardingHouse boardingHouse;
     private TextInputLayout textInputName, textInputDistrict, textInputVillage, textInputHamlet, textInputElectricityPrice, textInputWaterPrice, textInputDescription, textInputDistance;
     private TextInputEditText textInputEditTextName, textInputEditTextHamlet, textInputEditTextElectricityPrice, textInputEditTextWaterPrice, textInputEditTextDescription, textInputEditTextDistance;
@@ -100,9 +101,20 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
             GeoPoint point = new GeoPoint(latitude, longitude);
             update.put("point", point);
             update.put("distance", boardingHouse.getDistanceBoardingHouse());
+
             FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).update(update);
             Toast.makeText(getApplicationContext(), "Cập nhật thông tin nhà trọ thành công", Toast.LENGTH_SHORT).show();
+
+            BoardingHouse boardingHouseResult = boardingHouse;
+            Bundle bundleResult = new Bundle();
+            bundleResult.putSerializable("boardingHouseResult", boardingHouseResult);
+            Intent intentResult = new Intent();
+            intentResult.putExtras(bundleResult);
+            setResult(RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE, intentResult);
+            finish();
+
         });
+
         textInputEditTextName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 Editable e = textInputEditTextHamlet.getText();
@@ -179,7 +191,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<DirectionsResponse> call, @NotNull Response<DirectionsResponse> response) {
                 // You can get the generic HTTP info about the response
-                Timber.d("Response code: " + response.code());
+                Timber.d("Response code: %s", response.code());
                 if (response.body() == null) {
                     Timber.e("No routes found, make sure you set the right user and access token.");
                     return;
@@ -198,7 +210,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<DirectionsResponse> call, @NotNull Throwable throwable) {
-                Timber.e("Error: " + throwable.getMessage());
+                Timber.e("Error: %s", throwable.getMessage());
                 Toast.makeText(UpdateBoardingHouseActivity.this, "Error: " + throwable.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
@@ -210,7 +222,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
         textInputName = findViewById(R.id.ubh_textInput_name);
         textInputEditTextName = findViewById(R.id.ubh_textInputEditText_name);
 
-        textViewAddress = findViewById(R.id.ubh_textView_address);
+        textViewAddress = findViewById(R.id.ubh_tv_address);
 
         textInputDistrict = findViewById(R.id.ubh_textInput_district);
         autoCompleteTextViewDistrict = findViewById(R.id.ubh_autoCompleteTextView_district);
@@ -233,7 +245,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
         textInputDistance = findViewById(R.id.ubh_textInput_distance);
         textInputEditTextDistance = findViewById(R.id.ubh_textInputEditText_distance);
 
-        imageButtonPickLocation = findViewById(R.id.ubh_imageButton_pick_location);
+        imageButtonPickLocation = findViewById(R.id.ubh_ib_pick_location);
         buttonUpdate = findViewById(R.id.ubh_button_update);
     }
 
@@ -265,7 +277,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
         int index = address.indexOf(", ");
         String hamletAddress = address.substring(0, index).trim();
         int index2 = address.indexOf(", ", index + 1);
-        String villageAddress = address.substring(index + 2, index2).trim();
+        //String villageAddress = address.substring(index + 2, index2).trim();
         int index3 = address.indexOf(", ", index2 + 1);
         String districtAddress = address.substring(index2 + 2, index3).trim();
 
@@ -426,18 +438,4 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        BoardingHouse boardingHouseResult = new BoardingHouse();
-        boardingHouseResult = boardingHouse;
-
-        Bundle bundleResult = new Bundle();
-        bundleResult.putSerializable("boardingHouseResult", boardingHouseResult);
-        Intent intent = new Intent();
-        intent.putExtras(bundleResult);
-
-        setResult(RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE, intent);
-        finish();
-        super.onBackPressed();
-    }
 }

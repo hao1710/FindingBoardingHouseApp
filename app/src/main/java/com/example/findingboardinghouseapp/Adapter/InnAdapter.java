@@ -11,7 +11,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findingboardinghouseapp.Activity.InnManagementActivity;
@@ -40,11 +39,17 @@ public class InnAdapter extends RecyclerView.Adapter<InnAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull InnAdapter.MyViewHolder holder, int position) {
         BoardingHouse boardingHouse = arrayList.get(position);
-        holder.aSwitch.setChecked(boardingHouse.isStatusBoardingHouse());
-        if (boardingHouse.isStatusBoardingHouse()) {
+        double status = boardingHouse.getStatusBoardingHouse();
+        if (status == -1) {
+            holder.aSwitch.setChecked(false);
+            holder.tvName.setText(boardingHouse.getNameBoardingHouse() + ": nhà trọ mới");
+        } else if (status % 2 == 0) {
+            holder.aSwitch.setChecked(true);
             holder.tvName.setText(boardingHouse.getNameBoardingHouse());
         } else {
-            holder.tvName.setText(boardingHouse.getNameBoardingHouse() + ": vô hiệu hóa");
+            int i = (int) (status / 2) + 1;
+            holder.aSwitch.setChecked(false);
+            holder.tvName.setText(boardingHouse.getNameBoardingHouse() + ": đang bị vô hiệu hóa lần " + i);
         }
     }
 

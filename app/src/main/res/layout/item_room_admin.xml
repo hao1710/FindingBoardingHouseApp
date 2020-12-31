@@ -19,28 +19,18 @@
             android:paddingEnd="8dp"
             tools:ignore="RtlSymmetry,UselessParent">
 
-            <Switch
-                android:id="@+id/item_r_switch_button"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
             <TextView
-                android:id="@+id/item_r_name_room"
+                android:id="@+id/admin_tv_name_room"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_toStartOf="@id/item_ib_show"
-                android:layout_toEndOf="@+id/item_r_switch_button"
+                android:layout_toStartOf="@id/admin_ib_show"
                 android:gravity="center_vertical"
                 android:text="@string/name"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <ImageButton
-                android:id="@+id/item_ib_show"
+                android:id="@+id/admin_ib_show"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -52,12 +42,12 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
-        android:id="@+id/expandImage"
+        android:id="@+id/admin_expand_image"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="200dp">
         <com.denzcoskun.imageslider.ImageSlider
-            android:id="@+id/r_is_image"
+            android:id="@+id/admin_image_slider"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             app:iss_auto_cycle="true"

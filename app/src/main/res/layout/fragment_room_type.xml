@@ -55,12 +55,12 @@
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_contact_phone"/>
+            app:drawableStartCompat="@drawable/ic_contact_phone" />
     </LinearLayout>
     <TextView
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Danh sách loại phòng"
+        android:text="Danh sách loại phòng và phòng"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:gravity="center_vertical"

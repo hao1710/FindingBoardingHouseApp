@@ -5,24 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".Activity.CreateRoomTypeActivity">
+    tools:context=".Activity.UpdateRoomTypeActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_bg_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/custom_bg_title">
+
+        <ImageButton
+            android:id="@+id/urt_ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_arrow_back"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO">
+
+        </ImageButton>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_centerInParent="true"
             android:gravity="center_vertical"
-            android:text="@string/createInn"
+            android:text="Cập nhật thông tin loại phòng"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="@string/pleaseEnter"
+            android:text="@string/info"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -58,16 +68,17 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_name"
+                android:id="@+id/urt_textInput_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/nameRoomTpe"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="Tên loại phòng"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/urt_textInputEditText_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
@@ -77,36 +88,17 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_area"
+                android:id="@+id/urt_textInput_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/areaRoom"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="Diện tích phòng (m²)"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:inputType="numberDecimal">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/rPriceUnit"
-                app:boxStrokeColor="@color/boxStrokeColor"
-                android:textColorHint="@color/green"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/green">
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/urt_textInputEditText_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal">
@@ -115,18 +107,39 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_numberPeople"
+                android:id="@+id/urt_textInput_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/numberPeopleMax"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="Giá phòng (triệu đồng)"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/urt_textInputEditText_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/urt_textInput_numberPeople"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Số người ở tối đa"
+                android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
+                app:errorEnabled="true"
+                app:hintTextColor="@color/green">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/urt_textInputEditText_numberPeople"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number">
@@ -136,19 +149,20 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_description"
+                android:id="@+id/urt_textInput_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/descriptionRoom"
-                app:boxStrokeColor="@color/boxStrokeColor"
+                android:hint="Mô tả phòng"
                 android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/boxStrokeColor"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cbh_textInput_distance"
+                    android:id="@+id/urt_textInputEditText_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:inputType="text">
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -159,9 +173,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:text="@string/facility"
-                android:textSize="18sp"
-                android:textColor="@color/black"/>
+                android:text="Tiện nghi"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -169,82 +183,77 @@
                 android:orientation="vertical">
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_gac"
+                    android:id="@+id/urt_checkBox_gac"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Gác"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_wcrieng"
+                    android:id="@+id/urt_checkBox_wcrieng"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="WC riêng"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_wififree"
+                    android:id="@+id/urt_checkBox_wififree"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Wifi free"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_bep"
+                    android:id="@+id/urt_checkBox_bep"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Kệ bếp"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_tulanh"
+                    android:id="@+id/urt_checkBox_tulanh"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Tủ lạnh"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_maylanh"
+                    android:id="@+id/urt_checkBox_maylanh"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Máy lạnh"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_maygiat"
+                    android:id="@+id/urt_checkBox_maygiat"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Máy giặt"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_tuquanao"
+                    android:id="@+id/urt_checkBox_tuquanao"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Tủ quần áo"
                     android:textSize="16sp" />
 
                 <CheckBox
-                    android:id="@+id/crt_checkBox_giuong"
+                    android:id="@+id/urt_checkBox_giuong"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="Giường"
                     android:textSize="16sp" />
-
-
             </LinearLayout>
 
-
             <Button
-                android:textColor="@color/white"
-                android:id="@+id/crt_button_create"
+                android:id="@+id/urt_button_update"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/green"
-                android:text="@string/create" />
+                android:text="@string/update"
+                android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>
-
-
 </LinearLayout>

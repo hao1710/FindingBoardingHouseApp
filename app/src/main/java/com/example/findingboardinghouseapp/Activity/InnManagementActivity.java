@@ -3,15 +3,11 @@ package com.example.findingboardinghouseapp.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.findingboardinghouseapp.Adapter.CommentAdapter;
@@ -30,26 +26,22 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class InnManagementActivity extends AppCompatActivity {
     public static final int RESULT_CODE_FROM_INN_MANAGEMENT = 31;
+
     private BoardingHouse boardingHouse;
-    TextView tvName, tvEmailL, tvPhoneNumberL;
-    TextView tvNameBH, tvAddressBH, tvEPrice, tvWPrice;
-    TextView tvViewMap, tvDescription;
-    Switch aSwitch;
-    Button button;
+    TextView tvName;
     ImageButton ibBack;
-    RecyclerView rvComment;
+    TabLayout tabLayout;
     ViewPager viewPager;
+
     private FirebaseFirestore firebaseFirestore;
     private CommentAdapter adapter;
     private ArrayList<Comment> arrayList;
     private ArrayList<RoomType> roomTypeArrayList;
-    TabLayout tabLayout;
-    InnFragment innFragment;
 
+    InnFragment innFragment;
     RoomTypeFragment roomTypeFragment;
     Landlord landlordZ;
 
@@ -62,17 +54,20 @@ public class InnManagementActivity extends AppCompatActivity {
         Intent intent = getIntent();
         boardingHouse = (BoardingHouse) intent.getSerializableExtra("boardingHouse");
 
+        ibBack = findViewById(R.id.ib_back);
+        tvName = findViewById(R.id.inn_tv_name);
         tabLayout = findViewById(R.id.inn_tabLayout);
         viewPager = findViewById(R.id.inn_viewPager);
+
         arrayList = new ArrayList<>();
         roomTypeArrayList = new ArrayList<>();
-        tvName = findViewById(R.id.inn_tv_name);
+
         tvName.setText(boardingHouse.getNameBoardingHouse());
+
         firebaseFirestore = FirebaseFirestore.getInstance();
-        ibBack = findViewById(R.id.ib_back);
+
         //
         innFragment = new InnFragment();
-
         roomTypeFragment = new RoomTypeFragment();
 
         // underline textView
@@ -126,13 +121,10 @@ public class InnManagementActivity extends AppCompatActivity {
 //        });
 
         landlordZ = new Landlord();
-        ibBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentResult = new Intent();
-                setResult(RESULT_CODE_FROM_INN_MANAGEMENT, intentResult);
-                finish();
-            }
+        ibBack.setOnClickListener(v -> {
+            Intent intentResult = new Intent();
+            setResult(RESULT_CODE_FROM_INN_MANAGEMENT, intentResult);
+            finish();
         });
 
 //        adapter = new CommentAdapter(getApplicationContext(), arrayList);
@@ -143,14 +135,7 @@ public class InnManagementActivity extends AppCompatActivity {
 //        rvComment.setAdapter(adapter);
 //
 
-        getComment(new FirestoreCallBack() {
-            @Override
-            public void onCallback(List<Comment> list) {
-                arrayList.clear();
-                arrayList.addAll(list);
-
-            }
-
+        getInfo(new CallBack() {
             @Override
             public void onCallbackL(Landlord landlord) {
                 landlordZ = landlord;
@@ -187,78 +172,57 @@ public class InnManagementActivity extends AppCompatActivity {
         TabLayoutAdapter tabLayoutAdapter = new TabLayoutAdapter(getSupportFragmentManager());
         Bundle bundle = new Bundle();
         bundle.putSerializable("inn", boardingHouse);
-        bundle.putSerializable("comment", arrayList);
         bundle.putSerializable("landlord", landlordZ);
         bundle.putSerializable("roomType", roomTypeArrayList);
 
         innFragment.setArguments(bundle);
-        //landlordFragment.setArguments(bundle);
         roomTypeFragment.setArguments(bundle);
-
         tabLayoutAdapter.addFrag(innFragment, "Thông tin");
-        //tabLayoutAdapter.addFrag(landlordFragment, "Chủ trọ");
         tabLayoutAdapter.addFrag(roomTypeFragment, "Loại phòng");
         viewPager.setAdapter(tabLayoutAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
 
-    protected interface FirestoreCallBack {
-        void onCallback(List<Comment> list);
-
+    protected interface CallBack {
         void onCallbackL(Landlord landlord);
 
         void onCB(List<RoomType> list);
     }
 
-    private void getComment(FirestoreCallBack firestoreCallBack) {
-        List<Comment> list = new ArrayList<>();
-        List<RoomType> list1 = new ArrayList<>();
-        firebaseFirestore.collection("comment").whereEqualTo("boardingHouse", boardingHouse.getIdBoardingHouse()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult()).getDocuments()) {
-                    Comment comment = new Comment();
-                    comment.setIdComment(documentSnapshot.getId());
-                    comment.setNameTenant(documentSnapshot.getString("name"));
-                    comment.setContentComment(documentSnapshot.getString("content"));
-                    comment.setIdBoardingHouse(documentSnapshot.getString("boardingHouse"));
-                    list.add(comment);
+    private void getInfo(CallBack callBack) {
+        List<RoomType> listRoomType = new ArrayList<>();
+        FirebaseFirestore.getInstance().collection("landlord").document(boardingHouse.getIdOwnerBoardingHouse()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    assert documentSnapshot != null;
+                    landlordZ.setNameLandlord(documentSnapshot.getString("name"));
+                    landlordZ.setEmailLandlord(documentSnapshot.getString("email"));
+                    landlordZ.setPhoneNumberLandlord(documentSnapshot.getString("phoneNumber"));
                 }
-            }
-            firestoreCallBack.onCallback(list);
-            FirebaseFirestore.getInstance().collection("landlord").document(boardingHouse.getIdOwnerBoardingHouse()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        assert documentSnapshot != null;
-                        landlordZ.setNameLandlord(documentSnapshot.getString("name"));
-                        landlordZ.setEmailLandlord(documentSnapshot.getString("email"));
-                        landlordZ.setPhoneNumberLandlord(documentSnapshot.getString("phoneNumber"));
-
-                    }
-                    firestoreCallBack.onCallbackL(landlordZ);
-                    FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
-                            .collection("roomType").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                    RoomType roomType = new RoomType();
-                                    roomType.setNameRoomType(documentSnapshot.getString("name"));
-                                    roomType.setAreaRoomType(documentSnapshot.getDouble("area"));
-                                    roomType.setPriceRoomType(documentSnapshot.getDouble("price"));
-                                    roomType.setNumberPeopleRoomType(documentSnapshot.getDouble("numberPeople").intValue());
-                                    list1.add(roomType);
-                                }
+                callBack.onCallbackL(landlordZ);
+                FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
+                        .collection("roomType").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                RoomType roomType = new RoomType();
+                                roomType.setIdRoomType(documentSnapshot.getId());
+                                roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());
+                                roomType.setNameRoomType(documentSnapshot.getString("name"));
+                                roomType.setAreaRoomType(documentSnapshot.getDouble("area"));
+                                roomType.setPriceRoomType(documentSnapshot.getDouble("price"));
+                                roomType.setNumberPeopleRoomType(documentSnapshot.getDouble("numberPeople").intValue());
+                                listRoomType.add(roomType);
                             }
-                            firestoreCallBack.onCB(list1);
                         }
-                    });
-                }
-            });
+                        callBack.onCB(listRoomType);
+                    }
+                });
+            }
         });
-
     }
-
 }

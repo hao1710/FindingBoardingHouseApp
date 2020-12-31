@@ -38,7 +38,7 @@ public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyView
     @NonNull
     @Override
     public LandlordAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_landlord, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_landlord_admin, parent, false);
         return new LandlordAdapter.MyViewHolder(v);
     }
 
@@ -73,7 +73,7 @@ public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyView
                             boardingHouse.setWaterPriceBoardingHouse(documentSnapshot.getDouble("waterPrice"));
                             boardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
                             boardingHouse.setIdOwnerBoardingHouse(documentSnapshot.getString("owner"));
-                            boardingHouse.setStatusBoardingHouse(documentSnapshot.getBoolean("status"));
+                            boardingHouse.setStatusBoardingHouse(documentSnapshot.getDouble("status"));
                             boardingHouse.setLatitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLatitude());
                             boardingHouse.setLongitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLongitude());
                             arrayListBoardingHouse.add(boardingHouse);
@@ -91,7 +91,6 @@ public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyView
             super(view);
             // mapping
             tvName = view.findViewById(R.id.itemLandlord_tv_name);
-
             rvBoardingHouse = view.findViewById(R.id.itemLandlord_rv_boardingHouse);
 
         }

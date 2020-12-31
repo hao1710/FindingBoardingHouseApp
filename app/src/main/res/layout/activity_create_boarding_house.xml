@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_background_title"
+        android:background="@drawable/custom_bg_title"
         android:gravity="center"
         android:orientation="vertical">
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/acc_log_out"
+        android:title="@string/logOut" />
+    <item
+        android:id="@+id/acc_setting_account"
+        android:title="@string/settingAccount" />
+    <item
+        android:id="@+id/acc_create_inn"
+        android:title="@string/createInn" />
+</menu>

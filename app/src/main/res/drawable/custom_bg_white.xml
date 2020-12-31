@@ -6,8 +6,8 @@
     <!--        android:width="2dp"-->
     <!--        android:color="@color/deepSkyBlue" />-->
     <corners
-        android:topLeftRadius="15dp"
-        android:topRightRadius="15dp" />
+        android:topLeftRadius="16dp"
+        android:topRightRadius="16dp" />
     <!--        <gradient-->
     <!--            android:endColor="@color/white"-->
     <!--            android:type="linear"-->

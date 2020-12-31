@@ -32,7 +32,7 @@ public class BoardingHouseAdapter extends RecyclerView.Adapter<BoardingHouseAdap
     @NonNull
     @Override
     public BoardingHouseAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_boarding_house, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inn, parent, false);
         BoardingHouseAdapter.MyViewHolder myViewHolder = new BoardingHouseAdapter.MyViewHolder(v);
         return myViewHolder;
     }
@@ -40,7 +40,12 @@ public class BoardingHouseAdapter extends RecyclerView.Adapter<BoardingHouseAdap
     @Override
     public void onBindViewHolder(@NonNull BoardingHouseAdapter.MyViewHolder holder, int position) {
         BoardingHouse boardingHouse = arrayList.get(position);
-        if (!boardingHouse.isStatusBoardingHouse()) {
+        if (boardingHouse.getStatusBoardingHouse() == -1) {
+            holder.tvStatus.setText("Nhà trọ mới. Liên hệ admin tại email anhhaovo1710@gmail.com để xác nhận");
+//            holder.textViewNameBoardingHouse.setTextColor(context.getResources().getColor(R.color.red));
+            int resId = context.getResources().getIdentifier("ic_warning", "drawable", context.getPackageName());
+            holder.imageView.setImageResource(resId);
+        } else if (boardingHouse.getStatusBoardingHouse() % 2 == 1) {
             holder.tvStatus.setText("Nhà trọ đang bị vô hiệu hóa. Liên hệ admin tại email anhhaovo1710@gmail.com");
 //            holder.textViewNameBoardingHouse.setTextColor(context.getResources().getColor(R.color.red));
             int resId = context.getResources().getIdentifier("ic_warning", "drawable", context.getPackageName());
@@ -77,7 +82,8 @@ public class BoardingHouseAdapter extends RecyclerView.Adapter<BoardingHouseAdap
                 builder.setMessage("Bạn muốn xóa khu trọ này?")
                         .setPositiveButton("Xóa", (dialog, id) -> {
                             // FIRE ZE MISSILES!
-                            FirebaseFirestore.getInstance().collection("boardingHouse").document(arrayList.get(getAdapterPosition()).getIdBoardingHouse()).delete();
+                            FirebaseFirestore.getInstance().collection("boardingHouse")
+                                    .document(arrayList.get(getAdapterPosition()).getIdBoardingHouse()).delete();
                             Toast.makeText(context, "Xóa khu trọ thành công", Toast.LENGTH_SHORT).show();
                         })
                         .setNegativeButton("Hủy", (dialog, id) -> {

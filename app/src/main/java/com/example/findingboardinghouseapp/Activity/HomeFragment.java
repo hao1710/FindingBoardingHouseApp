@@ -489,6 +489,7 @@ public class HomeFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("LogNotTimber")
+    @SuppressWarnings("unchecked")
     private void readData(FirestoreCallback firestoreCallback) {
         List<Room> listBoardingHouse = new ArrayList<>();
         List<Room> listRoom = new ArrayList<>();
@@ -506,14 +507,13 @@ public class HomeFragment extends Fragment {
                 roomBoardingHouse.setLatitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLatitude());
                 roomBoardingHouse.setLongitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLongitude());
                 roomBoardingHouse.setWaterPriceBoardingHouse(documentSnapshot.getDouble("waterPrice"));
-                Log.i("Distance", String.valueOf(roomBoardingHouse.getDistanceBoardingHouse()));
-                if (documentSnapshot.getBoolean("status")) {
-                    roomBoardingHouse.setStatusBoardingHouse(true);
+                double status = documentSnapshot.getDouble("status");
+                if (status % 2 == 0) {
+                    roomBoardingHouse.setStatusBoardingHouse(status);
                     listBoardingHouse.add(roomBoardingHouse);
                 }
             }
             for (Room room : listBoardingHouse) {
-                Log.i("Distance1", String.valueOf(room.getDistanceBoardingHouse()));
                 firebaseFirestore.collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").get().addOnSuccessListener(queryDocumentSnapshots1 -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots1.getDocuments()) {
                         Room roomRoomType = new Room();

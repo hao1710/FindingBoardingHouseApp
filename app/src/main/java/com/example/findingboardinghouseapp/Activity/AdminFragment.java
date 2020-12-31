@@ -25,9 +25,11 @@ import com.example.findingboardinghouseapp.Model.Admin;
 import com.example.findingboardinghouseapp.Model.Landlord;
 import com.example.findingboardinghouseapp.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -43,15 +45,16 @@ public class AdminFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    // code under
-    private ImageButton ibMenu;
-    private TextView tvLandlord, tvInn;
-
+    // code below
     public static final String MY_PREFERENCES = "MyPre";
     public SharedPreferences sharedPreferences;
+
     private Admin admin;
-    private RecyclerView rvLandlord;
-    private LandlordAdapter adapter;
+
+    RecyclerView rvLandlord;
+    LandlordAdapter adapter;
+    ImageButton ibMenu;
+    TextView tvLandlord, tvInn;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -61,26 +64,16 @@ public class AdminFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
 
         findView(view);
-        FirebaseFirestore.getInstance().collection("landlord").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                tvLandlord.setText(String.valueOf(task.getResult().size()));
-            }
-        });
-        FirebaseFirestore.getInstance().collection("boardingHouse").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                tvInn.setText(String.valueOf(task.getResult().size()));
-            }
-        });
 
-        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(this.getActivity()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
 
+        FirebaseFirestore.getInstance().collection("landlord").addSnapshotListener((value, error) -> tvLandlord.setText(String.valueOf(value.size())));
+
+        FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener((value, error) -> tvInn.setText(String.valueOf(value.size())));
 
         Bundle bundle = getArguments();
         assert bundle != null;
         admin = (Admin) bundle.getSerializable("admin");
-
-        // setText
-
 
         // recyclerView
         rvLandlord.setHasFixedSize(true);
@@ -88,17 +81,8 @@ public class AdminFragment extends Fragment {
         rvLandlord.setLayoutManager(linearLayout);
         rvLandlord.setAdapter(adapter);
 
-        FirebaseFirestore.getInstance().collection("landlord").addSnapshotListener((value, error) -> {
-            for (DocumentChange dc : value.getDocumentChanges()) {
-                switch (dc.getType()) {
-                    case ADDED:
-                    case REMOVED:
-                    case MODIFIED:
-                        readDataLandlord();
-                        break;
-                }
-            }
-        });
+        FirebaseFirestore.getInstance().collection("landlord").addSnapshotListener((value, error) -> readDataLandlord());
+        FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener((value, error) -> readDataLandlord());
 
         ibMenu.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(getContext(), ibMenu);
@@ -113,10 +97,9 @@ public class AdminFragment extends Fragment {
                         FirebaseAuth.getInstance().signOut();
 
                         Fragment fragment = new LogInFragment();
-                        FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                        FragmentTransaction fragmentTransaction = ((FragmentActivity) Objects.requireNonNull(getContext())).getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.main_frameLayout, fragment);
                         fragmentTransaction.commit();
-
                         return true;
                 }
                 return false;
@@ -129,11 +112,9 @@ public class AdminFragment extends Fragment {
     @SuppressLint("LogNotTimber")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.i("DATATYPE", requestCode + " - " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 5 && resultCode == InnManagementActivity.RESULT_CODE_FROM_INN_MANAGEMENT && data != null) {
             readDataLandlord();
-            Log.i("DATATYPE", "no");
         }
     }
 
@@ -142,7 +123,6 @@ public class AdminFragment extends Fragment {
         ArrayList<Landlord> landlordArrayList = new ArrayList<>();
         LandlordAdapter newAdapter = new LandlordAdapter(getContext(), landlordArrayList);
         rvLandlord.setAdapter(newAdapter);
-        Log.i("DATATYPE", "yes");
         FirebaseFirestore.getInstance().collection("landlord").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -155,7 +135,6 @@ public class AdminFragment extends Fragment {
 
                             landlordArrayList.add(landlord);
                         }
-
                     }
 
                     newAdapter.notifyDataSetChanged();

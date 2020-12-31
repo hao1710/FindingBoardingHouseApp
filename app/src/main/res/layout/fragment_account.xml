@@ -21,7 +21,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@drawable/custom_background_title">
+                android:background="@drawable/custom_bg_title">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                     tools:ignore="RelativeOverlap" />
 
                 <ImageButton
-                    android:id="@+id/a_imageButton_menu"
+                    android:id="@+id/acc_ib_menu"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
@@ -49,13 +49,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/custom_background_white"
+                android:background="@drawable/custom_bg_white"
                 android:orientation="vertical"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp">
 
                 <TextView
-                    android:id="@+id/a_textView_name"
+                    android:id="@+id/acc_tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -71,7 +71,7 @@
                     android:background="@color/black" />
 
                 <TextView
-                    android:id="@+id/a_textView_address"
+                    android:id="@+id/acc_tv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
@@ -83,7 +83,7 @@
                     app:drawableStartCompat="@drawable/ic_house" />
 
                 <TextView
-                    android:id="@+id/a_textView_phoneNumber"
+                    android:id="@+id/acc_tv_phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:drawablePadding="8dp"
@@ -99,7 +99,7 @@
                     android:background="@color/black" />
 
                 <TextView
-                    android:id="@+id/a_textView_email"
+                    android:id="@+id/acc_tv_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
@@ -129,13 +129,12 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/acc_tv_text"
                     android:paddingStart="8dp"
                     android:background="@color/colorTitle"
-                    android:id="@+id/account_tv_enableInn"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
@@ -149,10 +148,10 @@
                 <!--            android:background="@color/black" />-->
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewBoardingHouse"
+                    android:id="@+id/acc_rv_inn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                   />
+                    tools:listitem="@layout/item_inn" />
 
             </LinearLayout>
         </LinearLayout>

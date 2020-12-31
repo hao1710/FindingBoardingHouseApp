@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CreateRoomActivity extends AppCompatActivity {
 
@@ -92,7 +93,7 @@ public class CreateRoomActivity extends AppCompatActivity {
 
         buttonCreateRoom.setOnClickListener(v -> {
 
-            String name = textInputName.getEditText().getText().toString().trim();
+            String name = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
 
             if (!validateName(name)) {
                 return;
@@ -132,10 +133,8 @@ public class CreateRoomActivity extends AppCompatActivity {
 //                                        }
 //                                    }, 500);
 
-                    file.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            count[0]++;
+                    file.getDownloadUrl().addOnSuccessListener(uri -> {
+                        count[0]++;
 //                            RoomCRUD roomCRUD = new RoomCRUD();
 //                            roomCRUD.setStatus(false);
 //                            roomCRUD.setImage(uri.toString());
@@ -146,39 +145,33 @@ public class CreateRoomActivity extends AppCompatActivity {
 //
 //                            FirebaseFirestore.getInstance().collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").document(room.getIdRoomType())
 //                                    .set(create, SetOptions.merge());
-                            linkImage.add(uri.toString());
-                            if (count[0] == roomImageList.size()) {
-                                progressBar.setVisibility(View.GONE);
-                                RoomCRUD roomCRUD = new RoomCRUD();
-                                roomCRUD.setStatus(false);
-                                roomCRUD.setImage(linkImage);
-                                Map<String, RoomCRUD> newRoom = new HashMap<>();
-                                newRoom.put(textInputName.getEditText().getText().toString().trim(), roomCRUD);
-                                Map<String, Map> create = new HashMap<>();
-                                create.put("room", newRoom);
-                                FirebaseFirestore.getInstance().collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").document(room.getIdRoomType())
-                                        .set(create, SetOptions.merge());
+                        linkImage.add(uri.toString());
+                        if (count[0] == roomImageList.size()) {
+                            progressBar.setVisibility(View.GONE);
+                            RoomCRUD roomCRUD = new RoomCRUD();
+                            roomCRUD.setStatus(false);
+                            roomCRUD.setImage(linkImage);
+                            Map<String, RoomCRUD> newRoom = new HashMap<>();
+                            newRoom.put(Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim(), roomCRUD);
+                            Map<String, Map> create = new HashMap<>();
+                            create.put("room", newRoom);
+                            FirebaseFirestore.getInstance().collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").document(room.getIdRoomType())
+                                    .set(create, SetOptions.merge());
 
-                                Intent intent = new Intent();
-                                Bundle bundle = new Bundle();
-                                room.setNameRoom("aka");
-                                bundle.putSerializable("newRoom", room);
-                                intent.putExtra("a", bundle);
-                                setResult(RESULT_CODE_FROM_CREATE_ROOM, intent);
-                                finish();
-                                Toast.makeText(getApplicationContext(), "Thêm phòng mới thành công!", Toast.LENGTH_SHORT).show();
-                            }
+                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            room.setNameRoom("aka");
+                            bundle.putSerializable("newRoom", room);
+                            intent.putExtra("a", bundle);
+                            setResult(RESULT_CODE_FROM_CREATE_ROOM, intent);
+                            finish();
+                            Toast.makeText(getApplicationContext(), "Thêm phòng mới thành công!", Toast.LENGTH_SHORT).show();
                         }
                     });
 //                    Toast.makeText(getApplicationContext(), "Thêm phòng mới thành công!", Toast.LENGTH_SHORT).show();
 
                 })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
 //                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
 //                                @Override
 //                                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {

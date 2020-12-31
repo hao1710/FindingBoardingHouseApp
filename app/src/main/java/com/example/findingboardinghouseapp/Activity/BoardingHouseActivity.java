@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -17,11 +18,11 @@ import com.example.findingboardinghouseapp.Adapter.RoomTypeAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
     private RoomTypeAdapter adapter;
     private FirebaseFirestore firebaseFirestore;
 
-    public static final int REQUEST_CODE_FROM_BOARDING_HOUSE = 32;
+    public static final int REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY = 41;
 
     private ImageButton imageButtonMenu;
     private TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewDistanceBoardingHouse, textViewDescription;
@@ -55,14 +56,13 @@ public class BoardingHouseActivity extends AppCompatActivity {
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.bh_item_update:
-                        BoardingHouse boardingHouseUpdate = new BoardingHouse();
-                        boardingHouseUpdate = boardingHouse;
-//             
+                        BoardingHouse boardingHouseUpdate = boardingHouse;
+//
                         Bundle bundleUpdate = new Bundle();
                         bundleUpdate.putSerializable("boardingHouseUpdate", boardingHouseUpdate);
                         Intent intentUpdate = new Intent(BoardingHouseActivity.this, UpdateBoardingHouseActivity.class);
                         intentUpdate.putExtras(bundleUpdate);
-                        startActivityForResult(intentUpdate, REQUEST_CODE_FROM_BOARDING_HOUSE);
+                        startActivityForResult(intentUpdate, REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY);
                         return true;
                     case R.id.bh_item_create_room_type:
                         RoomType roomType = new RoomType();
@@ -71,7 +71,7 @@ public class BoardingHouseActivity extends AppCompatActivity {
                         bundle.putSerializable("newRoomType", roomType);
                         Intent intent1 = new Intent(BoardingHouseActivity.this, CreateRoomTypeActivity.class);
                         intent1.putExtras(bundle);
-                        startActivityForResult(intent1, REQUEST_CODE_FROM_BOARDING_HOUSE);
+                        startActivityForResult(intent1, REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY);
                         return true;
                 }
                 return false;
@@ -90,28 +90,22 @@ public class BoardingHouseActivity extends AppCompatActivity {
         // do something
         setTextBoardingHouse(boardingHouse);
 
-        FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).collection("roomType")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                    }
-                });
-        FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).collection("roomType")
+        readDataRoomType();
+        FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
+                .collection("roomType")
                 .addSnapshotListener((value, error) -> {
-//                    assert value != null;
-//                    for (DocumentChange dc : value.getDocumentChanges()) {
-//                        DocumentSnapshot documentSnapshot = dc.getDocument();
-//                        switch (dc.getType()) {
-//                            case ADDED:
-//                            case REMOVED:
-//
-//                                break;
-//                            case MODIFIED:
-//                                break;
-//                        }
-//                    }
-                    readDataRoomType();
+
+
+                    assert value != null;
+                    for (DocumentChange dc : value.getDocumentChanges()) {
+                        DocumentSnapshot documentSnapshot = dc.getDocument();
+                        switch (dc.getType()) {
+                            case ADDED:
+                            case REMOVED:
+                                readDataRoomType();
+                                break;
+                        }
+                    }
                 });
     }
 
@@ -139,26 +133,30 @@ public class BoardingHouseActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            if (resultCode == CreateRoomActivity.RESULT_CODE_FROM_CREATE_ROOM) {
-                readDataRoomType();
-            }
+        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY && resultCode == UpdateBoardingHouseActivity.RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE && data != null) {
+            Bundle bundleResult = data.getExtras();
+            boardingHouse = (BoardingHouse) bundleResult.getSerializable("boardingHouseResult");
+            setTextBoardingHouse(boardingHouse);
         }
-        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE && resultCode == CreateRoomTypeActivity.RESULT_CODE_FROM_CREATE_ROOM_TYPE && data != null) {
+        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY && resultCode == CreateRoomTypeActivity.RESULT_CODE_FROM_CREATE_ROOM_TYPE && data != null) {
             readDataRoomType();
         }
-        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE && resultCode == UpdateBoardingHouseActivity.RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE && data != null) {
-            Bundle bundle1 = data.getExtras();
-            boardingHouse = (BoardingHouse) bundle1.getSerializable("boardingHouseResult");
-            setTextBoardingHouse(boardingHouse);
+        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY && resultCode == CreateRoomActivity.RESULT_CODE_FROM_CREATE_ROOM && data != null) {
+            readDataRoomType();
+        }
+        if (requestCode == REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY && resultCode == UpdateRoomTypeActivity.RESULT_CODE_FROM_UPDATE_ROOM_TYPE_ACTIVITY && data != null) {
+            readDataRoomType();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void readDataRoomType() {
         ArrayList<RoomType> roomTypeArrayList = new ArrayList<>();
+        Log.i("SIZEZZZ", "size " + roomTypeArrayList.size());
         RoomTypeAdapter newAdapter = new RoomTypeAdapter(getApplicationContext(), roomTypeArrayList);
         recyclerViewRoomType.setAdapter(newAdapter);
-        firebaseFirestore.collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).collection("roomType").get()
+        firebaseFirestore.collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
+                .collection("roomType").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
 //                            arrayList.clear();
@@ -169,18 +167,18 @@ public class BoardingHouseActivity extends AppCompatActivity {
                             roomType.setNameRoomType(documentSnapshot.getString("name"));
                             roomType.setAreaRoomType(documentSnapshot.getDouble("area"));
                             roomType.setPriceRoomType(documentSnapshot.getDouble("price"));
-
                             roomType.setNumberPeopleRoomType(Objects.requireNonNull(documentSnapshot.getDouble("numberPeople")).intValue());
-
+                            roomType.setDescriptionRoomType(documentSnapshot.getString("description"));
                             roomTypeArrayList.add(roomType);
                         }
                     }
                     newAdapter.notifyDataSetChanged();
-                    if (roomTypeArrayList.size() > 0) {
+                    Log.i("SIZEZZZ", "size IN " + roomTypeArrayList.size());
+                    if (roomTypeArrayList.size() != 0) {
                         tvDSR.setText("Danh sách loại phòng và phòng trọ");
-                        //   tvDSR.setBackgroundColor(BoardingHouseActivity.this.getResources().getColor(R.color.colorTitle));
+
                     } else {
-                        tvDSR.setText(null);
+                        tvDSR.setText("Hãy thêm loại phòng và phòng");
                     }
                 });
     }

@@ -78,8 +78,6 @@ public class CreateRoomTypeActivity extends AppCompatActivity {
                 String name = textInputName.getEditText().getText().toString().trim();
                 String area = textInputArea.getEditText().getText().toString().trim();
                 String price = textInputPrice.getEditText().getText().toString().trim();
-//                String electricity = textInputElectricityPrice.getEditText().getText().toString().trim();
-//                String water = textInputWaterPrice.getEditText().getText().toString().trim();
                 String numberPeople = textInputNumberPeople.getEditText().getText().toString().trim();
                 String description = textInputDescription.getEditText().getText().toString().trim();
                 if (!validateName(name) | !validateArea(area) | !validatePrice(price) | !validateNumberPeople(numberPeople) | !validateDescription(description)) {
@@ -92,7 +90,6 @@ public class CreateRoomTypeActivity extends AppCompatActivity {
                 roomTypeCRUD.setNumberPeople(Double.parseDouble(numberPeople));
                 roomTypeCRUD.setPrice(Double.parseDouble(price));
                 Map<String, Facility> facility = new HashMap<>();
-
 
                 Facility fGac = new Facility();
                 fGac.setName("Gác");
@@ -233,27 +230,6 @@ public class CreateRoomTypeActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateElectricityPrice(String electricity) {
-        if (electricity.isEmpty()) {
-            textInputElectricityPrice.setError("Vui lòng điền giá điện");
-            return false;
-        } else {
-            textInputElectricityPrice.setError(null);
-//            textInputEmail.setEnabled(false);
-            return true;
-        }
-    }
-
-    private boolean validateWaterPrice(String water) {
-        if (water.isEmpty()) {
-            textInputWaterPrice.setError("Vui lòng điền giá nước");
-            return false;
-        } else {
-            textInputWaterPrice.setError(null);
-//            textInputEmail.setEnabled(false);
-            return true;
-        }
-    }
 
     private boolean validateNumberPeople(String numberPeople) {
         if (numberPeople.isEmpty()) {

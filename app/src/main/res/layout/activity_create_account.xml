@@ -10,21 +10,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_background_title">
+        android:background="@drawable/custom_bg_title">
 
         <TextView
             android:id="@+id/bh_name_boarding_house"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-
             android:gravity="center_vertical"
             android:layout_centerInParent="true"
-            android:text="Tạo tài khoản"
+            android:text="@string/createAccount"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
         <ProgressBar
-
             android:id="@+id/ca_progressBar"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -48,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Vui lòng điền các thông tin bên dưới"
+            android:text="@string/pleaseEnter"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -65,7 +63,7 @@
             android:id="@+id/ca_textInput_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Họ tên"
+            android:hint="@string/fullName"
             app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
@@ -82,7 +80,7 @@
             android:id="@+id/ca_textInput_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Địa chỉ"
+            android:hint="@string/address"
             app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
@@ -101,7 +99,7 @@
             android:id="@+id/ca_textInput_phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Số điện thoại"
+            android:hint="@string/phoneNumber"
             app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
@@ -117,7 +115,7 @@
             android:id="@+id/ca_textInput_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="@string/email"
             app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
@@ -134,7 +132,7 @@
             android:id="@+id/ca_textInput_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mật khẩu"
+            android:hint="@string/password"
             app:boxStrokeColor="@color/green"
             app:hintTextColor="@color/green"
             android:textColorHint="@color/green"
@@ -159,7 +157,7 @@
             android:layout_height="50dp"
             android:textColor="@color/white"
             android:backgroundTint="@color/green"
-            android:text="Đăng ký" />
+            android:text="@string/register" />
     </LinearLayout>
 
 </LinearLayout>

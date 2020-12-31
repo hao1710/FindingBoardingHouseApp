@@ -21,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/TODO">
-
         </ImageButton>
         <TextView
             android:id="@+id/inn_tv_name"
@@ -33,17 +32,6 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             tools:ignore="RelativeOverlap" />
-
-        <!--        <ImageButton-->
-        <!--            android:id="@+id/bh_imageButton_menu"-->
-        <!--            android:layout_width="30dp"-->
-        <!--            android:layout_height="30dp"-->
-        <!--            android:layout_marginEnd="8dp"-->
-        <!--            android:layout_alignParentEnd="true"-->
-        <!--            android:layout_centerVertical="true"-->
-        <!--            android:background="@drawable/ic_more_vert"-->
-        <!--            android:backgroundTint="@color/white"-->
-        <!--            android:contentDescription="@string/TODO" />-->
 
     </RelativeLayout>
 

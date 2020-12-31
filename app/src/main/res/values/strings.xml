@@ -3,39 +3,60 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="comment">Bình luận</string>
+    <string name="update">Cập nhật</string>
+    <string name="updateBoardingHouse">Cập nhật thông tin nhà trọ</string>
     <string name="updateAccount">Cập nhật thông tin tài khoản</string>
-    <string name="email">Email</string>
+    <string name="area">Diện tích</string>
+    <string name="areaRoom">Diện tích phòng (m²)</string>
+    <string name="register">Đăng ký</string>
     <string name="logIn">Đăng nhập</string>
     <string name="logOut">Đăng xuất</string>
     <string name="address">Địa chỉ</string>
+    <string name="email">Email</string>
+    <string name="price">Giá</string>
+    <string name="electricityPrice">Giá điện</string>
+    <string name="ePriceUnit">Giá điện (nghìn đồng)</string>
+    <string name="waterPrice">Giá nước</string>
+    <string name="wPriceUnit">Giá nước (nghìn đồng)</string>
+    <string name="rPriceUnit">Giá phòng (triệu đồng)</string>
+    <string name="fullName">Họ tên</string>
     <string name="home">Home</string>
     <string name="cancel">Hủy</string>
     <string name="roomType">Loại phòng</string>
     <string name="password">Mật khẩu</string>
+    <string name="description">Mô tả</string>
+    <string name="descriptionRoom">Mô tả phòng</string>
     <string name="disableInn">Nhà trọ bị vô hiệu hóa</string>
     <string name="enableInn">Nhà trọ đang hoạt động</string>
-    <string name="status">Trạng thái</string>
-    <string name="createAccount">Tạo tài khoản</string>
-    <string name="account">Tài khoản</string>
-    <string name="TODO">TO DO</string>
-    <string name="search">Tìm kiếm</string>
-    <string name="room">Phòng trọ</string>
-    <string name="name">Tên</string>
-    <string name="phoneNumber">Số điện thoại</string>
-
-    <string name="updateBoardingHouse">Cập nhật thông tin nhà trọ</string>
-    <string name="info">Thông tin</string>
-    <string name="update">Cập nhật</string>
-    <string name="description">Mô tả</string>
-    <string name="price">Giá</string>
-    <string name="area">Diện tích</string>
-    <string name="numberPeople">Số người ở</string>
-    <string name="electricityPrice">Giá điện</string>
-    <string name="waterPrice">Giá nước</string>
-    <string name="viewMap">Xem map</string>
-    <string name="facility">Tiện nghi</string>
-    <string name="comment">Bình luận</string>
+    <string name="pressIcon">Nhấn biểu tượng bên cạnh để chọn vị trí nhà trọ</string>
     <string name="content">Nội dung</string>
+    <string name="room">Phòng trọ</string>
+    <string name="phoneNumber">Số điện thoại</string>
+    <string name="account">Tài khoản</string>
+    <string name="createAccount">Tạo tài khoản</string>
+    <string name="name">Tên</string>
+    <string name="nameRoomTpe">Tên loại phòng</string>
+    <string name="info">Thông tin</string>
+    <string name="create">Thêm</string>
+    <string name="createRoomType">Thêm loại phòng</string>
+    <string name="createInn">Thêm nhà trọ</string>
+    <string name="settingAccount">Thiết lập tài khoản</string>
+    <string name="facility">Tiện nghi</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="TODO">TO DO</string>
+    <string name="status">Trạng thái</string>
+
+    <string name="numberPeople">Số người ở</string>
+    <string name="numberPeopleMax">Số người ở tối đa</string>
+    <string name="pleaseAddress">Vui lòng chọn địa chỉ</string>
+    <string name="pleaseEnter">Vui lòng điền các thông tin bên dưới</string>
+
+    <string name="viewMap">Xem map</string>
+
+
+
+
     <string name="distance">Khoảng cách</string>
     <string name="nameBoardingHouse">Tên nhà trọ</string>
     <string name="district">Huyện</string>

@@ -120,7 +120,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
             boardingHouseCRUD.setDistance(distance);
             boardingHouseCRUD.setElectricityPrice(Double.parseDouble(ePrice));
             boardingHouseCRUD.setWaterPrice(Double.parseDouble(wPrice));
-            boardingHouseCRUD.setStatus(false);
+            boardingHouseCRUD.setStatus(-1);
             GeoPoint point = new GeoPoint(latitude, longitude);
             boardingHouseCRUD.setOwner(boardingHouse.getIdOwnerBoardingHouse());
             boardingHouseCRUD.setPoint(point);

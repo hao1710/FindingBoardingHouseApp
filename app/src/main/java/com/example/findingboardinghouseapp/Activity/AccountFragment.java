@@ -40,17 +40,17 @@ public class AccountFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    //
+    // code below
     public static final int REQUEST_CODE_FROM_ACCOUNT_FRAGMENT = 34;
     public static final String MY_PREFERENCES = "MyPre";
     public SharedPreferences sharedPreferences;
 
-    private ImageButton imageButtonMenu;
-    private TextView textViewName, textViewAddress, textViewPhoneNumber, textViewEmail;
-    private Landlord landlord;
-    private RecyclerView rvBoardingHouse;
-    private TextView tvEnableInn;
+    Landlord landlord;
 
+    ImageButton ibMenu;
+    TextView textViewName, textViewAddress, textViewPhoneNumber, textViewEmail;
+    TextView tvText;
+    RecyclerView rvBoardingHouse;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -62,9 +62,8 @@ public class AccountFragment extends Fragment {
         findView(view);
 
         // sharedPreferences
-        sharedPreferences = Objects.requireNonNull(this.getActivity()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
 
-        //
         Bundle bundle = getArguments();
         assert bundle != null;
         landlord = (Landlord) bundle.getSerializable("landlord");
@@ -74,18 +73,17 @@ public class AccountFragment extends Fragment {
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvBoardingHouse.setLayoutManager(linearLayout);
 
-
         // do something
         setTextDataLandlord(landlord);
 
         readDataBoardingHouse();
 
-        imageButtonMenu.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(getContext(), imageButtonMenu);
-            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_af, popupMenu.getMenu());
+        ibMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(getContext(), ibMenu);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_account_fragment, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    case R.id.a_item_log_out:
+                    case R.id.acc_log_out:
                         FirebaseAuth.getInstance().signOut();
 
                         SharedPreferences.Editor editor = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE).edit();
@@ -99,16 +97,21 @@ public class AccountFragment extends Fragment {
                         fragmentTransaction.commit();
 
                         return true;
-                    case R.id.a_item_create_boarding_house:
+
+                    case R.id.acc_create_inn:
                         BoardingHouse boardingHouse = new BoardingHouse();
                         boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putSerializable("boardingHouse", boardingHouse);
-                        Intent intent = new Intent(getContext(), CreateBoardingHouseActivity.class);
-                        intent.putExtras(bundle2);
-                        startActivityForResult(intent, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+
+                        Bundle bundleCreate = new Bundle();
+                        bundleCreate.putSerializable("boardingHouse", boardingHouse);
+
+                        Intent intentCreate = new Intent(getContext(), CreateBoardingHouseActivity.class);
+                        intentCreate.putExtras(bundleCreate);
+                        startActivityForResult(intentCreate, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+
                         return true;
-                    case R.id.a_item_setting_account:
+
+                    case R.id.acc_setting_account:
                         Landlord landlordUpdate = landlord;
 
                         Bundle bundleUpdate = new Bundle();
@@ -118,6 +121,7 @@ public class AccountFragment extends Fragment {
                         intentUpdate.putExtras(bundleUpdate);
 
                         startActivityForResult(intentUpdate, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+
                         return true;
                 }
                 return false;
@@ -125,24 +129,23 @@ public class AccountFragment extends Fragment {
             popupMenu.show();
         });
 
-        FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener((value, error) -> readDataBoardingHouse());
+        FirebaseFirestore.getInstance().collection("boardingHouse")
+                .addSnapshotListener((value, error) -> readDataBoardingHouse());
+
         return view;
     }
 
 
     private void findView(View view) {
-        imageButtonMenu = view.findViewById(R.id.a_imageButton_menu);
+        ibMenu = view.findViewById(R.id.acc_ib_menu);
 
-        textViewName = view.findViewById(R.id.a_textView_name);
-        textViewAddress = view.findViewById(R.id.a_textView_address);
-        textViewPhoneNumber = view.findViewById(R.id.a_textView_phoneNumber);
-        textViewEmail = view.findViewById(R.id.a_textView_email);
-        //textViewPassword = view.findViewById(R.id.a_textView_password);
+        textViewName = view.findViewById(R.id.acc_tv_name);
+        textViewAddress = view.findViewById(R.id.acc_tv_address);
+        textViewPhoneNumber = view.findViewById(R.id.acc_tv_phoneNumber);
+        textViewEmail = view.findViewById(R.id.acc_tv_email);
 
-        tvEnableInn = view.findViewById(R.id.account_tv_enableInn);
-
-
-        rvBoardingHouse = view.findViewById(R.id.recyclerViewBoardingHouse);
+        tvText = view.findViewById(R.id.acc_tv_text);
+        rvBoardingHouse = view.findViewById(R.id.acc_rv_inn);
     }
 
     private void setTextDataLandlord(Landlord landlord) {
@@ -150,11 +153,12 @@ public class AccountFragment extends Fragment {
         textViewAddress.setText(landlord.getAddressLandlord());
         textViewPhoneNumber.setText(landlord.getPhoneNumberLandlord());
         textViewEmail.setText(landlord.getEmailLandlord());
-//        textViewPassword.setText(landlord.getPasswordLandlord());
     }
 
+    @SuppressLint("SetTextI18n")
     private void readDataBoardingHouse() {
-        ArrayList<BoardingHouse> arrayList = new ArrayList();
+        ArrayList<BoardingHouse> arrayList;
+        arrayList = new ArrayList<>();
         BoardingHouseAdapter adapter = new BoardingHouseAdapter(getContext(), arrayList);
         rvBoardingHouse.setAdapter(adapter);
 
@@ -173,30 +177,25 @@ public class AccountFragment extends Fragment {
                             boardingHouse.setElectricityPriceBoardingHouse(documentSnapshot.getDouble("electricityPrice"));
                             boardingHouse.setWaterPriceBoardingHouse(documentSnapshot.getDouble("waterPrice"));
                             boardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
-                            boardingHouse.setStatusBoardingHouse(documentSnapshot.getBoolean("status"));
+                            boardingHouse.setStatusBoardingHouse(documentSnapshot.getDouble("status"));
 
                             arrayList.add(boardingHouse);
-
-
                         }
                     }
                     adapter2.notifyDataSetChanged();
                     if (arrayList.size() > 0) {
-                        tvEnableInn.setText("Khu trọ của bạn");
-                       //tvEnableInn.setBackgroundColor(AccountFragment.this.getResources().getColor(R.color.colorTitle));
+                        tvText.setText("Khu trọ của bạn");
                     } else {
-                        tvEnableInn.setText(null);
-                       // tvEnableInn.setBackgroundColor(AccountFragment.this.getResources().getColor(R.color.white));
+                        tvText.setText("Hãy thêm khu trọ của bạn");
                     }
                     adapter.notifyDataSetChanged();
                 });
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_FROM_ACCOUNT_FRAGMENT && resultCode == CreateBoardingHouseActivity.RESULT_CODE_FROM_CREATE_BOARDING_HOUSE) {
+        if (requestCode == REQUEST_CODE_FROM_ACCOUNT_FRAGMENT && resultCode == CreateBoardingHouseActivity.RESULT_CODE_FROM_CREATE_BOARDING_HOUSE && data != null) {
             readDataBoardingHouse();
         }
         if (requestCode == REQUEST_CODE_FROM_ACCOUNT_FRAGMENT && resultCode == UpdateAccountActivity.RESULT_CODE_FROM_UPDATE_ACCOUNT && data != null) {

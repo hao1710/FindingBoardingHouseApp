@@ -10,7 +10,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,71 +18,40 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.findingboardinghouseapp.Adapter.CommentAdapter;
+import com.example.findingboardinghouseapp.Adapter.CommentAdminAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.Model.Comment;
 import com.example.findingboardinghouseapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InnFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InnFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public InnFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InnFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static InnFragment newInstance(String param1, String param2) {
-        InnFragment fragment = new InnFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     //
     TextView tvName, tvAddress, tvViewMap, tvEPrice, tvWPrice, tvDescription;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch aSwitch;
-    BoardingHouse boardingHouse;
-    ArrayList<Comment> arrayList;
     RecyclerView rvComment;
-    CommentAdapter adapter;
-    //Button button;
     FloatingActionButton floatingActionButton;
+
+    BoardingHouse boardingHouse;
+    ArrayList<Comment> listComment;
+    CommentAdminAdapter commentAdapter;
+
+    double statusInn;
+
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,61 +60,66 @@ public class InnFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inn, container, false);
 
         // findView
-        tvName = view.findViewById(R.id.tv_name_bh);
-        tvAddress = view.findViewById(R.id.tv_address_bh);
-        tvViewMap = view.findViewById(R.id.tv_viewMap);
-        tvEPrice = view.findViewById(R.id.tv_ePrice);
-        tvWPrice = view.findViewById(R.id.tv_wPrice);
-        tvDescription = view.findViewById(R.id.inn_description);
-        aSwitch = view.findViewById(R.id.switch_status);
-        rvComment = view.findViewById(R.id.rv_comment);
-        //button = view.findViewById(R.id.button_status);
+        tvName = view.findViewById(R.id.inn_tv_name);
+        tvAddress = view.findViewById(R.id.inn_tv_address);
+        tvViewMap = view.findViewById(R.id.inn_tv_viewMap);
+        tvEPrice = view.findViewById(R.id.inn_tv_ePrice);
+        tvWPrice = view.findViewById(R.id.inn_tv_wPrice);
+        tvDescription = view.findViewById(R.id.inn_tv_description);
+        aSwitch = view.findViewById(R.id.inn_switch_status);
+        rvComment = view.findViewById(R.id.inn_rv_comment);
         floatingActionButton = view.findViewById(R.id.inn_fab);
+
         // underline textView
         String create = "Xem map";
         SpannableString spannableString = new SpannableString(create);
         spannableString.setSpan(new UnderlineSpan(), 0, create.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvViewMap.setText(spannableString);
 
-        Bundle bundle = new Bundle();
+        Bundle bundle;
         bundle = this.getArguments();
         boardingHouse = new BoardingHouse();
-        arrayList = new ArrayList<>();
+
         assert bundle != null;
         boardingHouse = (BoardingHouse) bundle.getSerializable("inn");
-        arrayList = (ArrayList<Comment>) bundle.getSerializable("comment");
         tvName.setText(boardingHouse.getNameBoardingHouse());
         tvAddress.setText("Địa chỉ: " + boardingHouse.getAddressBoardingHouse());
-        tvEPrice.setText(boardingHouse.getElectricityPriceBoardingHouse() + " ngàn VND");
-        tvWPrice.setText(boardingHouse.getWaterPriceBoardingHouse() + " ngàn VND");
-        aSwitch.setChecked(boardingHouse.isStatusBoardingHouse());
-        if (boardingHouse.isStatusBoardingHouse()) {
-           // button.setText("Vô hiệu hóa");
+        tvEPrice.setText(boardingHouse.getElectricityPriceBoardingHouse() + " nghìn VND");
+        tvWPrice.setText(boardingHouse.getWaterPriceBoardingHouse() + " nghìn VND");
+
+        statusInn = boardingHouse.getStatusBoardingHouse();
+        if (statusInn == -1) {
+            aSwitch.setChecked(false);
+            aSwitch.setText("Trạng thái: Nhà trọ mới");
+        } else if (statusInn % 2 == 0) {
+            aSwitch.setChecked(true);
             aSwitch.setText("Trạng thái: Đang hoạt động");
         } else {
-            aSwitch.setText("Trạng thái: Đang bị vô hiệu hóa");
-           // button.setText("Xác nhận");
+            int i = (int) statusInn;
+            int number = i / 2;
+            number++;
+            aSwitch.setChecked(false);
+            aSwitch.setText("Trạng thái: Đang bị vô hiệu hóa lần " + number);
         }
 
         tvDescription.setText(boardingHouse.getDescriptionBoardingHouse());
         tvViewMap.setOnClickListener(v -> {
             ArrayList<BoardingHouse> listBoardingHouse = new ArrayList<>();
             listBoardingHouse.add(boardingHouse);
-            Intent intent1 = new Intent(v.getContext(), MapActivity.class);
-            intent1.putExtra("name", boardingHouse.getNameBoardingHouse());
-            intent1.putExtra("latitude", boardingHouse.getLatitude());
-            intent1.putExtra("longitude", boardingHouse.getLongitude());
-            intent1.putExtra("list", listBoardingHouse);
-            startActivity(intent1);
+            Intent intentViewMap = new Intent(v.getContext(), MapActivity.class);
+            intentViewMap.putExtra("name", boardingHouse.getNameBoardingHouse());
+            intentViewMap.putExtra("latitude", boardingHouse.getLatitude());
+            intentViewMap.putExtra("longitude", boardingHouse.getLongitude());
+            intentViewMap.putExtra("list", listBoardingHouse);
+            startActivity(intentViewMap);
         });
+        listComment = new ArrayList<>();
+        commentAdapter = new CommentAdminAdapter(getContext(), listComment);
 
-        adapter = new CommentAdapter(getContext(), arrayList);
         rvComment.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvComment.setLayoutManager(linearLayout);
-        rvComment.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
+        rvComment.setAdapter(commentAdapter);
 
         floatingActionButton.setOnClickListener(v -> {
             boolean status = aSwitch.isChecked();
@@ -155,12 +128,15 @@ public class InnFragment extends Fragment {
                 builder.setMessage("Bạn muốn vô hiệu hóa nhà trọ này?")
                         .setPositiveButton("Thực hiện", (dialog, id) -> {
                             // FIRE ZE MISSILES!
-
+                            statusInn++;
                             FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
-                                    .update("status", false);
+                                    .update("status", statusInn);
                             aSwitch.setChecked(false);
-                            aSwitch.setText("Trạng thái: Đang bị vô hiệu hóa");
-                     //       button.setText("Xác nhận");
+                            int i = (int) statusInn;
+                            int number = i / 2;
+                            number++;
+                            aSwitch.setText("Trạng thái: Đang bị vô hiệu hóa lần " + number);
+                            //       button.setText("Xác nhận");
                             Toast.makeText(getContext(), "Vô hiệu hóa thành công", Toast.LENGTH_SHORT).show();
                         })
                         .setNegativeButton("Hủy", (dialog, id) -> {
@@ -173,11 +149,13 @@ public class InnFragment extends Fragment {
                         .setPositiveButton("Thực hiện", (dialog, id) -> {
                             // FIRE ZE MISSILES!
 
+                            statusInn++;
                             FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
-                                    .update("status", true);
+                                    .update("status", statusInn);
                             aSwitch.setChecked(true);
+
                             aSwitch.setText("Trạng thái: Đang hoạt động");
-                         //   button.setText("Vô hiệu hóa");
+                            //   button.setText("Vô hiệu hóa");
                             Toast.makeText(getContext(), "Xác nhận thành công", Toast.LENGTH_SHORT).show();
                         })
                         .setNegativeButton("Hủy", (dialog, id) -> {
@@ -190,6 +168,20 @@ public class InnFragment extends Fragment {
             builder.show();
         });
 
+        FirebaseFirestore.getInstance().collection("comment")
+                .whereEqualTo("boardingHouse", boardingHouse.getIdBoardingHouse()).addSnapshotListener((value, error) -> {
+            listComment.clear();
+            assert value != null;
+            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                Comment comment = new Comment();
+                comment.setIdComment(documentSnapshot.getId());
+                comment.setNameTenant(documentSnapshot.getString("name"));
+                comment.setContentComment(documentSnapshot.getString("content"));
+                comment.setIdBoardingHouse(documentSnapshot.getString("boardingHouse"));
+                listComment.add(comment);
+            }
+            commentAdapter.notifyDataSetChanged();
+        });
         return view;
     }
 }

@@ -17,16 +17,17 @@ public class BoardingHouse implements Serializable {
     protected String phoneNumberOwnerBoardingHouse;
     protected double latitude;
     protected double longitude;
-    protected boolean statusBoardingHouse;
+    protected double statusBoardingHouse;
 
     public BoardingHouse() {
     }
 
-    public boolean isStatusBoardingHouse() {
+
+    public double getStatusBoardingHouse() {
         return statusBoardingHouse;
     }
 
-    public void setStatusBoardingHouse(boolean statusBoardingHouse) {
+    public void setStatusBoardingHouse(double statusBoardingHouse) {
         this.statusBoardingHouse = statusBoardingHouse;
     }
 
