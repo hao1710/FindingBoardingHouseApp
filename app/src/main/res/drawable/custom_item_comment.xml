@@ -5,7 +5,7 @@
 <!--    <stroke-->
 <!--        android:width="2dp"-->
 <!--        android:color="@color/deepSkyBlue" />-->
-        <corners android:radius="10dp"/>
+        <corners android:radius="8dp"/>
     <!--    <gradient-->
     <!--        android:endColor="@color/green"-->
     <!--        android:angle="135"-->

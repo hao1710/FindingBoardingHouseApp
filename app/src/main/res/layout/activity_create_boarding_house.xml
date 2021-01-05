@@ -7,22 +7,31 @@
     android:orientation="vertical"
     tools:context=".Activity.CreateBoardingHouseActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_bg_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/custom_bg_title">
+
+        <ImageButton
+            android:id="@+id/cbh_ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_arrow_back"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO" />
 
         <TextView
-            android:id="@+id/bh_name_boarding_house"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Thêm khu trọ"
+            android:layout_centerInParent="true"
+            android:text="Thêm nhà trọ"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +40,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:orientation="vertical">
-
 
         <TextView
             android:layout_width="match_parent"
@@ -55,7 +63,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_name"
+                android:id="@+id/cbh_til_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Tên nhà trọ"
@@ -65,6 +73,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cbh_edt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
@@ -104,11 +113,10 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_district"
+                android:id="@+id/cbh_til_district"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:hint="Huyện"
                 app:boxStrokeColor="@color/boxStrokeColor"
                 android:textColorHint="@color/green"
@@ -117,7 +125,7 @@
                 app:hintTextColor="@color/green">
 
                 <AutoCompleteTextView
-                    android:id="@+id/cbh_autoCompleteTextView_district"
+                    android:id="@+id/cbh_auto_district"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -125,7 +133,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_village"
+                android:id="@+id/cbh_til_village"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,7 +147,7 @@
                 app:hintTextColor="@color/green">
 
                 <AutoCompleteTextView
-                    android:id="@+id/cbh_autoCompleteTextView_village"
+                    android:id="@+id/cbh_auto_village"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -148,7 +156,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_hamlet"
+                android:id="@+id/cbh_til_hamlet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ấp"
@@ -158,7 +166,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cbh_textInputEditText_hamlet"
+                    android:id="@+id/cbh_edt_hamlet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -175,7 +183,7 @@
                 android:weightSum="2">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cbh_textInput_electricityPrice"
+                    android:id="@+id/cbh_til_ePrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
@@ -188,6 +196,7 @@
                     app:hintTextColor="@color/green">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cbh_edt_ePrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal">
@@ -197,7 +206,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cbh_textInput_waterPrice"
+                    android:id="@+id/cbh_til_wPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -211,6 +220,7 @@
                     app:hintTextColor="@color/green">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cbh_edt_wPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal">
@@ -222,7 +232,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_description"
+                android:id="@+id/cbh_til_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mô tả nhà trọ"
@@ -232,6 +242,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cbh_edt_description"
                     android:layout_width="match_parent"
                     android:imeOptions="actionDone"
                     android:layout_height="wrap_content"
@@ -250,7 +261,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/cbh_imageButton_pick_location"
+                    android:layout_toStartOf="@+id/cbh_ib_pick_location"
                     android:minHeight="40dp"
                     android:gravity="center_vertical"
                     android:padding="0dp"
@@ -260,7 +271,7 @@
                     android:textSize="16sp" />
 
                 <ImageButton
-                    android:id="@+id/cbh_imageButton_pick_location"
+                    android:id="@+id/cbh_ib_pick_location"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
@@ -272,18 +283,17 @@
             </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cbh_textInput_distance"
+                android:id="@+id/cbh_til_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/distance"
                 app:boxStrokeColor="@color/boxStrokeColor"
-
                 android:textColorHint="@color/green"
                 app:errorEnabled="true"
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cbh_textInputEditText_distance"
+                    android:id="@+id/cbh_edt_distance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -293,17 +303,14 @@
                 </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
             <Button
                 android:id="@+id/cbh_button_create"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/green"
                 android:text="Tạo" />
         </LinearLayout>
     </ScrollView>
-
 
 </LinearLayout>

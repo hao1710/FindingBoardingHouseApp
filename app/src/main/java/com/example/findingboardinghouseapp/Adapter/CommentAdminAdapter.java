@@ -30,8 +30,7 @@ public class CommentAdminAdapter extends RecyclerView.Adapter<CommentAdminAdapte
     @Override
     public CommentAdminAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_comment_admin, parent, false);
-        CommentAdminAdapter.MyViewHolder myViewHolder = new CommentAdminAdapter.MyViewHolder(v);
-        return myViewHolder;
+        return new MyViewHolder(v);
     }
 
     @Override
@@ -54,28 +53,19 @@ public class CommentAdminAdapter extends RecyclerView.Adapter<CommentAdminAdapte
             super(view);
             tvName = view.findViewById(R.id.cmt_name);
             tvContent = view.findViewById(R.id.cmt_content);
-//            textViewNameBoardingHouse = view.findViewById(R.id.rr_name_boarding_house);
-//            textViewAddressBoardingHouse = view.findViewById(R.id.rr_address_boarding_house);
-//            textViewPriceRoom = view.findViewById(R.id.rr_price_room);
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setMessage("Bạn muốn xóa bình luận này?")
-                            .setPositiveButton("Xóa", (dialog, id) -> {
-                                // FIRE ZE MISSILES!
-                                FirebaseFirestore.getInstance().collection("comment").document(commentList.get(getAdapterPosition()).getIdComment()).delete();
-                                Toast.makeText(context, "Xóa bình luận thành công", Toast.LENGTH_SHORT).show();
-                            })
-                            .setNegativeButton("Hủy", (dialog, id) -> {
-                                // User cancelled the dialog
-                                dialog.dismiss();
-                            });
-                    // Create the AlertDialog object and return it
-                    builder.create();
-                    builder.show();
-                    return true;
-                }
+
+            view.setOnLongClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage("Bạn muốn xóa bình luận này?")
+                        .setPositiveButton("Xóa", (dialog, id) -> {
+                            FirebaseFirestore.getInstance().collection("comment")
+                                    .document(commentList.get(getAdapterPosition()).getIdComment()).delete();
+                            Toast.makeText(context, "Xóa bình luận thành công", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Hủy", (dialog, id) -> dialog.dismiss());
+                builder.create();
+                builder.show();
+                return true;
             });
         }
     }

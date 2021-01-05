@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.findingboardinghouseapp.Activity.AdminFragment;
 import com.example.findingboardinghouseapp.Activity.InnManagementActivity;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.R;
@@ -73,7 +74,7 @@ public class InnAdapter extends RecyclerView.Adapter<InnAdapter.MyViewHolder> {
                 BoardingHouse boardingHouse = arrayList.get(getLayoutPosition());
                 intent.putExtra("boardingHouse", boardingHouse);
 
-                ((Activity) context).startActivityForResult(intent, 5);
+                ((Activity) context).startActivityForResult(intent, AdminFragment.REQUEST_CODE_FROM_ADMIN_FRAGMENT);
             });
         }
     }

@@ -21,18 +21,17 @@ import java.util.Objects;
 
 public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyViewHolder> {
     private Context context;
-    private ArrayList<Landlord> arrayList;
-    private RecyclerView rvBoardingHouse;
+    private ArrayList<Landlord> landlordList;
     FirebaseFirestore firebaseFirestore;
 
-    public LandlordAdapter(Context context, ArrayList<Landlord> arrayList) {
+    public LandlordAdapter(Context context, ArrayList<Landlord> landlordList) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.landlordList = landlordList;
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return landlordList.size();
     }
 
     @NonNull
@@ -44,7 +43,7 @@ public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Landlord landlord = arrayList.get(position);
+        Landlord landlord = landlordList.get(position);
         holder.tvName.setText(landlord.getNameLandlord());
 
         ArrayList<BoardingHouse> arrayListBoardingHouse;
@@ -55,10 +54,10 @@ public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyView
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // recyclerView
-        rvBoardingHouse.setHasFixedSize(true);
+        holder.rvBoardingHouse.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        rvBoardingHouse.setLayoutManager(linearLayout);
-        rvBoardingHouse.setAdapter(adapter);
+        holder.rvBoardingHouse.setLayoutManager(linearLayout);
+        holder.rvBoardingHouse.setAdapter(adapter);
 
         firebaseFirestore.collection("boardingHouse").whereEqualTo("owner", landlord.getIdLandlord()).get()
                 .addOnCompleteListener(task -> {
@@ -86,13 +85,12 @@ public class LandlordAdapter extends RecyclerView.Adapter<LandlordAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvName, tvEmail;
-
+        public RecyclerView rvBoardingHouse;
         public MyViewHolder(View view) {
             super(view);
             // mapping
             tvName = view.findViewById(R.id.itemLandlord_tv_name);
             rvBoardingHouse = view.findViewById(R.id.itemLandlord_rv_boardingHouse);
-
         }
 
     }

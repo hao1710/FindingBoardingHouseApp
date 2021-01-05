@@ -1,16 +1,16 @@
 package com.example.findingboardinghouseapp.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,8 +21,6 @@ import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.Model.RoomCRUD;
 import com.example.findingboardinghouseapp.Model.RoomImage;
 import com.example.findingboardinghouseapp.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,22 +31,24 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class CreateRoomActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_FROM_CREATE_ROOM = 29;
     public static final int RESULT_CODE_FROM_CREATE_ROOM = 28;
+
     private Room room;
 
     private StorageReference storageReference;
 
-    TextInputLayout textInputName;
-    TextInputEditText editTextName;
+    ImageButton ibBack;
+    TextInputLayout tilName;
+    TextInputEditText edtName;
     Button buttonSelectImage;
     RecyclerView rvRoomImage;
-    ProgressBar progressBar;
     Button buttonCreateRoom;
+
+    ProgressDialog progressDialog;
 
     ArrayList<RoomImage> roomImageList;
 
@@ -64,11 +64,11 @@ public class CreateRoomActivity extends AppCompatActivity {
         room = (Room) bundle.getSerializable("newRoom");
 
         // findView
-        textInputName = findViewById(R.id.cr_textInput_name);
-        editTextName = findViewById(R.id.cr_editText_name);
+        ibBack = findViewById(R.id.cr_ib_back);
+        tilName = findViewById(R.id.cr_til_name);
+        edtName = findViewById(R.id.cr_edt_name);
         buttonSelectImage = findViewById(R.id.cr_button_select_image);
         rvRoomImage = findViewById(R.id.cr_rv_roomImage);
-        progressBar = findViewById(R.id.cr_progressBar);
         buttonCreateRoom = findViewById(R.id.cr_button_create_room);
 
         // initial
@@ -93,7 +93,7 @@ public class CreateRoomActivity extends AppCompatActivity {
 
         buttonCreateRoom.setOnClickListener(v -> {
 
-            String name = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
+            String name = edtName.getText().toString().trim();
 
             if (!validateName(name)) {
                 return;
@@ -104,10 +104,16 @@ public class CreateRoomActivity extends AppCompatActivity {
             }
             uploadFile();
 
-
         });
         storageReference = FirebaseStorage.getInstance().getReference("image");
+        edtName.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                edtName.clearFocus();
+            }
+            return false;
+        });
 
+        ibBack.setOnClickListener(v -> finish());
     }
 
     private String getFileExtension(Uri uri) {
@@ -117,7 +123,9 @@ public class CreateRoomActivity extends AppCompatActivity {
     }
 
     private void uploadFile() {
-        progressBar.setVisibility(View.VISIBLE);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Vui lòng đợi");
+        progressDialog.show();
         ArrayList<String> linkImage = new ArrayList<>();
         final int[] count = {0};
         for (int i = 0; i < roomImageList.size(); i++) {
@@ -147,12 +155,12 @@ public class CreateRoomActivity extends AppCompatActivity {
 //                                    .set(create, SetOptions.merge());
                         linkImage.add(uri.toString());
                         if (count[0] == roomImageList.size()) {
-                            progressBar.setVisibility(View.GONE);
+                            progressDialog.dismiss();
                             RoomCRUD roomCRUD = new RoomCRUD();
                             roomCRUD.setStatus(false);
                             roomCRUD.setImage(linkImage);
                             Map<String, RoomCRUD> newRoom = new HashMap<>();
-                            newRoom.put(Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim(), roomCRUD);
+                            newRoom.put(edtName.getText().toString().trim(), roomCRUD);
                             Map<String, Map> create = new HashMap<>();
                             create.put("room", newRoom);
                             FirebaseFirestore.getInstance().collection("boardingHouse").document(room.getIdBoardingHouse()).collection("roomType").document(room.getIdRoomType())
@@ -165,7 +173,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                             intent.putExtra("a", bundle);
                             setResult(RESULT_CODE_FROM_CREATE_ROOM, intent);
                             finish();
-                            Toast.makeText(getApplicationContext(), "Thêm phòng mới thành công!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Thêm phòng mới thành công", Toast.LENGTH_SHORT).show();
                         }
                     });
 //                    Toast.makeText(getApplicationContext(), "Thêm phòng mới thành công!", Toast.LENGTH_SHORT).show();
@@ -200,6 +208,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_FROM_CREATE_ROOM && resultCode == RESULT_OK && data != null) {
+            roomImageList.clear();
             if (data.getClipData() != null) {
                 int count = data.getClipData().getItemCount();
                 for (int i = 0; i < count; i++) {
@@ -213,7 +222,6 @@ public class CreateRoomActivity extends AppCompatActivity {
                 RoomImage roomImage = new RoomImage();
                 roomImage.setUri(data.getData());
                 roomImageList.add(roomImage);
-
                 selectImageAdapter.notifyDataSetChanged();
             }
 
@@ -222,19 +230,12 @@ public class CreateRoomActivity extends AppCompatActivity {
 
     private boolean validateName(String name) {
         if (name.isEmpty()) {
-            textInputName.setError("Vui lòng điền tên phòng");
+            tilName.setError("Vui lòng điền tên phòng");
             return false;
         } else {
-            textInputName.setError(null);
-//            textInputEmail.setEnabled(false);
+            tilName.setError(null);
             return true;
         }
     }
 
-    @Override
-    public void onBackPressed() {
-
-
-        super.onBackPressed();
-    }
 }

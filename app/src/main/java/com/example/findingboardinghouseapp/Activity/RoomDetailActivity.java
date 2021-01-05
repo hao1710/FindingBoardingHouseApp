@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -169,6 +171,12 @@ public class RoomDetailActivity extends AppCompatActivity {
                 edtContent.setText("");
                 expandComment.collapse();
             }
+        });
+        edtContent.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                edtContent.clearFocus();
+            }
+            return false;
         });
 
         listComment = new ArrayList<>();

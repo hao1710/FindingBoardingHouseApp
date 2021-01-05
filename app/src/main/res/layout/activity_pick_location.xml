@@ -12,15 +12,21 @@
         mapbox:mapbox_cameraTargetLat="9.76126166509999"
         mapbox:mapbox_cameraTargetLng="105.60451156571315"
         mapbox:mapbox_cameraZoom="14"/>
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_vert"
+        android:layout_margin="8dp"
+        android:layout_gravity="right"
+        />
     <Button
         android:id="@+id/select_location_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:layout_margin="8dp"
         android:textColor="@color/white"
-        android:text="Select a location"
-        />
+        android:text="Chọn vị trí nhà trọ" />
 
 </FrameLayout>

@@ -2,6 +2,7 @@ package com.example.findingboardinghouseapp.Adapter;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,18 +23,21 @@ import com.example.findingboardinghouseapp.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> {
-    private Context context;
-    private ArrayList<Room> arrayList;
+    private final Context context;
+    private final ArrayList<Room> roomList;
+    ProgressDialog progressDialog;
 
-    public RoomAdapter(Context context, ArrayList<Room> arrayList) {
+    public RoomAdapter(Context context, ArrayList<Room> roomList) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.roomList = roomList;
     }
 
     @NonNull
@@ -46,7 +50,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RoomAdapter.MyViewHolder holder, int position) {
-        Room room = arrayList.get(position);
+        Room room = roomList.get(position);
         if (room.isStatusRoom()) {
             holder.textViewNameRoom.setText("Phòng " + room.getNameRoom() + ": có người thuê");
         } else {
@@ -66,7 +70,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return roomList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -86,20 +90,17 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
             expandableLinearLayout = view.findViewById(R.id.expandImage);
             ibShow = view.findViewById(R.id.item_ib_show);
 
-            ibShow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    expandableLinearLayout.toggle();
-                    if (expandableLinearLayout.isExpanded()) {
-                        ibShow.setBackgroundResource(R.drawable.ic_arrow_right);
-                    } else {
-                        ibShow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
-                    }
+            ibShow.setOnClickListener(v -> {
+                expandableLinearLayout.toggle();
+                if (expandableLinearLayout.isExpanded()) {
+                    ibShow.setBackgroundResource(R.drawable.ic_arrow_right);
+                } else {
+                    ibShow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
                 }
             });
             aSwitchStatus.setOnClickListener(v -> {
                 boolean status = aSwitchStatus.isChecked();
-                Room room = arrayList.get(getAdapterPosition());
+                Room room = roomList.get(getAdapterPosition());
                 if (status) {
                     textViewNameRoom.setText("Phòng " + room.getNameRoom() + ": có người thuê");
                 } else {
@@ -114,13 +115,30 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setMessage("Bạn muốn xóa phòng này?")
                         .setPositiveButton("Xóa", (dialog, id) -> {
+                            progressDialog = new ProgressDialog(v.getContext());
+                            progressDialog.setMessage("Vui lòng đợi");
+                            progressDialog.show();
+
                             Map<String, Object> delete = new HashMap<>();
-                            String name = "room." + arrayList.get(getAdapterPosition()).getNameRoom();
+                            String name = "room." + roomList.get(getAdapterPosition()).getNameRoom();
                             delete.put(name, FieldValue.delete());
-                            FirebaseFirestore.getInstance().collection("boardingHouse").document(arrayList.get(getAdapterPosition()).getIdBoardingHouse())
-                                    .collection("roomType").document(arrayList.get(getAdapterPosition()).getIdRoomType())
+                            FirebaseFirestore.getInstance().collection("boardingHouse").document(roomList.get(getAdapterPosition()).getIdBoardingHouse())
+                                    .collection("roomType").document(roomList.get(getAdapterPosition()).getIdRoomType())
                                     .update(delete);
-                            Toast.makeText(context, "Xóa phòng thành công", Toast.LENGTH_SHORT).show();
+
+                            final int[] count = {0};
+                            final int size = roomList.get(getAdapterPosition()).getImageRoom().size();
+                            for (int i = 0; i < size; i++) {
+                                String url = roomList.get(getAdapterPosition()).getImageRoom().get(i);
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                                storageReference.delete().addOnCompleteListener(task -> {
+                                    count[0]++;
+                                    if (count[0] == size) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(context, "Xóa phòng thành công", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         })
                         .setNegativeButton("Hủy", (dialog, id) -> {
                             // User cancelled the dialog
@@ -129,17 +147,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
                 // Create the AlertDialog object and return it
                 builder.create();
                 builder.show();
-
                 return true;
             });
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
         }
     }
 

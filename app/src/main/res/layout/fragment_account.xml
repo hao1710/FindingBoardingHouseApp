@@ -8,7 +8,35 @@
     android:background="@color/backgroundColor"
     tools:context=".Activity.AccountFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/custom_bg_title">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:text="@string/account"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:ignore="RelativeOverlap" />
+
+        <ImageButton
+            android:id="@+id/acc_ib_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/ic_more_vert"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO" />
+    </RelativeLayout>
+
     <androidx.core.widget.NestedScrollView
+        android:layout_marginTop="8dp"
         android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,37 +46,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@drawable/custom_bg_title">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_centerInParent="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/account"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    tools:ignore="RelativeOverlap" />
-
-                <ImageButton
-                    android:id="@+id/acc_ib_menu"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/ic_more_vert"
-                    android:backgroundTint="@color/white"
-                    android:contentDescription="@string/TODO" />
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/custom_bg_white"
                 android:orientation="vertical"
                 android:paddingStart="8dp"
@@ -148,7 +148,7 @@
                 <!--            android:background="@color/black" />-->
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/acc_rv_inn"
+                    android:id="@+id/acc_rv_boarding_house"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:listitem="@layout/item_inn" />

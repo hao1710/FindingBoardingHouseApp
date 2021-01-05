@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
+
     tools:context=".Activity.RoomTypeFragment">
 
     <LinearLayout
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:background="#EBF8FA"
@@ -21,7 +21,6 @@
         <TextView
             android:layout_gravity="center"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -41,7 +40,7 @@
             android:id="@+id/tv_email"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="@string/name"
+            android:text="@string/email"
             android:gravity="center_vertical"
             android:textSize="16sp"
             android:drawablePadding="8dp"
@@ -51,28 +50,37 @@
             android:id="@+id/tv_phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="@string/name"
+            android:text="@string/phoneNumber"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:drawablePadding="8dp"
             app:drawableStartCompat="@drawable/ic_contact_phone" />
     </LinearLayout>
-    <TextView
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Danh sách loại phòng và phòng"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        tools:listitem="@layout/item_rv_room_type_admin"
-        android:id="@+id/ad_rv_roomType"
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/custom_bg_white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="Danh sách loại phòng và phòng"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ad_rv_roomType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            tools:listitem="@layout/item_rv_room_type_admin" />
+    </LinearLayout>
+
 
 </LinearLayout>

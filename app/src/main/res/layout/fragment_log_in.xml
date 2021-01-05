@@ -28,7 +28,7 @@
         android:layout_height="0dp"
         android:layout_weight="80"
         android:gravity="center_horizontal"
-        android:background="@drawable/custom_background_log_in"
+        android:background="@drawable/custom_bg_log_in"
         android:orientation="vertical">
 
         <LinearLayout
@@ -59,7 +59,7 @@
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/li_textInput_email"
+                android:id="@+id/li_til_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/email"
@@ -70,6 +70,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/li_edt_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
@@ -86,7 +87,7 @@
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/li_textInput_password"
+                android:id="@+id/li_til_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:boxStrokeColor="@color/green"
@@ -97,6 +98,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/li_edt_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword">
@@ -121,9 +123,10 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/li_textView_create_account"
+                android:id="@+id/li_tv_create_account"
                 android:textColor="@color/green"
                 android:gravity="center"
+                android:text="Bạn chưa có tài khoản? Đăng kí ngay"
                 android:layout_width="300dp"
                 android:layout_height="40dp" />
 

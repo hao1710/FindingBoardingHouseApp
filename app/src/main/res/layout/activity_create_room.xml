@@ -7,22 +7,31 @@
     android:orientation="vertical"
     tools:context=".Activity.CreateAccountActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_bg_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/custom_bg_title">
+
+        <ImageButton
+            android:id="@+id/cr_ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_arrow_back"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO" />
 
         <TextView
-            android:id="@+id/bh_name_boarding_house"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
+            android:layout_centerInParent="true"
             android:text="Thêm phòng"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,12 +41,11 @@
         android:layout_marginRight="8dp"
         android:orientation="vertical">
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="Vui lòng điền các thông tin bên dưới"
+            android:text="@string/pleaseEnter"
             android:textColor="@color/black"
             android:textSize="17sp" />
 
@@ -50,18 +58,20 @@
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cr_textInput_name"
+            android:id="@+id/cr_til_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tên phòng"
+            app:boxStrokeColor="@color/boxStrokeColor"
             android:textColorHint="@color/green"
             app:errorEnabled="true"
             app:hintTextColor="@color/green">
             <!--            app:counterEnabled="true"-->
             <!--            app:counterMaxLength="30"-->
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cr_editText_name"
+                android:id="@+id/cr_edt_name"
                 android:layout_width="match_parent"
+                android:imeOptions="actionDone"
                 android:layout_height="wrap_content"
                 android:inputType="text">
 
@@ -88,15 +98,7 @@
             android:id="@+id/cr_rv_roomImage"
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <ProgressBar
-                android:id="@+id/cr_progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:visibility="gone"/>
-        </LinearLayout>
+
         <Button
             android:id="@+id/cr_button_create_room"
             android:layout_width="wrap_content"
@@ -104,7 +106,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:backgroundTint="@color/green"
-            android:text="Tạo" />
+            android:text="@string/create" />
     </LinearLayout>
 
 </LinearLayout>

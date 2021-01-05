@@ -63,7 +63,6 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.MyView
         holder.textViewArea.setText(roomType.getAreaRoomType() + " m\u00b2");
         holder.textViewPrice.setText("Giá: " + roomType.getPriceRoomType() + " triệu");
         holder.textViewNumberPeople.setText("Tối đa "+roomType.getNumberPeopleRoomType() + " người");
-//        holder.expandableRelativeLayout.toggle();
 
         ArrayList<Room> arrayListRoom;
         RoomAdapter adapter;

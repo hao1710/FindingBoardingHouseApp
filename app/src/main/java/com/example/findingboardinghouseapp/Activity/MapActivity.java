@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -102,6 +103,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageButton imageButton;
     private ArrayList<BoardingHouse> listBoardingHouse;
 
+
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // This contains the MapView in XML and needs to be called after the access token is configured.
         setContentView(R.layout.activity_map);
+
+
 
         mapView = findViewById(R.id.mapView);
         imageButton = findViewById(R.id.m_imageButton_menu);

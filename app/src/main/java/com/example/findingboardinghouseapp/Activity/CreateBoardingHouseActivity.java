@@ -1,12 +1,12 @@
 package com.example.findingboardinghouseapp.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -55,19 +55,21 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
     double longitudeCTU = 105.60451156571315;
     double distance;
 
-    private TextInputLayout textInputName, textInputDistrict, textInputVillage, textInputHamlet, textInputElectricityPrice, textInputWaterPrice, textInputDescription, textInputDistance;
-    private TextInputEditText textInputEditTextHamlet, textInputEditTextDistance;
-    private AutoCompleteTextView autoCompleteTextViewDistrict, autoCompleteTextViewVillage;
-    private ImageButton imageButtonPickLocation;
-    private Button buttonCreateBoardingHouse;
-    private TextView textViewAddress;
+    ImageButton ibBack;
+    TextInputLayout tilName, tilDistrict, tilVillage, tilHamlet, tilEPrice, tilWPrice, tilDescription, tilDistance;
+    TextInputEditText edtName, edtHamlet, edtEPrice, edtWPrice, edtDescription, edtDistance;
+    AutoCompleteTextView autoCompleteTextViewDistrict, autoCompleteTextViewVillage;
+    ImageButton ibPickLocation;
+    Button buttonCreateBoardingHouse;
+    TextView tvAddress;
 
     private BoardingHouse boardingHouse;
     private static MapboxDirections client;
     private DirectionsRoute currentRoute;
 
     private String address;
-    private String hamletAddress, villageAddress, districtAddress, provinceAddress;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,38 +84,25 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
         findView();
 
         initialSpinner();
-        Objects.requireNonNull(textInputElectricityPrice.getEditText()).setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    Editable e = Objects.requireNonNull(textInputWaterPrice.getEditText()).getText();
-                    Selection.setSelection(e, textInputWaterPrice.getEditText().getText().length());
-                }
-                return false;
-            }
-        });
-        Objects.requireNonNull(textInputDescription.getEditText()).setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    textInputDescription.getEditText().clearFocus();
-                }
-                return false;
-            }
-        });
+
+        setOnEditorAction();
+
         buttonCreateBoardingHouse.setOnClickListener(v -> {
-            String nameV = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
-            String districtV = Objects.requireNonNull(textInputDistrict.getEditText()).getText().toString().trim();
-            String villageV = Objects.requireNonNull(textInputVillage.getEditText()).getText().toString().trim();
-            String hamletV = Objects.requireNonNull(textInputHamlet.getEditText()).getText().toString().trim();
-            String ePrice = Objects.requireNonNull(textInputElectricityPrice.getEditText()).getText().toString().trim();
-            String wPrice = Objects.requireNonNull(textInputWaterPrice.getEditText()).getText().toString().trim();
-            String descriptionV = Objects.requireNonNull(textInputDescription.getEditText()).getText().toString().trim();
-            String distanceV = Objects.requireNonNull(textInputDistance.getEditText()).getText().toString().trim();
+            String nameV = edtName.getText().toString().trim();
+            String districtV = Objects.requireNonNull(tilDistrict.getEditText()).getText().toString().trim();
+            String villageV = Objects.requireNonNull(tilVillage.getEditText()).getText().toString().trim();
+            String hamletV = edtHamlet.getText().toString().trim();
+            String ePrice = edtEPrice.getText().toString().trim();
+            String wPrice = edtWPrice.getText().toString().trim();
+            String descriptionV = edtDescription.getText().toString().trim();
+            String distanceV = edtDistance.getText().toString().trim();
             if (!validateName(nameV) | !validateDistrict(districtV) | !validateVillage(villageV) | !validateHamlet(hamletV)
                     | !validateElectricityPrice(ePrice) | !validateWaterPrice(wPrice) | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
                 return;
             }
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Vui lòng đợi");
+            progressDialog.show();
             BoardingHouseCRUD boardingHouseCRUD = new BoardingHouseCRUD();
             boardingHouseCRUD.setName(nameV);
             boardingHouseCRUD.setAddress(address);
@@ -124,10 +113,11 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
             GeoPoint point = new GeoPoint(latitude, longitude);
             boardingHouseCRUD.setOwner(boardingHouse.getIdOwnerBoardingHouse());
             boardingHouseCRUD.setPoint(point);
-            boardingHouseCRUD.setDescription(textInputDescription.getEditText().getText().toString().trim());
+            boardingHouseCRUD.setDescription(edtDescription.getText().toString().trim());
             FirebaseFirestore.getInstance().collection("boardingHouse").add(boardingHouseCRUD).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentReference> task) {
+                    progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Thêm nhà trọ thành công", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     setResult(RESULT_CODE_FROM_CREATE_BOARDING_HOUSE, intent);
@@ -136,55 +126,100 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
             });
 
         });
-        imageButtonPickLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent1 = new Intent(getApplicationContext(), PickLocationActivity.class);
-                startActivityForResult(intent1, REQUEST_CODE_FROM_CREATE_BOARDING_HOUSE);
+
+        ibPickLocation.setOnClickListener(v -> {
+            Intent intentPick = new Intent(getApplicationContext(), PickLocationActivity.class);
+            startActivityForResult(intentPick, REQUEST_CODE_FROM_CREATE_BOARDING_HOUSE);
+        });
+
+        edtHamlet.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                getAddress();
             }
         });
 
-        textInputEditTextHamlet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    getAddress();
-                }
+        ibBack.setOnClickListener(v -> finish());
+    }
+
+    private void setOnEditorAction() {
+        edtName.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtHamlet.getText();
+                Selection.setSelection(e, edtHamlet.getText().length());
             }
+            return false;
+        });
+        edtHamlet.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtEPrice.getText();
+                Selection.setSelection(e, edtEPrice.getText().length());
+            }
+            return false;
+        });
+        edtEPrice.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtWPrice.getText();
+                Selection.setSelection(e, edtWPrice.getText().length());
+            }
+            return false;
+        });
+        edtWPrice.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    Editable e = edtDescription.getText();
+                    Selection.setSelection(e, edtDescription.getText().length());
+                }
+                return false;
+            }
+        });
+        edtDescription.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                edtDescription.clearFocus();
+            }
+            return false;
         });
     }
 
     private void findView() {
-        textInputName = findViewById(R.id.cbh_textInput_name);
-        textViewAddress = findViewById(R.id.cbh_textView_address);
-        textInputDistrict = findViewById(R.id.cbh_textInput_district);
-        textInputVillage = findViewById(R.id.cbh_textInput_village);
-        textInputHamlet = findViewById(R.id.cbh_textInput_hamlet);
-        textInputElectricityPrice = findViewById(R.id.cbh_textInput_electricityPrice);
-        textInputWaterPrice = findViewById(R.id.cbh_textInput_waterPrice);
-        textInputDescription = findViewById(R.id.cbh_textInput_description);
-        textInputDistance = findViewById(R.id.cbh_textInput_distance);
+        ibBack = findViewById(R.id.cbh_ib_back);
 
-        autoCompleteTextViewDistrict = findViewById(R.id.cbh_autoCompleteTextView_district);
-        autoCompleteTextViewVillage = findViewById(R.id.cbh_autoCompleteTextView_village);
-        textInputEditTextHamlet = findViewById(R.id.cbh_textInputEditText_hamlet);
-        textInputEditTextDistance = findViewById(R.id.cbh_textInputEditText_distance);
+        tilName = findViewById(R.id.cbh_til_name);
+        tilDistrict = findViewById(R.id.cbh_til_district);
+        tilVillage = findViewById(R.id.cbh_til_village);
+        tilHamlet = findViewById(R.id.cbh_til_hamlet);
+        tilEPrice = findViewById(R.id.cbh_til_ePrice);
+        tilWPrice = findViewById(R.id.cbh_til_wPrice);
+        tilDescription = findViewById(R.id.cbh_til_description);
+        tilDistance = findViewById(R.id.cbh_til_distance);
 
-        imageButtonPickLocation = findViewById(R.id.cbh_imageButton_pick_location);
+        edtName = findViewById(R.id.cbh_edt_name);
+        edtHamlet = findViewById(R.id.cbh_edt_hamlet);
+        edtEPrice = findViewById(R.id.cbh_edt_ePrice);
+        edtWPrice = findViewById(R.id.cbh_edt_wPrice);
+        edtDescription = findViewById(R.id.cbh_edt_description);
+        edtDistance = findViewById(R.id.cbh_edt_distance);
+
+        autoCompleteTextViewDistrict = findViewById(R.id.cbh_auto_district);
+        autoCompleteTextViewVillage = findViewById(R.id.cbh_auto_village);
+
+        tvAddress = findViewById(R.id.cbh_textView_address);
+
+        ibPickLocation = findViewById(R.id.cbh_ib_pick_location);
         buttonCreateBoardingHouse = findViewById(R.id.cbh_button_create);
     }
 
     @SuppressLint("SetTextI18n")
     private void getAddress() {
-        hamletAddress = Objects.requireNonNull(textInputEditTextHamlet.getText()).toString().trim();
-        villageAddress = autoCompleteTextViewVillage.getText().toString().trim();
-        districtAddress = autoCompleteTextViewDistrict.getText().toString().trim();
-        provinceAddress = "Hậu Giang";
+        String hamletAddress = edtHamlet.getText().toString().trim();
+        String villageAddress = autoCompleteTextViewVillage.getText().toString().trim();
+        String districtAddress = autoCompleteTextViewDistrict.getText().toString().trim();
+        String provinceAddress = "Hậu Giang";
         address = hamletAddress + ", " + villageAddress + ", " + districtAddress + ", " + provinceAddress;
         if (hamletAddress.isEmpty() | villageAddress.isEmpty() | districtAddress.isEmpty()) {
-            textViewAddress.setText("Vui lòng chọn địa chỉ");
+            tvAddress.setText("Vui lòng chọn địa chỉ");
         } else {
-            textViewAddress.setText(address);
+            tvAddress.setText(address);
         }
 
     }
@@ -282,83 +317,80 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
 
     private boolean validateName(String name) {
         if (name.isEmpty()) {
-            textInputName.setError("Vui lòng điền tên nhà trọ");
+            tilName.setError("Vui lòng điền tên nhà trọ");
             return false;
         } else {
-            textInputName.setError(null);
-//            textInputEmail.setEnabled(false);
+            tilName.setError(null);
             return true;
         }
     }
 
     private boolean validateDistrict(String district) {
         if (district.isEmpty()) {
-            textInputDistrict.setError("Vui lòng chọn huyện");
+            tilDistrict.setError("Vui lòng chọn huyện");
             return false;
         } else {
-            textInputDistrict.setError(null);
+            tilDistrict.setError(null);
             return true;
         }
     }
 
     private boolean validateVillage(String village) {
         if (village.isEmpty()) {
-            textInputVillage.setError("Vui lòng chọn xã");
+            tilVillage.setError("Vui lòng chọn xã");
             return false;
         } else {
-            textInputVillage.setError(null);
+            tilVillage.setError(null);
             return true;
         }
     }
 
     private boolean validateHamlet(String hamlet) {
         if (hamlet.isEmpty()) {
-            textInputHamlet.setError("Vui lòng điền ấp");
+            tilHamlet.setError("Vui lòng điền ấp");
             return false;
         } else {
-            textInputHamlet.setError(null);
+            tilHamlet.setError(null);
             return true;
         }
     }
 
     private boolean validateElectricityPrice(String ePrice) {
         if (ePrice.isEmpty()) {
-            textInputElectricityPrice.setError("Vui lòng điền giá điện");
+            tilEPrice.setError("Vui lòng điền giá điện");
             return false;
         } else {
-            textInputElectricityPrice.setError(null);
+            tilEPrice.setError(null);
             return true;
         }
     }
 
     private boolean validateWaterPrice(String wPrice) {
         if (wPrice.isEmpty()) {
-            textInputWaterPrice.setError("Vui lòng điền giá nước");
+            tilWPrice.setError("Vui lòng điền giá nước");
             return false;
         } else {
-            textInputWaterPrice.setError(null);
+            tilWPrice.setError(null);
             return true;
         }
     }
 
     private boolean validateDescription(String description) {
         if (description.isEmpty()) {
-            textInputDescription.setError("Vui lòng điền mô tả về nhà trọ");
+            tilDescription.setError("Vui lòng điền mô tả về nhà trọ");
             return false;
         } else {
-            textInputDescription.setError(null);
-//            textInputEmail.setEnabled(false);
+            tilDescription.setError(null);
             return true;
         }
     }
 
     private boolean validateDistance(String distance) {
         if (distance.isEmpty()) {
-            textInputDistance.setError("Vui lòng chọn vị trí nhà trọ");
+            tilDistance.setError("Vui lòng chọn vị trí nhà trọ");
             return false;
         } else {
-            textInputDistance.setError(null);
-//            textInputEmail.setEnabled(false);
+            tilDistance.setError(null);
             return true;
         }
     }
@@ -390,7 +422,7 @@ public class CreateBoardingHouseActivity extends AppCompatActivity {
                 currentRoute = response.body().routes().get(0);
                 double tempDistance = currentRoute.distance() / 1000;
                 distance = Math.ceil(tempDistance * 100) / 100;
-                textInputEditTextDistance.setText("Cách ĐHCT " + distance + " km");
+                edtDistance.setText("Cách ĐHCT " + distance + " km");
 
             }
 

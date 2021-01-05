@@ -48,7 +48,7 @@ public class AccountFragment extends Fragment {
     Landlord landlord;
 
     ImageButton ibMenu;
-    TextView textViewName, textViewAddress, textViewPhoneNumber, textViewEmail;
+    TextView tvName, tvAddress, tvPhoneNumber, tvEmail;
     TextView tvText;
     RecyclerView rvBoardingHouse;
 
@@ -62,7 +62,7 @@ public class AccountFragment extends Fragment {
         findView(view);
 
         // sharedPreferences
-        sharedPreferences = this.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(this.getActivity()).getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
 
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -139,20 +139,20 @@ public class AccountFragment extends Fragment {
     private void findView(View view) {
         ibMenu = view.findViewById(R.id.acc_ib_menu);
 
-        textViewName = view.findViewById(R.id.acc_tv_name);
-        textViewAddress = view.findViewById(R.id.acc_tv_address);
-        textViewPhoneNumber = view.findViewById(R.id.acc_tv_phoneNumber);
-        textViewEmail = view.findViewById(R.id.acc_tv_email);
+        tvName = view.findViewById(R.id.acc_tv_name);
+        tvAddress = view.findViewById(R.id.acc_tv_address);
+        tvPhoneNumber = view.findViewById(R.id.acc_tv_phoneNumber);
+        tvEmail = view.findViewById(R.id.acc_tv_email);
 
         tvText = view.findViewById(R.id.acc_tv_text);
-        rvBoardingHouse = view.findViewById(R.id.acc_rv_inn);
+        rvBoardingHouse = view.findViewById(R.id.acc_rv_boarding_house);
     }
 
     private void setTextDataLandlord(Landlord landlord) {
-        textViewName.setText(landlord.getNameLandlord());
-        textViewAddress.setText(landlord.getAddressLandlord());
-        textViewPhoneNumber.setText(landlord.getPhoneNumberLandlord());
-        textViewEmail.setText(landlord.getEmailLandlord());
+        tvName.setText(landlord.getNameLandlord());
+        tvAddress.setText(landlord.getAddressLandlord());
+        tvPhoneNumber.setText(landlord.getPhoneNumberLandlord());
+        tvEmail.setText(landlord.getEmailLandlord());
     }
 
     @SuppressLint("SetTextI18n")
@@ -184,9 +184,9 @@ public class AccountFragment extends Fragment {
                     }
                     adapter2.notifyDataSetChanged();
                     if (arrayList.size() > 0) {
-                        tvText.setText("Khu trọ của bạn");
+                        tvText.setText("Nhà trọ của bạn");
                     } else {
-                        tvText.setText("Hãy thêm khu trọ của bạn");
+                        tvText.setText("Hãy thêm nhà trọ của bạn");
                     }
                     adapter.notifyDataSetChanged();
                 });

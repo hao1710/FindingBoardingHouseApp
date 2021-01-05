@@ -8,21 +8,31 @@
     android:background="@color/white"
     tools:context=".Activity.CreateRoomTypeActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/custom_bg_title"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/custom_bg_title">
+
+        <ImageButton
+            android:id="@+id/crt_ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_arrow_back"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="@string/createInn"
+            android:layout_centerInParent="true"
+            android:text="Thêm loại phòng"
             android:textColor="@color/white"
             android:textSize="20sp" />
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,19 +56,16 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp">
+        android:layout_margin="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:gravity="center"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_name"
+                android:id="@+id/crt_til_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/nameRoomTpe"
@@ -68,6 +75,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/crt_edt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
@@ -75,9 +83,8 @@
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_area"
+                android:id="@+id/crt_til_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/areaRoom"
@@ -87,9 +94,9 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/crt_edt_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:inputType="numberDecimal">
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -97,7 +104,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_price"
+                android:id="@+id/crt_til_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/rPriceUnit"
@@ -107,6 +114,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/crt_edt_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal">
@@ -117,7 +125,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_numberPeople"
+                android:id="@+id/crt_til_numberPeople"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/numberPeopleMax"
@@ -127,6 +135,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/crt_edt_numberPeople"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number">
@@ -136,7 +145,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/crt_textInput_description"
+                android:id="@+id/crt_til_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/descriptionRoom"
@@ -146,7 +155,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cbh_textInput_distance"
+                    android:id="@+id/crt_edt_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
@@ -234,7 +243,6 @@
 
             </LinearLayout>
 
-
             <Button
                 android:textColor="@color/white"
                 android:id="@+id/crt_button_create"
@@ -245,6 +253,5 @@
                 android:text="@string/create" />
         </LinearLayout>
     </ScrollView>
-
 
 </LinearLayout>

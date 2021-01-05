@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     private FirebaseUser firebaseUser;
 
+    int flag = -1;
     @SuppressLint({"NonConstantResourceId", "LogNotTimber"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,55 +37,69 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(MY_PREFERENCES, MODE_PRIVATE);
 
-
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.home:
-                    selectedFragment = new HomeFragment();
-                    break;
-                case R.id.account:
-                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                    firebaseUser = firebaseAuth.getCurrentUser();
-                    if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-                        if (!Objects.equals(firebaseUser.getEmail(), "anhhaovo1710@gmail.com")) {
-                            Landlord landlord = new Landlord();
-
-                            landlord.setIdLandlord(sharedPreferences.getString("id", null));
-                            landlord.setNameLandlord(sharedPreferences.getString("name", null));
-                            landlord.setAddressLandlord(sharedPreferences.getString("address", null));
-                            landlord.setPhoneNumberLandlord(sharedPreferences.getString("phoneNumber", null));
-                            landlord.setEmailLandlord(sharedPreferences.getString("email", null));
-                            landlord.setPasswordLandlord(sharedPreferences.getString("password", null));
-
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("landlord", landlord);
-
-                            selectedFragment = new AccountFragment();
-                            selectedFragment.setArguments(bundle);
-                        } else {
-                            Admin admin = new Admin();
-                            admin.setIdAdmin(sharedPreferences.getString("id", null));
-                            admin.setEmailAdmin(sharedPreferences.getString("email", null));
-                            admin.setPasswordAdmin(sharedPreferences.getString("password", null));
-
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("admin", admin);
-
-                            selectedFragment = new AdminFragment();
-                            selectedFragment.setArguments(bundle);
-                        }
-                    } else {
-                        selectedFragment = new LogInFragment();
+                    if (flag != 0) {
+                        flag = 0;
+                        Log.i("Flag", "home");
+                        Fragment selectedFragment = new HomeFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.main_frameLayout, selectedFragment).commit();
                     }
                     break;
+                case R.id.account:
+                    if (flag != 1) {
+                        flag = 1;
+                        Log.i("Flag", "account");
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                        firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null && firebaseUser.isEmailVerified()) {
+                            if (!Objects.equals(firebaseUser.getEmail(), "anhhaovo1710@gmail.com")) {
+                                Landlord landlord = new Landlord();
+
+                                landlord.setIdLandlord(sharedPreferences.getString("id", null));
+                                landlord.setNameLandlord(sharedPreferences.getString("name", null));
+                                landlord.setAddressLandlord(sharedPreferences.getString("address", null));
+                                landlord.setPhoneNumberLandlord(sharedPreferences.getString("phoneNumber", null));
+                                landlord.setEmailLandlord(sharedPreferences.getString("email", null));
+                                landlord.setPasswordLandlord(sharedPreferences.getString("password", null));
+
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("landlord", landlord);
+
+                                Fragment selectedFragment = new AccountFragment();
+                                selectedFragment.setArguments(bundle);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.main_frameLayout, selectedFragment).commit();
+
+                            } else {
+                                Admin admin = new Admin();
+                                admin.setIdAdmin(sharedPreferences.getString("id", null));
+                                admin.setEmailAdmin(sharedPreferences.getString("email", null));
+                                admin.setPasswordAdmin(sharedPreferences.getString("password", null));
+
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("admin", admin);
+
+                                Fragment selectedFragment = new AdminFragment();
+                                selectedFragment.setArguments(bundle);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.main_frameLayout, selectedFragment).commit();
+
+                            }
+                        } else {
+                            Fragment selectedFragment = new LogInFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.main_frameLayout, selectedFragment).commit();
+
+                        }
+                    }
+
+                    break;
             }
-            assert selectedFragment != null;
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frameLayout, selectedFragment).commit();
+
             return true;
         });
 
         bottomNavigationView.setSelectedItemId(R.id.home);
+
     }
 
     @Override

@@ -20,9 +20,7 @@ import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -30,15 +28,16 @@ import java.util.Objects;
 public class BoardingHouseActivity extends AppCompatActivity {
 
     private BoardingHouse boardingHouse;
-    private RoomTypeAdapter adapter;
     private FirebaseFirestore firebaseFirestore;
 
     public static final int REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY = 41;
 
-    private ImageButton imageButtonMenu;
-    private TextView textViewNameBoardingHouse, textViewAddressBoardingHouse, textViewDistanceBoardingHouse, textViewDescription;
-    private RecyclerView recyclerViewRoomType;
-    private TextView tvDSR;
+    ImageButton ibBack, ibMenu;
+    TextView tvName, tvAddress, tvDistance, tvDescription;
+    TextView tvText;
+    RecyclerView rvRoomType;
+
+
     @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +49,14 @@ public class BoardingHouseActivity extends AppCompatActivity {
 
         findView();
 
-        imageButtonMenu.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), imageButtonMenu);
+        ibMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), ibMenu);
             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_in_bha, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.bh_item_update:
                         BoardingHouse boardingHouseUpdate = boardingHouse;
-//
+
                         Bundle bundleUpdate = new Bundle();
                         bundleUpdate.putSerializable("boardingHouseUpdate", boardingHouseUpdate);
                         Intent intentUpdate = new Intent(BoardingHouseActivity.this, UpdateBoardingHouseActivity.class);
@@ -69,9 +68,9 @@ public class BoardingHouseActivity extends AppCompatActivity {
                         roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("newRoomType", roomType);
-                        Intent intent1 = new Intent(BoardingHouseActivity.this, CreateRoomTypeActivity.class);
-                        intent1.putExtras(bundle);
-                        startActivityForResult(intent1, REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY);
+                        Intent intentRoomType = new Intent(BoardingHouseActivity.this, CreateRoomTypeActivity.class);
+                        intentRoomType.putExtras(bundle);
+                        startActivityForResult(intentRoomType, REQUEST_CODE_FROM_BOARDING_HOUSE_ACTIVITY);
                         return true;
                 }
                 return false;
@@ -82,10 +81,10 @@ public class BoardingHouseActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // recyclerView
-        recyclerViewRoomType.setHasFixedSize(true);
+        rvRoomType.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerViewRoomType.setLayoutManager(linearLayout);
-        recyclerViewRoomType.setAdapter(adapter);
+        rvRoomType.setLayoutManager(linearLayout);
+
 
         // do something
         setTextBoardingHouse(boardingHouse);
@@ -107,27 +106,32 @@ public class BoardingHouseActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        ibBack.setOnClickListener(v -> finish());
     }
 
     private void findView() {
-        imageButtonMenu = findViewById(R.id.bh_imageButton_menu);
-        textViewNameBoardingHouse = findViewById(R.id.bh_name_boarding_house);
-        textViewAddressBoardingHouse = findViewById(R.id.bh_address_boarding_house);
-        textViewDistanceBoardingHouse = findViewById(R.id.bh_distance_boarding_house);
-        textViewDescription = findViewById(R.id.bh_textView_description);
-        recyclerViewRoomType = findViewById(R.id.recyclerViewRoomType);
+        ibBack = findViewById(R.id.bh_ib_back);
+        ibMenu = findViewById(R.id.bh_imageButton_menu);
 
-        tvDSR = findViewById(R.id.inn_dsr);
+        tvName = findViewById(R.id.bh_tv_name);
+        tvAddress = findViewById(R.id.bh_tv_address);
+        tvDistance = findViewById(R.id.bh_tv_distance);
+        tvDescription = findViewById(R.id.bh_tv_description);
+
+        rvRoomType = findViewById(R.id.bh_rv_roomType);
+
+        tvText = findViewById(R.id.bh_tv_text);
     }
 
     @SuppressLint("SetTextI18n")
     private void setTextBoardingHouse(BoardingHouse boardingHouse) {
-        textViewNameBoardingHouse.setText(boardingHouse.getNameBoardingHouse());
-        textViewAddressBoardingHouse.setText(boardingHouse.getAddressBoardingHouse());
-        textViewDistanceBoardingHouse.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
-        textViewDescription.setMaxLines(2);
-        textViewDescription.setEllipsize(TextUtils.TruncateAt.END);
-        textViewDescription.setText(boardingHouse.getDescriptionBoardingHouse());
+        tvName.setText(boardingHouse.getNameBoardingHouse());
+        tvAddress.setText(boardingHouse.getAddressBoardingHouse());
+        tvDistance.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
+        tvDescription.setMaxLines(2);
+        tvDescription.setEllipsize(TextUtils.TruncateAt.END);
+        tvDescription.setText(boardingHouse.getDescriptionBoardingHouse());
     }
 
     @Override
@@ -152,9 +156,8 @@ public class BoardingHouseActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void readDataRoomType() {
         ArrayList<RoomType> roomTypeArrayList = new ArrayList<>();
-        Log.i("SIZEZZZ", "size " + roomTypeArrayList.size());
         RoomTypeAdapter newAdapter = new RoomTypeAdapter(getApplicationContext(), roomTypeArrayList);
-        recyclerViewRoomType.setAdapter(newAdapter);
+        rvRoomType.setAdapter(newAdapter);
         firebaseFirestore.collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
                 .collection("roomType").get()
                 .addOnCompleteListener(task -> {
@@ -175,11 +178,54 @@ public class BoardingHouseActivity extends AppCompatActivity {
                     newAdapter.notifyDataSetChanged();
                     Log.i("SIZEZZZ", "size IN " + roomTypeArrayList.size());
                     if (roomTypeArrayList.size() != 0) {
-                        tvDSR.setText("Danh sách loại phòng và phòng trọ");
+                        tvText.setText("Danh sách loại phòng và phòng trọ");
 
                     } else {
-                        tvDSR.setText("Hãy thêm loại phòng và phòng");
+                        tvText.setText("Hãy thêm loại phòng và phòng");
                     }
                 });
+    }
+
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onStart() {
+        Log.i("LifeCycleINN", "onStart");
+        super.onStart();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onResume() {
+        Log.i("LifeCycleINN", "onResume");
+        super.onResume();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onPause() {
+        Log.i("LifeCycleINN", "onPause");
+        super.onPause();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onStop() {
+        Log.i("LifeCycleINN", "onStop");
+        super.onStop();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onRestart() {
+        Log.i("LifeCycleINN", "onRestart");
+        super.onRestart();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onDestroy() {
+        Log.i("LifeCycleINN", "onDestroy");
+        super.onDestroy();
     }
 }

@@ -26,13 +26,14 @@ import java.util.Map;
 
 public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdapter.MyViewHolder> {
     private Context context;
-    private ArrayList<RoomType> arrayList;
-    RecyclerView recyclerViewRoom;
+    private ArrayList<RoomType> roomTypeList;
+
+    RecyclerView rvRoom;
     FirebaseFirestore firebaseFirestore;
 
     public RoomTypeAdminAdapter(Context context, ArrayList<RoomType> arrayList) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.roomTypeList = arrayList;
     }
 
     @NonNull
@@ -45,9 +46,9 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RoomTypeAdminAdapter.MyViewHolder holder, int position) {
-        RoomType roomType = arrayList.get(position);
+        RoomType roomType = roomTypeList.get(position);
         holder.tvName.setText("Loại phòng: " + roomType.getNameRoomType());
-        holder.tvArea.setText(roomType.getAreaRoomType() + " m2");
+        holder.tvArea.setText(roomType.getAreaRoomType() + " m\u00b2");
         holder.tvNumberPeople.setText(roomType.getNumberPeopleRoomType() + " người ở");
         holder.tvPrice.setText(roomType.getPriceRoomType() + " triệu");
 
@@ -58,10 +59,10 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
         adapter = new RoomAdminAdapter(context, arrayListRoom);
         firebaseFirestore = FirebaseFirestore.getInstance();
         // recyclerView
-        recyclerViewRoom.setHasFixedSize(true);
+        rvRoom.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        recyclerViewRoom.setLayoutManager(linearLayout);
-        recyclerViewRoom.setAdapter(adapter);
+        rvRoom.setLayoutManager(linearLayout);
+        rvRoom.setAdapter(adapter);
         firebaseFirestore.collection("boardingHouse").document(roomType.getIdBoardingHouse())
                 .collection("roomType").document(roomType.getIdRoomType()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -99,7 +100,7 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return roomTypeList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -111,7 +112,7 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
             tvArea = view.findViewById(R.id.tv_area);
             tvPrice = view.findViewById(R.id.tv_price);
             tvNumberPeople = view.findViewById(R.id.tv_numberPeople);
-            recyclerViewRoom = view.findViewById(R.id.admin_rv_room_type);
+            rvRoom = view.findViewById(R.id.admin_rv_room_type);
         }
     }
 }

@@ -8,5 +8,5 @@
         android:title="@string/settingAccount" />
     <item
         android:id="@+id/acc_create_inn"
-        android:title="@string/createInn" />
+        android:title="Thêm nhà trọ" />
 </menu>
