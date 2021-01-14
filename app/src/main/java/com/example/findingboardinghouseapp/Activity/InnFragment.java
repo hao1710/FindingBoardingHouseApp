@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InnFragment extends Fragment {
 
@@ -82,27 +83,9 @@ public class InnFragment extends Fragment {
 
         assert bundle != null;
         boardingHouse = (BoardingHouse) bundle.getSerializable("inn");
-        tvName.setText(boardingHouse.getNameBoardingHouse());
-        tvAddress.setText("Địa chỉ: " + boardingHouse.getAddressBoardingHouse());
-        tvEPrice.setText(boardingHouse.getElectricityPriceBoardingHouse() + " nghìn VND");
-        tvWPrice.setText(boardingHouse.getWaterPriceBoardingHouse() + " nghìn VND");
+        setText(boardingHouse);
 
-        statusInn = boardingHouse.getStatusBoardingHouse();
-        if (statusInn == -1) {
-            aSwitch.setChecked(false);
-            aSwitch.setText("Trạng thái: Nhà trọ mới");
-        } else if (statusInn % 2 == 0) {
-            aSwitch.setChecked(true);
-            aSwitch.setText("Trạng thái: Đang hoạt động");
-        } else {
-            int i = (int) statusInn;
-            int number = i / 2;
-            number++;
-            aSwitch.setChecked(false);
-            aSwitch.setText("Trạng thái: Đang bị vô hiệu hóa lần " + number);
-        }
 
-        tvDescription.setText(boardingHouse.getDescriptionBoardingHouse());
         tvViewMap.setOnClickListener(v -> {
             ArrayList<BoardingHouse> listBoardingHouse = new ArrayList<>();
             listBoardingHouse.add(boardingHouse);
@@ -148,12 +131,10 @@ public class InnFragment extends Fragment {
                 builder.setMessage("Bạn muốn xác nhận nhà trọ này?")
                         .setPositiveButton("Thực hiện", (dialog, id) -> {
                             // FIRE ZE MISSILES!
-
                             statusInn++;
                             FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
                                     .update("status", statusInn);
                             aSwitch.setChecked(true);
-
                             aSwitch.setText("Trạng thái: Đang hoạt động");
                             //   button.setText("Vô hiệu hóa");
                             Toast.makeText(getContext(), "Xác nhận thành công", Toast.LENGTH_SHORT).show();
@@ -167,6 +148,55 @@ public class InnFragment extends Fragment {
             builder.create();
             builder.show();
         });
+
+
+        FirebaseFirestore.getInstance().collection("boardingHouse")
+                .document(boardingHouse.getIdBoardingHouse())
+                .addSnapshotListener((value, error) -> {
+                    if (value.exists()) {
+                        boardingHouse.setNameBoardingHouse(value.getString("name"));
+                        boardingHouse.setAddressBoardingHouse(value.getString("address"));
+                        boardingHouse.setDistanceBoardingHouse(value.getDouble("distance"));
+                        boardingHouse.setElectricityPriceBoardingHouse(value.getDouble("electricityPrice"));
+                        boardingHouse.setWaterPriceBoardingHouse(value.getDouble("waterPrice"));
+                        boardingHouse.setDescriptionBoardingHouse(value.getString("description"));
+                        boardingHouse.setStatusBoardingHouse(value.getDouble("status"));
+                        boardingHouse.setLatitude(Objects.requireNonNull(value.getGeoPoint("point")).getLatitude());
+                        boardingHouse.setLongitude(Objects.requireNonNull(value.getGeoPoint("point")).getLongitude());
+                        setText(boardingHouse);
+                    }
+                });
+
+
+//        FirebaseFirestore.getInstance().collection("boardingHouse").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                for (DocumentChange documentChange : value.getDocumentChanges()) {
+//                    DocumentSnapshot documentSnapshot = documentChange.getDocument();
+//                    if (documentSnapshot.getId().equals(boardingHouse.getIdBoardingHouse())) {
+//                        Log.i("HA3", documentChange.getType() + " thua");
+//                        switch (documentChange.getType()) {
+//                            case MODIFIED:
+//                                boardingHouse.setNameBoardingHouse(documentSnapshot.getString("name"));
+//                                boardingHouse.setAddressBoardingHouse(documentSnapshot.getString("address"));
+//                                boardingHouse.setDistanceBoardingHouse(documentSnapshot.getDouble("distance"));
+//                                boardingHouse.setElectricityPriceBoardingHouse(documentSnapshot.getDouble("electricityPrice"));
+//                                boardingHouse.setWaterPriceBoardingHouse(documentSnapshot.getDouble("waterPrice"));
+//                                boardingHouse.setDescriptionBoardingHouse(documentSnapshot.getString("description"));
+//                                boardingHouse.setStatusBoardingHouse(documentSnapshot.getDouble("status"));
+//                                boardingHouse.setLatitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLatitude());
+//                                boardingHouse.setLongitude(Objects.requireNonNull(documentSnapshot.getGeoPoint("point")).getLongitude());
+//                                setText(boardingHouse);
+//                                break;
+//                            case REMOVED:
+//                                Toast.makeText(getContext(), "Nhà trọ đã bị xóa", Toast.LENGTH_SHORT).show();
+//                                InnManagementActivity.ibBack.callOnClick();
+//                                break;
+//                        }
+//                    }
+//                }
+//            }
+//        });
 
         FirebaseFirestore.getInstance().collection("comment")
                 .whereEqualTo("boardingHouse", boardingHouse.getIdBoardingHouse()).addSnapshotListener((value, error) -> {
@@ -183,5 +213,30 @@ public class InnFragment extends Fragment {
             commentAdapter.notifyDataSetChanged();
         });
         return view;
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setText(BoardingHouse boardingHouse) {
+        tvName.setText(boardingHouse.getNameBoardingHouse());
+        tvAddress.setText("Địa chỉ: " + boardingHouse.getAddressBoardingHouse());
+        tvEPrice.setText(boardingHouse.getElectricityPriceBoardingHouse() + " nghìn VND");
+        tvWPrice.setText(boardingHouse.getWaterPriceBoardingHouse() + " nghìn VND");
+
+        statusInn = boardingHouse.getStatusBoardingHouse();
+        if (statusInn == -1) {
+            aSwitch.setChecked(false);
+            aSwitch.setText("Trạng thái: Nhà trọ mới");
+        } else if (statusInn % 2 == 0) {
+            aSwitch.setChecked(true);
+            aSwitch.setText("Trạng thái: Đang hoạt động");
+        } else {
+            int i = (int) statusInn;
+            int number = i / 2;
+            number++;
+            aSwitch.setChecked(false);
+            aSwitch.setText("Trạng thái: Đang bị vô hiệu hóa lần " + number);
+        }
+
+        tvDescription.setText(boardingHouse.getDescriptionBoardingHouse());
     }
 }

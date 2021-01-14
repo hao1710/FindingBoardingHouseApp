@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FindingBoardingHouseApp">
-        <activity android:name=".Activity.UpdateRoomTypeActivity"></activity>
+        <activity android:name=".Activity.UpdateRoomTypeActivity" />
         <activity android:name=".Activity.InnManagementActivity" />
         <activity android:name=".Activity.UpdateBoardingHouseActivity" />
         <activity android:name=".Activity.UpdateAccountActivity" />

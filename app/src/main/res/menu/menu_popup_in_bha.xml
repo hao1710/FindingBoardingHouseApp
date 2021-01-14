@@ -3,7 +3,4 @@
     <item
         android:id="@+id/bh_item_update"
         android:title="Chỉnh sửa thông tin nhà trọ" />
-    <item
-        android:id="@+id/bh_item_create_room_type"
-        android:title="Thêm loại phòng" />
 </menu>

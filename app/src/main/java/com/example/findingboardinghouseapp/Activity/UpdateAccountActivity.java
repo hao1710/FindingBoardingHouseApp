@@ -1,16 +1,16 @@
 package com.example.findingboardinghouseapp.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Patterns;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,14 +32,15 @@ import java.util.Objects;
 import timber.log.Timber;
 
 public class UpdateAccountActivity extends AppCompatActivity {
-    private TextInputLayout textInputName, textInputAddress, textInputPhoneNumber, textInputEmail, textInputPassword;
-    private TextInputEditText textInputEditTextName, textInputEditTextAddress, textInputEditTextPhoneNumber, textInputEditTextEmail, textInputEditTextPassword;
-    private Button buttonUpdate;
-    private ProgressBar progressBar;
-    private Landlord landlord;
+    TextInputLayout tilName, tilAddress, tilPhoneNumber, tilEmail, tilPassword;
+    TextInputEditText edtName, edtAddress, edtPhoneNumber, edtEmail, edtPassword;
+    Button buttonUpdate;
 
+    ImageButton ibBack;
+    ProgressDialog progressDialog;
     public static final String MY_PREFERENCES = "MyPre";
     public static int RESULT_CODE_FROM_UPDATE_ACCOUNT = 31;
+    private Landlord landlord;
 
     @SuppressLint("TimberArgCount")
     @Override
@@ -54,20 +55,20 @@ public class UpdateAccountActivity extends AppCompatActivity {
         landlord = (Landlord) bundle.getSerializable("landlordUpdate");
 
         // setText
-        textInputEditTextName.setText(landlord.getNameLandlord());
-        textInputEditTextAddress.setText(landlord.getAddressLandlord());
-        textInputEditTextPhoneNumber.setText(landlord.getPhoneNumberLandlord());
-        textInputEditTextEmail.setText(landlord.getEmailLandlord());
-        textInputEditTextPassword.setText(landlord.getPasswordLandlord());
+        edtName.setText(landlord.getNameLandlord());
+        edtAddress.setText(landlord.getAddressLandlord());
+        edtPhoneNumber.setText(landlord.getPhoneNumberLandlord());
+        edtEmail.setText(landlord.getEmailLandlord());
+        edtPassword.setText(landlord.getPasswordLandlord());
 
         setOnEditorAction();
 
         buttonUpdate.setOnClickListener(v -> {
-            String name = Objects.requireNonNull(textInputName.getEditText()).getText().toString().trim();
-            String address = Objects.requireNonNull(textInputAddress.getEditText()).getText().toString().trim();
-            String phoneNumber = Objects.requireNonNull(textInputPhoneNumber.getEditText()).getText().toString().trim();
-            String email = Objects.requireNonNull(textInputEmail.getEditText()).getText().toString().trim();
-            String password = Objects.requireNonNull(textInputPassword.getEditText()).getText().toString().trim();
+            String name = edtName.getText().toString().trim();
+            String address = edtAddress.getText().toString().trim();
+            String phoneNumber = edtPhoneNumber.getText().toString().trim();
+            String email = edtEmail.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
             if (!validateName(name) | !validateEmail(email) | !validatePhoneNumber(phoneNumber) | !validatePassword(password) | !validateAddress(address)) {
                 return;
             }
@@ -78,9 +79,11 @@ public class UpdateAccountActivity extends AppCompatActivity {
             assert user != null;
             user.reauthenticate(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    progressDialog = new ProgressDialog(this);
+                    progressDialog.setMessage("Vui lòng đợi");
+                    progressDialog.show();
                     user.updatePassword(password).addOnCompleteListener(task1 -> {
-                        progressBar.setVisibility(View.GONE);
+                        progressDialog.dismiss();
                         if (task1.isSuccessful()) {
                             Map<String, Object> update = new HashMap<>();
                             update.put("name", name);
@@ -100,6 +103,9 @@ public class UpdateAccountActivity extends AppCompatActivity {
                             editor.putString("password", password);
                             editor.apply();
                             Toast.makeText(getApplicationContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                            Intent intentResult = new Intent();
+                            setResult(RESULT_CODE_FROM_UPDATE_ACCOUNT, intentResult);
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
                             Timber.i("Error: %s", Objects.requireNonNull(task1.getException()).getMessage());
@@ -111,120 +117,114 @@ public class UpdateAccountActivity extends AppCompatActivity {
                 }
             });
         });
+        ibBack.setOnClickListener(v -> finish());
     }
 
     private void setOnEditorAction() {
-        textInputEditTextName.setOnEditorActionListener((v, actionId, event) -> {
+        edtName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextAddress.getText();
-                Selection.setSelection(e, Objects.requireNonNull(textInputEditTextAddress.getText()).length());
+                Editable e = edtAddress.getText();
+                Selection.setSelection(e, Objects.requireNonNull(edtAddress.getText()).length());
             }
             return false;
         });
-        textInputEditTextAddress.setOnEditorActionListener((v, actionId, event) -> {
+        edtAddress.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextPhoneNumber.getText();
-                Selection.setSelection(e, Objects.requireNonNull(textInputEditTextPhoneNumber.getText()).length());
+                Editable e = edtPhoneNumber.getText();
+                Selection.setSelection(e, Objects.requireNonNull(edtPhoneNumber.getText()).length());
             }
             return false;
         });
-        textInputEditTextPhoneNumber.setOnEditorActionListener((v, actionId, event) -> {
+        edtPhoneNumber.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextPassword.getText();
-                Selection.setSelection(e, Objects.requireNonNull(textInputEditTextPassword.getText()).length());
+                Editable e = edtPassword.getText();
+                Selection.setSelection(e, Objects.requireNonNull(edtPassword.getText()).length());
             }
             return false;
         });
-        textInputEditTextPassword.setOnEditorActionListener((v, actionId, event) -> {
+        edtPassword.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                textInputEditTextPassword.clearFocus();
+                edtPassword.clearFocus();
             }
             return false;
         });
     }
 
     private void findView() {
-        textInputName = findViewById(R.id.ua_textInput_name);
-        textInputAddress = findViewById(R.id.ua_textInput_address);
-        textInputPhoneNumber = findViewById(R.id.ua_textInput_phoneNumber);
-        textInputEmail = findViewById(R.id.ua_textInput_email);
-        textInputPassword = findViewById(R.id.ua_textInput_password);
+        ibBack = findViewById(R.id.ua_ib_back);
 
-        textInputEditTextName = findViewById(R.id.ua_textInputEditText_name);
-        textInputEditTextAddress = findViewById(R.id.ua_textInputEditText_address);
-        textInputEditTextPhoneNumber = findViewById(R.id.ua_textInputEditText_phoneNumber);
-        textInputEditTextEmail = findViewById(R.id.ua_textInputEditText_email);
-        textInputEditTextPassword = findViewById(R.id.ua_textInputEditText_password);
+        tilName = findViewById(R.id.ua_til_name);
+        tilAddress = findViewById(R.id.ua_til_address);
+        tilPhoneNumber = findViewById(R.id.ua_til_phoneNumber);
+        tilEmail = findViewById(R.id.ua_til_email);
+        tilPassword = findViewById(R.id.ua_til_password);
 
-        progressBar = findViewById(R.id.ua_progressBar);
+        edtName = findViewById(R.id.ua_edt_name);
+        edtAddress = findViewById(R.id.ua_edt_address);
+        edtPhoneNumber = findViewById(R.id.ua_edt_phoneNumber);
+        edtEmail = findViewById(R.id.ua_edt_email);
+        edtPassword = findViewById(R.id.ua_edt_password);
+
         buttonUpdate = findViewById(R.id.ua_button_update);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        setResult(RESULT_CODE_FROM_UPDATE_ACCOUNT, intent);
-        finish();
-        super.onBackPressed();
     }
 
     private boolean validateName(String name) {
         if (name.isEmpty()) {
-            textInputName.setError("Vui lòng điền họ tên");
+            tilName.setError("Vui lòng điền họ tên");
             return false;
         } else {
-            textInputName.setError(null);
+            tilName.setError(null);
             return true;
         }
     }
 
     private boolean validateAddress(String address) {
         if (address.isEmpty()) {
-            textInputAddress.setError("Vui lòng điền địa chỉ");
+            tilAddress.setError("Vui lòng điền địa chỉ");
             return false;
         } else {
-            textInputAddress.setError(null);
+            tilAddress.setError(null);
             return true;
         }
     }
 
     private boolean validatePhoneNumber(String phoneNumber) {
         if (phoneNumber.isEmpty()) {
-            textInputPhoneNumber.setError("Vui lòng điền số điền thoại");
+            tilPhoneNumber.setError("Vui lòng điền số điền thoại");
             return false;
         } else if (phoneNumber.length() > 11 || phoneNumber.length() < 10 || !phoneNumber.startsWith("0")) {
-            textInputPhoneNumber.setError("Vui lòng điền đúng số điện thoại");
+            tilPhoneNumber.setError("Vui lòng điền đúng số điện thoại");
             return false;
         } else {
-            textInputPhoneNumber.setError(null);
+            tilPhoneNumber.setError(null);
             return true;
         }
     }
 
     private boolean validateEmail(String email) {
         if (email.isEmpty()) {
-            textInputEmail.setError("Vui lòng điền email");
+            tilEmail.setError("Vui lòng điền email");
             return false;
         }
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            textInputEmail.setError(null);
+            tilEmail.setError(null);
             return true;
         } else {
-            textInputEmail.setError("Vui lòng điền đúng email");
+            tilEmail.setError("Vui lòng điền đúng email");
             return false;
         }
     }
 
     private boolean validatePassword(String password) {
         if (password.isEmpty()) {
-            textInputPassword.setError("Vui lòng điền mật khẩu");
+            tilPassword.setError("Vui lòng điền mật khẩu");
             return false;
         }
-        if (password.length() < 6) {
-            textInputPassword.setError("Mật khẩu phải có ít nhất 6 kí tự");
+        if (password.length() < 7) {
+            tilPassword.setError("Mật khẩu phải có ít nhất 7 kí tự");
             return false;
         } else {
-            textInputPassword.setError(null);
+            tilPassword.setError(null);
             return true;
         }
     }

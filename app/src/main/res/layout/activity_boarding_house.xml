@@ -15,8 +15,8 @@
 
         <ImageButton
             android:id="@+id/bh_ib_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
             android:background="@drawable/ic_arrow_back"
@@ -24,11 +24,13 @@
             android:contentDescription="@string/TODO" />
 
         <TextView
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:layout_centerInParent="true"
             android:id="@+id/bh_tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="@string/name"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -101,16 +103,31 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bh_tv_text"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/colorTitle"
-            android:gravity="center_vertical"
-            android:paddingStart="8dp"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            tools:ignore="RtlSymmetry" />
+            android:background="@color/colorTitle">
+
+            <TextView
+                android:id="@+id/bh_tv_text"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageButton
+                android:id="@+id/bh_ib_create_roomType"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_add"
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/TODO" />
+        </RelativeLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginStart="8dp"

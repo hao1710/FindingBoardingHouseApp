@@ -12,17 +12,24 @@
         android:layout_height="60dp"
         android:background="@drawable/custom_bg_title">
 
+        <ImageButton
+            android:id="@+id/ua_ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_arrow_back"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/TODO" />
+
         <TextView
-            android:id="@+id/bh_name_boarding_house"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-
             android:layout_centerInParent="true"
             android:gravity="center_vertical"
             android:text="@string/updateAccount"
             android:textColor="@color/white"
             android:textSize="20sp" />
-
 
     </RelativeLayout>
 
@@ -41,14 +48,6 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <ProgressBar
-            android:id="@+id/ua_progressBar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:indeterminateTint="@color/green"
-            android:visibility="gone" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -59,7 +58,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ua_textInput_name"
+            android:id="@+id/ua_til_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
@@ -69,7 +68,7 @@
             app:hintTextColor="@color/green">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ua_textInputEditText_name"
+                android:id="@+id/ua_edt_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text">
@@ -78,7 +77,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ua_textInput_address"
+            android:id="@+id/ua_til_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/address"
@@ -88,7 +87,7 @@
             app:hintTextColor="@color/green">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ua_textInputEditText_address"
+                android:id="@+id/ua_edt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text">
@@ -97,7 +96,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ua_textInput_phoneNumber"
+            android:id="@+id/ua_til_phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phoneNumber"
@@ -107,14 +106,14 @@
             app:hintTextColor="@color/green">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ua_textInputEditText_phoneNumber"
+                android:id="@+id/ua_edt_phoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ua_textInput_email"
+            android:id="@+id/ua_til_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
@@ -125,7 +124,7 @@
             app:hintTextColor="@color/green">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ua_textInputEditText_email"
+                android:id="@+id/ua_edt_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
@@ -133,7 +132,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ua_textInput_password"
+            android:id="@+id/ua_til_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
@@ -145,7 +144,7 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ua_textInputEditText_password"
+                android:id="@+id/ua_edt_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone"

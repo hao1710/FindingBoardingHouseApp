@@ -1,11 +1,11 @@
 package com.example.findingboardinghouseapp.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
-import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -14,11 +14,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
 import com.example.findingboardinghouseapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,15 +46,16 @@ import timber.log.Timber;
 public class UpdateBoardingHouseActivity extends AppCompatActivity {
 
     private BoardingHouse boardingHouse;
+
     private TextInputLayout textInputName, textInputDistrict, textInputVillage, textInputHamlet, textInputElectricityPrice, textInputWaterPrice, textInputDescription, textInputDistance;
-    private TextInputEditText textInputEditTextName, textInputEditTextHamlet, textInputEditTextElectricityPrice, textInputEditTextWaterPrice, textInputEditTextDescription, textInputEditTextDistance;
+    private TextInputEditText edtName, edtHamlet, edtEPrice, edtWPrice, edtDescription, edtDistance;
     private TextView textViewAddress;
     private AutoCompleteTextView autoCompleteTextViewDistrict, autoCompleteTextViewVillage;
 
     private Button buttonUpdate;
-    private ImageButton imageButtonPickLocation;
+    private ImageButton imageButtonPickLocation, ibBack;
     private DirectionsRoute currentRoute;
-
+    ProgressDialog progressDialog;
     public static int RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE = 38;
     public static int REQUEST_CODE_FROM_UPDATE_BOARDING_HOUSE = 39;
     double latitude;
@@ -72,20 +76,25 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
 
         initialInfo(boardingHouse);
 
+        setOnEditorAction();
+
         buttonUpdate.setOnClickListener(v -> {
-            String nameV = textInputEditTextName.getText().toString().trim();
+            String nameV = edtName.getText().toString().trim();
             String address = textViewAddress.getText().toString().trim();
             String districtV = autoCompleteTextViewDistrict.toString().trim();
             String villageV = autoCompleteTextViewVillage.getText().toString().trim();
-            String hamletV = textInputEditTextHamlet.getText().toString().trim();
-            String ePrice = textInputEditTextElectricityPrice.getText().toString().trim();
-            String wPrice = textInputEditTextWaterPrice.getText().toString().trim();
-            String descriptionV = textInputEditTextDescription.getText().toString().trim();
-            String distanceV = textInputEditTextDistance.getText().toString().trim();
+            String hamletV = edtHamlet.getText().toString().trim();
+            String ePrice = edtEPrice.getText().toString().trim();
+            String wPrice = edtWPrice.getText().toString().trim();
+            String descriptionV = edtDescription.getText().toString().trim();
+            String distanceV = edtDescription.getText().toString().trim();
             if (!validateName(nameV) | !validateDistrict(districtV) | !validateVillage(villageV) | !validateHamlet(hamletV)
                     | !validateElectricityPrice(ePrice) | !validateWaterPrice(wPrice) | !validateDescription(descriptionV) | !validateDistance(distanceV)) {
                 return;
             }
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Vui lòng đợi");
+            progressDialog.show();
             boardingHouse.setNameBoardingHouse(nameV);
             boardingHouse.setAddressBoardingHouse(address);
             boardingHouse.setDescriptionBoardingHouse(descriptionV);
@@ -102,65 +111,74 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
             update.put("point", point);
             update.put("distance", boardingHouse.getDistanceBoardingHouse());
 
-            FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).update(update);
-            Toast.makeText(getApplicationContext(), "Cập nhật thông tin nhà trọ thành công", Toast.LENGTH_SHORT).show();
+            FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse()).update(update).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    progressDialog.dismiss();
 
-            BoardingHouse boardingHouseResult = boardingHouse;
-            Bundle bundleResult = new Bundle();
-            bundleResult.putSerializable("boardingHouseResult", boardingHouseResult);
-            Intent intentResult = new Intent();
-            intentResult.putExtras(bundleResult);
-            setResult(RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE, intentResult);
-            finish();
+                    Toast.makeText(getApplicationContext(), "Cập nhật thông tin nhà trọ thành công", Toast.LENGTH_SHORT).show();
+
+                    BoardingHouse boardingHouseResult = boardingHouse;
+                    Bundle bundleResult = new Bundle();
+                    bundleResult.putSerializable("boardingHouseResult", boardingHouseResult);
+
+                    Intent intentResult = new Intent();
+                    intentResult.putExtras(bundleResult);
+                    setResult(RESULT_CODE_FROM_UPDATE_BOARDING_HOUSE, intentResult);
+                    finish();
+                }
+            });
 
         });
 
-        textInputEditTextName.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextHamlet.getText();
-                Selection.setSelection(e, textInputEditTextHamlet.getText().length());
-            }
-            return false;
-        });
-        textInputEditTextHamlet.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextElectricityPrice.getText();
-                Selection.setSelection(e, textInputEditTextElectricityPrice.getText().length());
-            }
-            return false;
-        });
-        textInputEditTextHamlet.setOnFocusChangeListener((v, hasFocus) -> {
+        edtHamlet.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 getAddress();
             }
         });
-        textInputEditTextElectricityPrice.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextWaterPrice.getText();
-                Selection.setSelection(e, textInputEditTextWaterPrice.getText().length());
-            }
-            return false;
-        });
-        textInputEditTextWaterPrice.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                Editable e = textInputEditTextDescription.getText();
-                Selection.setSelection(e, textInputEditTextDescription.getText().length());
-            }
-            return false;
-        });
-        textInputEditTextDescription.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    textInputDescription.getEditText().clearFocus();
-                }
-                return false;
-            }
-        });
-
         imageButtonPickLocation.setOnClickListener(v -> {
             Intent intent1 = new Intent(UpdateBoardingHouseActivity.this, PickLocationActivity.class);
             startActivityForResult(intent1, REQUEST_CODE_FROM_UPDATE_BOARDING_HOUSE);
+        });
+
+        ibBack.setOnClickListener(v -> finish());
+    }
+
+    private void setOnEditorAction() {
+        edtName.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtHamlet.getText();
+                Selection.setSelection(e, edtHamlet.getText().length());
+            }
+            return false;
+        });
+        edtHamlet.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtEPrice.getText();
+                Selection.setSelection(e, edtEPrice.getText().length());
+            }
+            return false;
+        });
+
+        edtEPrice.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtWPrice.getText();
+                Selection.setSelection(e, edtWPrice.getText().length());
+            }
+            return false;
+        });
+        edtWPrice.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                Editable e = edtDescription.getText();
+                Selection.setSelection(e, edtDescription.getText().length());
+            }
+            return false;
+        });
+        edtDescription.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                edtDescription.clearFocus();
+            }
+            return false;
         });
     }
 
@@ -204,7 +222,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
                 currentRoute = response.body().routes().get(0);
                 double tempDistance = currentRoute.distance() / 1000;
                 boardingHouse.setDistanceBoardingHouse(Math.ceil(tempDistance * 100) / 100);
-                textInputEditTextDistance.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
+                edtDistance.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
 
             }
 
@@ -219,8 +237,10 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
     }
 
     private void findView() {
+        ibBack = findViewById(R.id.ubh_ib_back);
+
         textInputName = findViewById(R.id.ubh_textInput_name);
-        textInputEditTextName = findViewById(R.id.ubh_textInputEditText_name);
+        edtName = findViewById(R.id.ubh_textInputEditText_name);
 
         textViewAddress = findViewById(R.id.ubh_tv_address);
 
@@ -231,19 +251,19 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
         autoCompleteTextViewVillage = findViewById(R.id.ubh_autoCompleteTextView_village);
 
         textInputHamlet = findViewById(R.id.ubh_textInput_hamlet);
-        textInputEditTextHamlet = findViewById(R.id.ubh_textInputEditText_hamlet);
+        edtHamlet = findViewById(R.id.ubh_textInputEditText_hamlet);
 
         textInputElectricityPrice = findViewById(R.id.ubh_textInput_electricityPrice);
-        textInputEditTextElectricityPrice = findViewById(R.id.ubh_textInputEditText_electricityPrice);
+        edtEPrice = findViewById(R.id.ubh_textInputEditText_electricityPrice);
 
         textInputWaterPrice = findViewById(R.id.ubh_textInput_waterPrice);
-        textInputEditTextWaterPrice = findViewById(R.id.ubh_textInputEditText_waterPrice);
+        edtWPrice = findViewById(R.id.ubh_textInputEditText_waterPrice);
 
         textInputDescription = findViewById(R.id.ubh_textInput_description);
-        textInputEditTextDescription = findViewById(R.id.ubh_textInputEditText_description);
+        edtDescription = findViewById(R.id.ubh_textInputEditText_description);
 
         textInputDistance = findViewById(R.id.ubh_textInput_distance);
-        textInputEditTextDistance = findViewById(R.id.ubh_textInputEditText_distance);
+        edtDistance = findViewById(R.id.ubh_textInputEditText_distance);
 
         imageButtonPickLocation = findViewById(R.id.ubh_ib_pick_location);
         buttonUpdate = findViewById(R.id.ubh_button_update);
@@ -252,7 +272,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void getAddress() {
-        String hamletAddress = Objects.requireNonNull(textInputEditTextHamlet.getText()).toString().trim();
+        String hamletAddress = Objects.requireNonNull(edtHamlet.getText()).toString().trim();
         String villageAddress = autoCompleteTextViewVillage.getText().toString().trim();
         String districtAddress = autoCompleteTextViewDistrict.getText().toString().trim();
         String provinceAddress = "Hậu Giang";
@@ -267,11 +287,11 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void initialInfo(BoardingHouse boardingHouse) {
-        textInputEditTextName.setText(boardingHouse.getNameBoardingHouse());
-        textInputEditTextElectricityPrice.setText(String.valueOf(boardingHouse.getElectricityPriceBoardingHouse()));
-        textInputEditTextWaterPrice.setText(String.valueOf(boardingHouse.getWaterPriceBoardingHouse()));
-        textInputEditTextDescription.setText(boardingHouse.getDescriptionBoardingHouse());
-        textInputEditTextDistance.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
+        edtName.setText(boardingHouse.getNameBoardingHouse());
+        edtEPrice.setText(String.valueOf(boardingHouse.getElectricityPriceBoardingHouse()));
+        edtWPrice.setText(String.valueOf(boardingHouse.getWaterPriceBoardingHouse()));
+        edtDescription.setText(boardingHouse.getDescriptionBoardingHouse());
+        edtDistance.setText("Cách ĐHCT " + boardingHouse.getDistanceBoardingHouse() + " km");
 
         String address = boardingHouse.getAddressBoardingHouse();
         int index = address.indexOf(", ");
@@ -281,7 +301,7 @@ public class UpdateBoardingHouseActivity extends AppCompatActivity {
         int index3 = address.indexOf(", ", index2 + 1);
         String districtAddress = address.substring(index2 + 2, index3).trim();
 
-        textInputEditTextHamlet.setText(hamletAddress);
+        edtHamlet.setText(hamletAddress);
         autoCompleteTextViewDistrict.setText(districtAddress);
 
         String[] district = new String[]{"Thành phố Vị Thanh", "Thị xã Ngã Bảy", "Thị xã Long Mỹ",

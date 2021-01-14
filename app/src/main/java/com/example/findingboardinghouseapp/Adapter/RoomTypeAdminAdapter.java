@@ -2,6 +2,8 @@ package com.example.findingboardinghouseapp.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.findingboardinghouseapp.Model.Room;
 import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,16 +48,25 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
     @Override
     public void onBindViewHolder(@NonNull RoomTypeAdminAdapter.MyViewHolder holder, int position) {
         RoomType roomType = roomTypeList.get(position);
+        holder.tvName.setMaxLines(1);
+        holder.tvName.setEllipsize(TextUtils.TruncateAt.END);
         holder.tvName.setText("Loại phòng: " + roomType.getNameRoomType());
+
+        holder.tvArea.setMaxLines(1);
+        holder.tvArea.setEllipsize(TextUtils.TruncateAt.END);
         holder.tvArea.setText(roomType.getAreaRoomType() + " m\u00b2");
+
+        holder.tvNumberPeople.setMaxLines(1);
+        holder.tvNumberPeople.setEllipsize(TextUtils.TruncateAt.END);
         holder.tvNumberPeople.setText(roomType.getNumberPeopleRoomType() + " người ở");
+
+        holder.tvPrice.setMaxLines(1);
+        holder.tvPrice.setEllipsize(TextUtils.TruncateAt.END);
         holder.tvPrice.setText(roomType.getPriceRoomType() + " triệu");
 
-        ArrayList<Room> arrayListRoom;
-        RoomAdminAdapter adapter;
+        ArrayList<Room> arrayListRoom = new ArrayList<>();
+        RoomAdminAdapter adapter = new RoomAdminAdapter(context, arrayListRoom);
         // initial
-        arrayListRoom = new ArrayList<>();
-        adapter = new RoomAdminAdapter(context, arrayListRoom);
         firebaseFirestore = FirebaseFirestore.getInstance();
         // recyclerView
         rvRoom.setHasFixedSize(true);
@@ -67,8 +77,15 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
                 .collection("roomType").document(roomType.getIdRoomType()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                arrayListRoom.clear();
+                if (error != null) {
+                    Log.i("HA3", "error");
+                }
+                if (value == null) {
+                    Log.i("HA3", "value null");
+                }
                 if (value.exists()) {
+                    arrayListRoom.clear();
+                    Log.i("HA3", "value ko null");
                     Map<String, Object> map = value.getData();
                     for (Map.Entry<String, Object> entry : map.entrySet()) {
                         if (entry.getKey().equals("room")) {
@@ -85,6 +102,7 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
                                     }
                                     if (image.getKey().equals("image")) {
                                         ArrayList<String> arrayList = (ArrayList<String>) image.getValue();
+                                        Log.i("HA3", arrayList.size() + " size");
                                         room.setImageRoom(arrayList);
                                     }
                                 }
@@ -92,8 +110,9 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
                             }
                         }
                     }
+                    adapter.notifyDataSetChanged();
                 }
-                adapter.notifyDataSetChanged();
+
             }
         });
     }
@@ -105,7 +124,6 @@ public class RoomTypeAdminAdapter extends RecyclerView.Adapter<RoomTypeAdminAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPrice, tvArea, tvNumberPeople;
-        ExpandableRelativeLayout expandableRelativeLayout;
         public MyViewHolder(View view) {
             super(view);
             tvName = view.findViewById(R.id.tv_name);

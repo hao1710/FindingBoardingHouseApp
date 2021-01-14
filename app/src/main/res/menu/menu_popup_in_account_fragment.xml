@@ -6,7 +6,4 @@
     <item
         android:id="@+id/acc_setting_account"
         android:title="@string/settingAccount" />
-    <item
-        android:id="@+id/acc_create_inn"
-        android:title="Thêm nhà trọ" />
 </menu>

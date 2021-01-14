@@ -3,43 +3,36 @@ package com.example.findingboardinghouseapp.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.findingboardinghouseapp.Adapter.CommentAdapter;
 import com.example.findingboardinghouseapp.Adapter.TabLayoutAdapter;
 import com.example.findingboardinghouseapp.Model.BoardingHouse;
-import com.example.findingboardinghouseapp.Model.Comment;
 import com.example.findingboardinghouseapp.Model.Landlord;
-import com.example.findingboardinghouseapp.Model.RoomType;
 import com.example.findingboardinghouseapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InnManagementActivity extends AppCompatActivity {
     public static final int RESULT_CODE_FROM_INN_MANAGEMENT = 31;
 
     private BoardingHouse boardingHouse;
     TextView tvName;
-    ImageButton ibBack;
+    static ImageButton ibBack;
     TabLayout tabLayout;
     ViewPager viewPager;
-
-    private FirebaseFirestore firebaseFirestore;
-    private CommentAdapter adapter;
-    private ArrayList<Comment> arrayList;
-    private ArrayList<RoomType> roomTypeArrayList;
 
     InnFragment innFragment;
     RoomTypeFragment roomTypeFragment;
@@ -59,66 +52,12 @@ public class InnManagementActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.inn_tabLayout);
         viewPager = findViewById(R.id.inn_viewPager);
 
-        arrayList = new ArrayList<>();
-        roomTypeArrayList = new ArrayList<>();
-
+        tvName.setMaxLines(1);
+        tvName.setEllipsize(TextUtils.TruncateAt.END);
         tvName.setText(boardingHouse.getNameBoardingHouse());
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
-        //
         innFragment = new InnFragment();
         roomTypeFragment = new RoomTypeFragment();
-
-        // underline textView
-//        String create = "Xem map";
-//        SpannableString spannableString = new SpannableString(create);
-//        spannableString.setSpan(new UnderlineSpan(), 0, create.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        tvViewMap.setText(spannableString);
-//        if (aSwitch.isChecked()) {
-//            button.setText("Vô hiệu hóa");
-//        } else {
-//            button.setText("Xác nhận");
-//        }
-//        button.setOnClickListener(v -> {
-//            boolean status = aSwitch.isChecked();
-//            AlertDialog.Builder builder = new AlertDialog.Builder(InnManagementActivity.this);
-//            if (status) {
-//                builder.setMessage("Bạn muốn vô hiệu hóa nhà trọ này?")
-//                        .setPositiveButton("Thực hiện", (dialog, id) -> {
-//                            // FIRE ZE MISSILES!
-//
-//                            FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
-//                                    .update("status", false);
-//                            aSwitch.setChecked(false);
-//                            button.setText("Xác nhận");
-//                            Toast.makeText(InnManagementActivity.this, "Vô hiệu hóa thành công", Toast.LENGTH_SHORT).show();
-//                        })
-//                        .setNegativeButton("Hủy", (dialog, id) -> {
-//                            // User cancelled the dialog
-//                            dialog.dismiss();
-//                        });
-//                // Create the AlertDialog object and return it
-//            } else {
-//                builder.setMessage("Bạn muốn xác nhận nhà trọ này?")
-//                        .setPositiveButton("Thực hiện", (dialog, id) -> {
-//                            // FIRE ZE MISSILES!
-//
-//                            FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
-//                                    .update("status", true);
-//                            aSwitch.setChecked(true);
-//                            button.setText("Vô hiệu hóa");
-//                            Toast.makeText(InnManagementActivity.this, "Xác nhận thành công", Toast.LENGTH_SHORT).show();
-//                        })
-//                        .setNegativeButton("Hủy", (dialog, id) -> {
-//                            // User cancelled the dialog
-//                            dialog.dismiss();
-//                        });
-//                // Create the AlertDialog object and return it
-//            }
-//            builder.create();
-//            builder.show();
-//        });
 
         landlordZ = new Landlord();
         ibBack.setOnClickListener(v -> {
@@ -127,37 +66,28 @@ public class InnManagementActivity extends AppCompatActivity {
             finish();
         });
 
-//        adapter = new CommentAdapter(getApplicationContext(), arrayList);
-//
-//        rvComment.setHasFixedSize(true);
-//        LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-//        rvComment.setLayoutManager(linearLayout);
-//        rvComment.setAdapter(adapter);
-//
-
-        getInfo(new CallBack() {
-            @Override
-            public void onCallbackL(Landlord landlord) {
-                landlordZ = landlord;
-            }
-
-            @Override
-            public void onCB(List<RoomType> list) {
-                roomTypeArrayList.clear();
-                roomTypeArrayList.addAll(list);
-                setupView(viewPager);
-            }
+        getInfo(landlord -> {
+            landlordZ = landlord;
+            setupView(viewPager);
         });
 
-        //setupView(viewPager);
-//        getComment(list -> {
-//            if (list.size() > 0) {
-//                arrayList.clear();
-//                arrayList.addAll(list);
-//            }
-
-//        });
-
+        FirebaseFirestore.getInstance().collection("boardingHouse")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        for (DocumentChange documentChange : value.getDocumentChanges()) {
+                            DocumentSnapshot documentSnapshot = documentChange.getDocument();
+                            if (documentSnapshot.getId().equals(boardingHouse.getIdBoardingHouse())) {
+                                if (documentChange.getType() == DocumentChange.Type.REMOVED) {
+                                    Toast.makeText(getApplicationContext(), "Nhà trọ đã bị xóa", Toast.LENGTH_SHORT).show();
+                                    Intent intentResult = new Intent();
+                                    setResult(RESULT_CODE_FROM_INN_MANAGEMENT, intentResult);
+                                    finish();
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -168,17 +98,19 @@ public class InnManagementActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+
     private void setupView(ViewPager viewPager) {
         TabLayoutAdapter tabLayoutAdapter = new TabLayoutAdapter(getSupportFragmentManager());
         Bundle bundle = new Bundle();
         bundle.putSerializable("inn", boardingHouse);
         bundle.putSerializable("landlord", landlordZ);
-        bundle.putSerializable("roomType", roomTypeArrayList);
 
         innFragment.setArguments(bundle);
         roomTypeFragment.setArguments(bundle);
+
         tabLayoutAdapter.addFrag(innFragment, "Thông tin");
         tabLayoutAdapter.addFrag(roomTypeFragment, "Loại phòng");
+
         viewPager.setAdapter(tabLayoutAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -186,43 +118,65 @@ public class InnManagementActivity extends AppCompatActivity {
 
     protected interface CallBack {
         void onCallbackL(Landlord landlord);
-
-        void onCB(List<RoomType> list);
     }
 
     private void getInfo(CallBack callBack) {
-        List<RoomType> listRoomType = new ArrayList<>();
-        FirebaseFirestore.getInstance().collection("landlord").document(boardingHouse.getIdOwnerBoardingHouse()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    assert documentSnapshot != null;
-                    landlordZ.setNameLandlord(documentSnapshot.getString("name"));
-                    landlordZ.setEmailLandlord(documentSnapshot.getString("email"));
-                    landlordZ.setPhoneNumberLandlord(documentSnapshot.getString("phoneNumber"));
-                }
-                callBack.onCallbackL(landlordZ);
-                FirebaseFirestore.getInstance().collection("boardingHouse").document(boardingHouse.getIdBoardingHouse())
-                        .collection("roomType").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                RoomType roomType = new RoomType();
-                                roomType.setIdRoomType(documentSnapshot.getId());
-                                roomType.setIdBoardingHouse(boardingHouse.getIdBoardingHouse());
-                                roomType.setNameRoomType(documentSnapshot.getString("name"));
-                                roomType.setAreaRoomType(documentSnapshot.getDouble("area"));
-                                roomType.setPriceRoomType(documentSnapshot.getDouble("price"));
-                                roomType.setNumberPeopleRoomType(documentSnapshot.getDouble("numberPeople").intValue());
-                                listRoomType.add(roomType);
-                            }
-                        }
-                        callBack.onCB(listRoomType);
+        FirebaseFirestore.getInstance().collection("landlord")
+                .document(boardingHouse.getIdOwnerBoardingHouse())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        assert documentSnapshot != null;
+                        landlordZ.setIdLandlord(documentSnapshot.getId());
+                        landlordZ.setNameLandlord(documentSnapshot.getString("name"));
+                        landlordZ.setEmailLandlord(documentSnapshot.getString("email"));
+                        landlordZ.setPhoneNumberLandlord(documentSnapshot.getString("phoneNumber"));
                     }
+                    callBack.onCallbackL(landlordZ);
                 });
-            }
-        });
+    }
+
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onStart() {
+        Log.i("LifeCycleINNM", "onStart");
+        super.onStart();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onResume() {
+        Log.i("LifeCycleINNM", "onResume");
+        super.onResume();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onPause() {
+        Log.i("LifeCycleINNM", "onPause");
+        super.onPause();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onStop() {
+        Log.i("LifeCycleINNM", "onStop");
+        super.onStop();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onRestart() {
+        Log.i("LifeCycleINNM", "onRestart");
+        super.onRestart();
+    }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    protected void onDestroy() {
+        Log.i("LifeCycleINNM", "onDestroy");
+        super.onDestroy();
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RoomAdapter.MyViewHolder holder, int position) {
         Room room = roomList.get(position);
+
+        holder.textViewNameRoom.setMaxLines(1);
+        holder.textViewNameRoom.setEllipsize(TextUtils.TruncateAt.END);
+
         if (room.isStatusRoom()) {
             holder.textViewNameRoom.setText("Phòng " + room.getNameRoom() + ": có người thuê");
         } else {

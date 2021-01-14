@@ -21,7 +21,6 @@
             android:background="@drawable/ic_arrow_back"
             android:backgroundTint="@color/white"
             android:contentDescription="@string/TODO">
-
         </ImageButton>
 
         <TextView
@@ -42,7 +41,6 @@
         android:layout_marginRight="8dp"
         android:orientation="vertical">
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -50,7 +48,6 @@
             android:text="@string/info"
             android:textColor="@color/black"
             android:textSize="18sp" />
-
     </LinearLayout>
 
     <ScrollView
@@ -63,12 +60,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:gravity="center"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/urt_textInput_name"
+                android:id="@+id/urt_til_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Tên loại phòng"
@@ -78,17 +74,16 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/urt_textInputEditText_name"
+                    android:id="@+id/urt_edt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text">
-
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/urt_textInput_area"
+                android:id="@+id/urt_til_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Diện tích phòng (m²)"
@@ -98,7 +93,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/urt_textInputEditText_area"
+                    android:id="@+id/urt_edt_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal">
@@ -108,7 +103,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/urt_textInput_price"
+                android:id="@+id/urt_til_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Giá phòng (triệu đồng)"
@@ -118,7 +113,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/urt_textInputEditText_price"
+                    android:id="@+id/urt_edt_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal">
@@ -129,7 +124,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/urt_textInput_numberPeople"
+                android:id="@+id/urt_til_numberPeople"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Số người ở tối đa"
@@ -139,7 +134,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/urt_textInputEditText_numberPeople"
+                    android:id="@+id/urt_edt_numberPeople"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number">
@@ -149,7 +144,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/urt_textInput_description"
+                android:id="@+id/urt_til_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mô tả phòng"
@@ -159,7 +154,7 @@
                 app:hintTextColor="@color/green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/urt_textInputEditText_description"
+                    android:id="@+id/urt_edt_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"

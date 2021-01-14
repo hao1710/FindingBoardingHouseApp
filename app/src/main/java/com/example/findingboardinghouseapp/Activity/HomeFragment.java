@@ -42,51 +42,15 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     // My code under
@@ -132,49 +96,56 @@ public class HomeFragment extends Fragment {
         recyclerViewRoomRecommendation.setLayoutManager(linearLayout);
 
         firebaseFirestore.collection("boardingHouse").addSnapshotListener((value, error) -> {
+            Log.i("HIHI", arrayListRoomSearch.size() + "");
             if (arrayListRoomSearch.size() == 0) {
+
                 readData(list -> {
                     ArrayList<Room> arrayList = new ArrayList<>(list);
                     recyclerViewRoomRecommendation.setAdapter(adapter);
-                    if (arrayList.size() > 0) {
-                        arrayListRoomRecommendation.clear();
-                        arrayListRoomRecommendation.addAll(arrayList);
-                    }
+
+                    arrayListRoomRecommendation.clear();
+                    arrayListRoomRecommendation.addAll(arrayList);
                     adapter.notifyDataSetChanged();
-                    tvNumberRoom.setText(list.size() + " phòng");
+
+                    tvNumberRoom.setText(arrayListRoomRecommendation.size() + " phòng");
                 });
             } else {
                 readData(list -> {
+
                     ArrayList<Room> arrayList = new ArrayList<>(list);
-                    if (arrayList.size() > 0) {
-                        arrayListRoomRecommendation.clear();
-                        arrayListRoomRecommendation.addAll(arrayList);
-                    }
-                    tvNumberRoom.setText(list.size() + " phòng");
+
+                    arrayListRoomRecommendation.clear();
+                    arrayListRoomRecommendation.addAll(arrayList);
+
+
+                    tvNumberRoom.setText(arrayListRoomSearch.size() + " phòng");
                 });
             }
         });
 
         firebaseFirestore.collectionGroup("roomType").addSnapshotListener((value, error) -> {
+            Log.i("HIHI3", arrayListRoomSearch.size() + "");
             if (arrayListRoomSearch.size() == 0) {
                 readData(list -> {
+                    Log.i("HIHI4", arrayListRoomSearch.size() + "");
                     ArrayList<Room> arrayList = new ArrayList<>(list);
                     recyclerViewRoomRecommendation.setAdapter(adapter);
-                    if (arrayList.size() > 0) {
+
                         arrayListRoomRecommendation.clear();
                         arrayListRoomRecommendation.addAll(arrayList);
-                    }
+
                     adapter.notifyDataSetChanged();
-                    tvNumberRoom.setText(list.size() + " phòng");
+                    tvNumberRoom.setText(arrayListRoomRecommendation.size() + " phòng");
                 });
             } else {
+                Log.i("HIHI5", arrayListRoomSearch.size() + "");
                 readData(list -> {
                     ArrayList<Room> arrayList = new ArrayList<>(list);
-                    if (arrayList.size() > 0) {
-                        arrayListRoomRecommendation.clear();
-                        arrayListRoomRecommendation.addAll(arrayList);
-                    }
-                    tvNumberRoom.setText(list.size() + " phòng");
+
+                    arrayListRoomRecommendation.clear();
+                    arrayListRoomRecommendation.addAll(arrayList);
+
+                    tvNumberRoom.setText(arrayListRoomSearch.size() + " phòng");
                 });
             }
         });
@@ -210,6 +181,7 @@ public class HomeFragment extends Fragment {
             }
             return false;
         });
+
         buttonRefresh.setOnClickListener(v -> {
             recyclerViewRoomRecommendation.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -267,10 +239,10 @@ public class HomeFragment extends Fragment {
         }
         adapterSearch.notifyDataSetChanged();
         tvNumberRoom.setText(arrayListRoomSearch.size() + " phòng");
-        if (price != 99 | numberPeople != 0 | distance != 99) {
-            pressSpinner = true;
-        } else {
+        if (price == 99 && numberPeople == 0 && distance == 99) {
             pressSpinner = false;
+        } else {
+            pressSpinner = true;
         }
 
     }
@@ -286,38 +258,26 @@ public class HomeFragment extends Fragment {
             switch (value) {
                 case 0:
                     Collections.sort(arrayListRoomRecommendation, Comparator.comparing(Room::getPriceRoomType));
-                    Log.i("DatatypeNo", "key " + value);
-                    break;
                 case 1:
-                    Collections.sort(arrayListRoomRecommendation, Comparator.comparing(Room::getDistanceBoardingHouse));
-                    Log.i("DatatypeNo", "key " + value);
+                    Collections.sort(arrayListRoomRecommendation, Comparator.comparing(Room::getNumberPeopleRoomType));
                     break;
                 case 2:
-                    Collections.sort(arrayListRoomRecommendation, Comparator.comparing(Room::getNumberPeopleRoomType));
-                    Log.i("DatatypeNo", "key " + value);
+                    Collections.sort(arrayListRoomRecommendation, Comparator.comparing(Room::getDistanceBoardingHouse));
                     break;
             }
-            Log.i("Datatype2", arrayListRoomRecommendation.toArray().toString());
-//            arrayListRoomSearch.addAll(arrayListRoomRecommendation);
             adapter.notifyDataSetChanged();
             tvNumberRoom.setText(arrayListRoomRecommendation.size() + " phòng");
 
-
         } else {
-//            ArrayList<Room> arrR = (ArrayList<Room>) arrayListRoomSearchTemp.clone();
-
             switch (value) {
                 case 0:
                     Collections.sort(arrayListRoomSearch, Comparator.comparing(Room::getPriceRoomType));
-                    Log.i("DatatypePress", "key " + value);
                     break;
                 case 1:
-                    Collections.sort(arrayListRoomSearch, Comparator.comparing(Room::getDistanceBoardingHouse));
-                    Log.i("DatatypePress", "key " + value);
+                    Collections.sort(arrayListRoomSearch, Comparator.comparing(Room::getNumberPeopleRoomType));
                     break;
                 case 2:
-                    Collections.sort(arrayListRoomSearch, Comparator.comparing(Room::getNumberPeopleRoomType));
-                    Log.i("DatatypePress", "key " + value);
+                    Collections.sort(arrayListRoomSearch, Comparator.comparing(Room::getDistanceBoardingHouse));
                     break;
             }
             adapterSearch.notifyDataSetChanged();
@@ -331,27 +291,21 @@ public class HomeFragment extends Fragment {
 
         ArrayList<ObjectSpinner> listFilter = new ArrayList<>();
         listFilter.add(new ObjectSpinner(0, "Xếp theo giá"));
-        listFilter.add(new ObjectSpinner(1, "Xếp theo khoảng cách"));
-        listFilter.add(new ObjectSpinner(2, "Xếp theo số người ở"));
+        listFilter.add(new ObjectSpinner(1, "Xếp theo số người ở"));
+        listFilter.add(new ObjectSpinner(2, "Xếp theo khoảng cách"));
+
 
         ArrayAdapter<ObjectSpinner> adapterFilter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listFilter);
         adapterFilter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFilter.setAdapter(adapterFilter);
-        ivFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinnerFilter.performClick();
-            }
-        });
+        ivFilter.setOnClickListener(v -> spinnerFilter.performClick());
         spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ObjectSpinner objectSpinner = (ObjectSpinner) parent.getItemAtPosition(position);
                 filterValue = objectSpinner.key;
-
                 sortRoom(filterValue);
-                Log.i("Datatypekey", "key " + filterValue);
             }
 
             @Override
@@ -367,17 +321,11 @@ public class HomeFragment extends Fragment {
         listNumberPeople.add(new ObjectSpinner(3, "3 người ở"));
         listNumberPeople.add(new ObjectSpinner(4, "4 người ở"));
         listNumberPeople.add(new ObjectSpinner(5, "5 người ở"));
-//        listNumberPeople.add(new ObjectSpinner(5, "Hơn 4 người ở"));
 
         ArrayAdapter<ObjectSpinner> adapterNumberPeopleSpinner = new ArrayAdapter<ObjectSpinner>(getContext(), android.R.layout.simple_spinner_item, listNumberPeople);
         adapterNumberPeopleSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNumberPeople.setAdapter(adapterNumberPeopleSpinner);
-        imageViewNumberPeople.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinnerNumberPeople.performClick();
-            }
-        });
+        imageViewNumberPeople.setOnClickListener(v -> spinnerNumberPeople.performClick());
         spinnerNumberPeople.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -401,7 +349,6 @@ public class HomeFragment extends Fragment {
         listPrice.add(new ObjectSpinner(3, "Dưới 3 triệu"));
         listPrice.add(new ObjectSpinner(3.5, "Dưới 3.5 triệu"));
         listPrice.add(new ObjectSpinner(4, "Dưới 4 triệu"));
-//        listPrice.add(new ObjectSpinner(99, "Trên 4 triệu"));
         ArrayAdapter<ObjectSpinner> adapterPriceSpinner = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listPrice);
         adapterPriceSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPrice.setAdapter(adapterPriceSpinner);

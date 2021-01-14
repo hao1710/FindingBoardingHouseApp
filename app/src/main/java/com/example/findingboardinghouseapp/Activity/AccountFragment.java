@@ -47,9 +47,10 @@ public class AccountFragment extends Fragment {
 
     Landlord landlord;
 
-    ImageButton ibMenu;
+    ImageButton ibMenu, ibCreate;
     TextView tvName, tvAddress, tvPhoneNumber, tvEmail;
     TextView tvText;
+
     RecyclerView rvBoardingHouse;
 
     @SuppressLint("NonConstantResourceId")
@@ -98,18 +99,6 @@ public class AccountFragment extends Fragment {
 
                         return true;
 
-                    case R.id.acc_create_inn:
-                        BoardingHouse boardingHouse = new BoardingHouse();
-                        boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
-
-                        Bundle bundleCreate = new Bundle();
-                        bundleCreate.putSerializable("boardingHouse", boardingHouse);
-
-                        Intent intentCreate = new Intent(getContext(), CreateBoardingHouseActivity.class);
-                        intentCreate.putExtras(bundleCreate);
-                        startActivityForResult(intentCreate, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
-
-                        return true;
 
                     case R.id.acc_setting_account:
                         Landlord landlordUpdate = landlord;
@@ -129,6 +118,18 @@ public class AccountFragment extends Fragment {
             popupMenu.show();
         });
 
+        ibCreate.setOnClickListener(v -> {
+            BoardingHouse boardingHouse = new BoardingHouse();
+            boardingHouse.setIdOwnerBoardingHouse(landlord.getIdLandlord());
+
+            Bundle bundleCreate = new Bundle();
+            bundleCreate.putSerializable("boardingHouse", boardingHouse);
+
+            Intent intentCreate = new Intent(getContext(), CreateBoardingHouseActivity.class);
+            intentCreate.putExtras(bundleCreate);
+            startActivityForResult(intentCreate, REQUEST_CODE_FROM_ACCOUNT_FRAGMENT);
+        });
+
         FirebaseFirestore.getInstance().collection("boardingHouse")
                 .addSnapshotListener((value, error) -> readDataBoardingHouse());
 
@@ -138,7 +139,7 @@ public class AccountFragment extends Fragment {
 
     private void findView(View view) {
         ibMenu = view.findViewById(R.id.acc_ib_menu);
-
+        ibCreate = view.findViewById(R.id.acc_ib_create_inn);
         tvName = view.findViewById(R.id.acc_tv_name);
         tvAddress = view.findViewById(R.id.acc_tv_address);
         tvPhoneNumber = view.findViewById(R.id.acc_tv_phoneNumber);

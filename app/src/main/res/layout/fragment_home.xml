@@ -70,6 +70,8 @@
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:paddingStart="8dp"
+                            android:drawableEnd="@drawable/ic_search"
+                            android:paddingEnd="4dp"
                             tools:ignore="RtlSymmetry" />
 
                         <Button
@@ -130,13 +132,13 @@
                                 android:orientation="horizontal">
 
                                 <Spinner
-                                    android:layout_height="40dp"
-                                    android:id="@+id/h_spinner_distance"
+                                    android:id="@+id/h_spinner_number_people"
                                     android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
                                     android:background="@drawable/custom_spinner" />
 
                                 <ImageView
-                                    android:id="@+id/h_imageView_spinner_distance"
+                                    android:id="@+id/h_imageView_spinner_number_people"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -153,13 +155,13 @@
                                 android:orientation="horizontal">
 
                                 <Spinner
-                                    android:id="@+id/h_spinner_number_people"
-                                    android:layout_width="wrap_content"
                                     android:layout_height="40dp"
+                                    android:id="@+id/h_spinner_distance"
+                                    android:layout_width="wrap_content"
                                     android:background="@drawable/custom_spinner" />
 
                                 <ImageView
-                                    android:id="@+id/h_imageView_spinner_number_people"
+                                    android:id="@+id/h_imageView_spinner_distance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -167,6 +169,7 @@
                                     android:contentDescription="@string/TODO" />
 
                             </LinearLayout>
+
 
                         </LinearLayout>
                     </HorizontalScrollView>
@@ -195,7 +198,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="8dp"
                         android:gravity="center_vertical"
-                        android:text="@string/room"
                         android:textSize="18sp"
                         tools:ignore="RelativeOverlap" />
 

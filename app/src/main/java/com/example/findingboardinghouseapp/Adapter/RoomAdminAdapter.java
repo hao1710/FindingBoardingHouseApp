@@ -3,6 +3,7 @@ package com.example.findingboardinghouseapp.Adapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ public class RoomAdminAdapter extends RecyclerView.Adapter<RoomAdminAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull RoomAdminAdapter.MyViewHolder holder, int position) {
         Room room = arrayList.get(position);
+        holder.textViewNameRoom.setMaxLines(1);
+        holder.textViewNameRoom.setEllipsize(TextUtils.TruncateAt.END);
         if (room.isStatusRoom()) {
             holder.textViewNameRoom.setText("Phòng " + room.getNameRoom() + ": có người thuê");
         } else {
@@ -80,19 +83,14 @@ public class RoomAdminAdapter extends RecyclerView.Adapter<RoomAdminAdapter.MyVi
             expandableLinearLayout = view.findViewById(R.id.admin_expand_image);
             ibShow = view.findViewById(R.id.admin_ib_show);
 
-            ibShow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    expandableLinearLayout.toggle();
-                    if (expandableLinearLayout.isExpanded()) {
-                        ibShow.setBackgroundResource(R.drawable.ic_arrow_right);
-                    } else {
-                        ibShow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
-                    }
+            ibShow.setOnClickListener(v -> {
+                expandableLinearLayout.toggle();
+                if (expandableLinearLayout.isExpanded()) {
+                    ibShow.setBackgroundResource(R.drawable.ic_arrow_right);
+                } else {
+                    ibShow.setBackgroundResource(R.drawable.ic_arrow_drop_down);
                 }
             });
-
-
 
         }
     }

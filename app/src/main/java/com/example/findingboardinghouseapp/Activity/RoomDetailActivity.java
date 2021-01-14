@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -258,6 +259,9 @@ public class RoomDetailActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void setTextRoom() {
         tvDescriptionRoom.setText(room.getDescriptionRoomType());
+
+        tvName.setMaxLines(1);
+        tvName.setEllipsize(TextUtils.TruncateAt.END);
         tvName.setText(room.getNameBoardingHouse());
 
         tvArea.setText(room.getAreaRoomType() + " m\u00b2");
